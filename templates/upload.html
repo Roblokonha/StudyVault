@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <title>StudyVault - Tải lên Tài liệu</title>
+     <style>
+        /* --- Phong cách chung --- */
+        :root { --primary-blue: #0d6efd; --light-bg: #f8f9fa; --white-bg: #ffffff; --card-border-radius: 0.75rem; --element-border-radius: 0.5rem; --card-shadow: 0 4px 15px rgba(0, 0, 0, 0.07); --text-dark: #212529; --text-muted: #6c757d;}
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; background-color: var(--light-bg); color: var(--text-dark); }
+        .navbar { background-color: var(--white-bg) !important; box-shadow: var(--card-shadow); }
+        .navbar-brand { color: var(--text-dark) !important; font-weight: 600; }
+        .navbar-brand i { color: var(--primary-blue); }
+        .nav-link { color: #495057 !important; font-weight: 500; }
+        .nav-link.active { color: var(--primary-blue) !important; font-weight: 600;}
+        .card { border-radius: var(--card-border-radius); border: none; box-shadow: var(--card-shadow); margin-bottom: 1.5rem; background-color: var(--white-bg); border-top: 4px solid var(--primary-blue); /* <<< Thêm border top màu xanh */}
+        .card-header { background-color: transparent; border-bottom: 1px solid #f1f3f5; font-weight: 600; padding: 1rem 1.25rem; color: var(--primary-blue);}
+        .btn { border-radius: var(--element-border-radius); padding: 0.5rem 1rem; font-weight: 500; }
+        .btn-primary { background-color: var(--primary-blue); border-color: var(--primary-blue); }
+        .btn-primary:hover { background-color: #0b5ed7; border-color: #0a58ca; }
+        .form-control, .form-select, .form-check-input { border-radius: var(--element-border-radius); border-color: #dee2e6; }
+        .form-control:focus, .form-select:focus { border-color: var(--primary-blue); box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25); }
+        .form-check-input:checked { background-color: var(--primary-blue); border-color: var(--primary-blue); }
+        .form-check-label i { margin-right: 6px; vertical-align: text-bottom; color: var(--primary-blue); /* <<< Icon trong label màu xanh */ }
+        h1 { margin-bottom: 1.5rem !important; font-weight: 600; color: var(--primary-blue); /* <<< Tiêu đề màu xanh */ }
+        h1 i { color: var(--primary-blue) !important; } /* Icon tiêu đề màu xanh */
+        .form-label.fw-bold { color: var(--text-dark); } /* Label đậm rõ hơn */
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-white mb-4 sticky-top">
+        <div class="container"> <a class="navbar-brand fw-bold" href="{{ url_for('index') }}"><i class="bi bi-book-half text-primary"></i> StudyVault</a> <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"><span class="navbar-toggler-icon"></span></button> <div class="collapse navbar-collapse" id="navbarNav"> <ul class="navbar-nav ms-auto"> <li class="nav-item"><a class="nav-link" href="{{ url_for('index') }}">Dashboard</a></li> <li class="nav-item"><a class="nav-link active" aria-current="page" href="{{ url_for('upload_file') }}">Tải lên</a></li> <li class="nav-item"><a class="nav-link" href="{{ url_for('study_timeline') }}">Timeline</a></li> <li class="nav-item"><a class="nav-link" href="{{ url_for('lazy_market') }}">LazyMarket & Cộng đồng</a></li> </ul> </div> </div>
+    </nav>
+
+    <div class="container mt-4">
+        <h1 class="mb-4 fw-bold"><i class="bi bi-cloud-arrow-up-fill"></i> Tải lên Tài liệu Mới</h1>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            {% for category, message in messages %}
+              <div class="alert alert-{{ category if category in ['success', 'danger', 'warning', 'info'] else 'info' }} alert-dismissible fade show rounded-pill" role="alert">
+                {{ message }} <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+              </div>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
+
+        <div class="card"> <div class="card-body p-4">
+                <form id="uploadForm" method="POST" action="{{ url_for('upload_file') }}" enctype="multipart/form-data">
+
+                    <div class="mb-4">
+                        <label class="form-label fw-bold d-block mb-3">Loại tài liệu:</label>
+                        <div class="d-flex flex-wrap" style="gap: 1rem;">
+                            <div class="form-check"> <input class="form-check-input" type="radio" name="upload_type" id="type_file" value="file" checked onchange="toggleUploadFields()"> <label class="form-check-label" for="type_file"><i class="bi bi-file-earmark-text"></i> File (PDF, DOCX, TXT)</label> </div>
+                            <div class="form-check"> <input class="form-check-input" type="radio" name="upload_type" id="type_image" value="image" onchange="toggleUploadFields()"> <label class="form-check-label" for="type_image"><i class="bi bi-image"></i> Ảnh</label> </div>
+                            <div class="form-check"> <input class="form-check-input" type="radio" name="upload_type" id="type_video" value="video" onchange="toggleUploadFields()"> <label class="form-check-label" for="type_video"><i class="bi bi-film"></i> Video</label> </div>
+                            <div class="form-check"> <input class="form-check-input" type="radio" name="upload_type" id="type_gdrive" value="googledrive_link" onchange="toggleUploadFields()"> <label class="form-check-label" for="type_gdrive"><i class="bi bi-google"></i> Link Google Drive</label> </div>
+                            <div class="form-check"> <input class="form-check-input" type="radio" name="upload_type" id="type_link" value="link" onchange="toggleUploadFields()"> <label class="form-check-label" for="type_link"><i class="bi bi-link-45deg"></i> Link Web (Khác)</label> </div>
+                        </div>
+                    </div>
+
+                    <hr class="my-4">
+
+                    <div class="mb-3" id="file_input_div"> <label for="document_file" class="form-label">Chọn file (PDF, DOCX, TXT):</label> <input class="form-control" type="file" id="document_file" name="document_file" accept=".pdf,.docx,.txt"> </div>
+                    <div class="mb-3" id="image_input_div" style="display: none;"> <label for="document_image" class="form-label">Chọn file ảnh:</label> <input class="form-control" type="file" id="document_image" name="document_image" accept="image/*"> <div class="form-text">Định dạng hỗ trợ: PNG, JPG, GIF, BMP, WEBP,...</div> </div>
+                    <div class="mb-3" id="video_input_div" style="display: none;"> <label for="document_video" class="form-label">Chọn file video:</label> <input class="form-control" type="file" id="document_video" name="document_video" accept="video/*"> <div class="form-text text-muted">Hỗ trợ: MP4, MOV, AVI, MKV,... (Mô phỏng: Chỉ lưu file, không phân tích sâu).</div> </div>
+                    <div class="mb-3" id="gdrive_link_input_div" style="display: none;"> <label for="document_gdrive_link" class="form-label">Nhập URL chia sẻ Google Drive:</label> <input type="url" class="form-control" id="document_gdrive_link" name="document_gdrive_link" placeholder="https://drive.google.com/..."> </div>
+                    <div class="mb-3" id="link_input_div" style="display: none;"> <label for="document_url" class="form-label">Nhập URL Web (Khác Google Drive):</label> <input type="url" class="form-control" id="document_url" name="document_url" placeholder="https://example.com"> </div>
+
+                    <button type="submit" class="btn btn-primary btn-lg w-100 mt-4"><i class="bi bi-cloud-arrow-up-fill"></i> Tải lên & Lưu trữ</button>
+                </form>
+            </div>
+        </div>
+         <div class="mt-4 text-center">
+             <a href="{{ url_for('index') }}" class="btn btn-link text-secondary"><i class="bi bi-arrow-left-circle"></i> Quay lại Dashboard</a>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function toggleUploadFields() {
+            const uploadType = document.querySelector('input[name="upload_type"]:checked').value;
+            const fileInputDiv = document.getElementById('file_input_div'); const linkInputDiv = document.getElementById('link_input_div'); const imageInputDiv = document.getElementById('image_input_div'); const videoInputDiv = document.getElementById('video_input_div'); const gdriveLinkInputDiv = document.getElementById('gdrive_link_input_div');
+            const fileInput = document.getElementById('document_file'); const linkInput = document.getElementById('document_url'); const imageInput = document.getElementById('document_image'); const videoInput = document.getElementById('document_video'); const gdriveLinkInput = document.getElementById('document_gdrive_link');
+            fileInputDiv.style.display = 'none'; fileInput.required = false; fileInput.value = ''; linkInputDiv.style.display = 'none'; linkInput.required = false; linkInput.value = ''; imageInputDiv.style.display = 'none'; imageInput.required = false; imageInput.value = ''; videoInputDiv.style.display = 'none'; videoInput.required = false; videoInput.value = ''; gdriveLinkInputDiv.style.display = 'none'; gdriveLinkInput.required = false; gdriveLinkInput.value = '';
+            if (uploadType === 'file') { fileInputDiv.style.display = 'block'; fileInput.required = true; }
+            else if (uploadType === 'link') { linkInputDiv.style.display = 'block'; linkInput.required = true; }
+            else if (uploadType === 'image') { imageInputDiv.style.display = 'block'; imageInput.required = true; }
+            else if (uploadType === 'video') { videoInputDiv.style.display = 'block'; videoInput.required = true; }
+            else if (uploadType === 'googledrive_link') { gdriveLinkInputDiv.style.display = 'block'; gdriveLinkInput.required = true; }
+        }
+        document.addEventListener('DOMContentLoaded', toggleUploadFields);
+        window.addEventListener('pageshow', function(event) { if (event.persisted) { const form = document.getElementById('uploadForm'); if (form) form.reset(); toggleUploadFields(); } });
+    </script>
+</body>
+</html>

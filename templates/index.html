@@ -9,15 +9,7 @@
     <style>
         /* --- Phong cách chung --- */
         :root {
-             --primary-blue: #0d6efd;
-             --light-bg: #f8f9fa;
-             --white-bg: #ffffff;
-             --card-border-radius: 0.75rem;
-             --element-border-radius: 0.5rem;
-             --card-shadow: 0 4px 15px rgba(0, 0, 0, 0.07);
-             --text-dark: #212529;
-             --text-muted: #6c757d;
-             --accent-red: #dc3545;
+             --primary-blue: #0d6efd; --light-bg: #f8f9fa; --white-bg: #ffffff; --card-border-radius: 0.75rem; --element-border-radius: 0.5rem; --card-shadow: 0 4px 15px rgba(0, 0, 0, 0.07); --text-dark: #212529; --text-muted: #6c757d; --accent-red: #dc3545; --bs-info: #0dcaf0; --bs-info-subtle: #cff4fc; --bs-info-text-emphasis: #055160; --bs-warning: #ffc107; --bs-success: #198754; --bs-danger: #dc3545; --bs-purple: #6f42c1;
         }
         body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; background-color: var(--light-bg); color: var(--text-dark); position: relative; min-height: 100vh; padding-bottom: 80px; }
         .navbar { background-color: var(--white-bg) !important; box-shadow: var(--card-shadow); }
@@ -25,31 +17,29 @@
         .navbar-brand i { color: var(--primary-blue); }
         .nav-link { color: #495057 !important; font-weight: 500; }
         .nav-link.active { color: var(--primary-blue) !important; font-weight: 600;}
-        .card { border-radius: var(--card-border-radius); border: none; box-shadow: var(--card-shadow); margin-bottom: 1.5rem; background-color: var(--white-bg); border-top: 4px solid var(--primary-blue); /* <<< Thêm border top màu xanh */}
-        .card-header { background-color: transparent; border-bottom: 1px solid #f1f3f5; font-weight: 600; padding: 1rem 1.25rem; color: var(--primary-blue); /* <<< Header màu xanh */}
-        .card-header i { color: var(--primary-blue) !important; /* Icon header màu xanh */ }
-
+        .card { border-radius: var(--card-border-radius); border: none; box-shadow: var(--card-shadow); margin-bottom: 1.5rem; background-color: var(--white-bg); border-top: 4px solid var(--primary-blue); }
+        .card-header { background-color: transparent; border-bottom: 1px solid #f1f3f5; font-weight: 600; padding: 1rem 1.25rem; color: var(--primary-blue); }
+        .card-header i { color: var(--primary-blue) !important; }
         .btn { border-radius: var(--element-border-radius); padding: 0.5rem 1rem; font-weight: 500; }
         .btn-primary { background-color: var(--primary-blue); border-color: var(--primary-blue); }
-        .btn-primary:hover { background-color: #0b5ed7; border-color: #0a58ca; } /* Hover đậm hơn */
-        .btn-danger { background-color: var(--accent-red); border-color: var(--accent-red); } /* Nút đỏ solid */
+        .btn-primary:hover { background-color: #0b5ed7; border-color: #0a58ca; }
+        .btn-danger { background-color: var(--accent-red); border-color: var(--accent-red); }
         .btn-danger:hover { background-color: #c82333; border-color: #bd2130; }
         .btn-outline-secondary { border-color: #ced4da; color: #495057;}
         .btn-outline-secondary:hover { background-color: #e9ecef; color: #343a40;}
-        .btn-outline-danger { border-color: var(--accent-red); color: var(--accent-red); } /* Giữ outline nếu cần */
+        .btn-outline-danger { border-color: var(--accent-red); color: var(--accent-red); }
         .btn-outline-danger:hover { background-color: var(--accent-red); color: white; }
         .btn-outline-primary { border-color: var(--primary-blue); color: var(--primary-blue);}
         .btn-outline-primary:hover { background-color: var(--primary-blue); color: white;}
         .btn-outline-info { border-color: #0dcaf0; color: #0dcaf0;}
         .btn-outline-info:hover { background-color: #0dcaf0; color: white;}
-
-
+        .btn-outline-success { border-color: #198754; color: #198754;}
+        .btn-outline-success:hover { background-color: #198754; color: white;}
         .form-control, .form-select { border-radius: var(--element-border-radius); border-color: #dee2e6; }
         .form-control:focus, .form-select:focus { border-color: var(--primary-blue); box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25); }
         .badge { border-radius: 50px; font-weight: 500; padding: 0.35em 0.65em; }
-        h1 { margin-bottom: 1.5rem !important; font-weight: 600; color: var(--primary-blue); /* <<< Tiêu đề màu xanh */ }
+        h1 { margin-bottom: 1.5rem !important; font-weight: 600; color: var(--primary-blue); }
         h3 { margin-bottom: 1.5rem !important; font-weight: 600; }
-
         .table { border: none; margin-bottom: 0; }
         .table thead th { background-color: var(--light-bg); border-bottom: 2px solid #dee2e6; font-weight: 600; color: var(--text-dark); text-transform: uppercase; font-size: 0.8em; padding-top: 0.75rem; padding-bottom: 0.75rem; text-align: center; }
         .table tbody td { vertical-align: middle; padding-top: 0.75rem; padding-bottom: 0.75rem; }
@@ -58,39 +48,40 @@
         .table tbody tr:hover { background-color: #f8f9fa; }
         .action-btn { margin: 0 2px; padding: 0.3rem 0.5rem; font-size: 0.85rem; }
         .doc-icon { margin-right: 8px; vertical-align: -0.1em; font-size: 1.1em;}
-        .keywords-list { font-size: 0.85em; color: var(--text-muted); max-width: 200px; }
-        .status-dot { width: 10px; height: 10px; }
+        .keywords-list { font-size: 0.85em; color: var(--text-muted); max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; display: inline-block; vertical-align: middle;}
+        .status-dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; margin-right: 5px; background-color: #adb5bd; }
+        .status-dot.dot-read { background-color: #198754; }
+        .status-dot.dot-unread { background-color: #ffc107; }
         .pagination .page-link { border-radius: var(--element-border-radius); margin: 0 3px; border-color: #dee2e6;}
         .pagination .page-item.active .page-link { background-color: var(--primary-blue); border-color: var(--primary-blue);}
         .suggestion-card-body { font-size: 0.9rem; }
         .suggestion-card-title { font-size: 1rem; font-weight: 600; margin-bottom: 0.5rem;}
         .suggestion-card-text { margin-bottom: 0.5rem; }
         .suggestion-card-footer { font-size: 0.8rem; padding-top: 0.75rem; border-top: 1px solid #eee; margin-top: 1rem;}
-
-        /* --- CSS NÚT FOCUS LOCK --- */
-        #focusLockBtn { position: fixed; bottom: 20px; right: 20px; z-index: 1050; background-color: var(--primary-blue) !important; /* <<< Nút màu xanh */ border-color: var(--primary-blue) !important; color: white !important; box-shadow: 0 4px 8px rgba(0,0,0,0.2); border-radius: 50%; width: 60px; height: 60px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; }
+        #focusLockBtn { position: fixed; bottom: 20px; right: 20px; z-index: 1050; background-color: var(--primary-blue) !important; border-color: var(--primary-blue) !important; color: white !important; box-shadow: 0 4px 8px rgba(0,0,0,0.2); border-radius: 50%; width: 60px; height: 60px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; }
         #focusLockModal .form-label { font-weight: 500; }
-        #focusLockModal .modal-content { border-radius: var(--card-border-radius); border-top: 4px solid var(--primary-blue); /* Thêm nhấn nhá cho modal */}
+        #focusLockModal .modal-content { border-radius: var(--card-border-radius); border-top: 4px solid var(--primary-blue); }
         #focusFeedback { margin-top: 1rem; font-weight: 500;}
-
     </style>
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-white mb-4 sticky-top">
         <div class="container">
-            <a class="navbar-brand fw-bold" href="{{ url_for('index') }}"><i class="bi bi-book-half text-primary"></i> StudyVault</a>
+            <a class="navbar-brand fw-bold d-flex align-items-center" href="{{ url_for('index') }}">
+                <img src="{{ url_for('static', filename='img/logo.png') }}" alt="StudyVault Logo" height="30" class="d-inline-block align-text-top me-2">
+                StudyVault
+            </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"><span class="navbar-toggler-icon"></span></button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item"><a class="nav-link active" aria-current="page" href="{{ url_for('index') }}">Dashboard</a></li>
                     <li class="nav-item"><a class="nav-link" href="{{ url_for('upload_file') }}">Tải lên</a></li>
                     <li class="nav-item"><a class="nav-link" href="{{ url_for('study_timeline') }}">Timeline</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{{ url_for('lazy_market') }}">LazyMarket & Cộng đồng</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('lazy_market') }}">Chia sẻ tài liệu & BXH</a></li>
                 </ul>
             </div>
         </div>
     </nav>
-
     <div class="container mt-4">
         {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
@@ -101,50 +92,103 @@
                 {% endfor %}
             {% endif %}
         {% endwith %}
-
-         {% if suggested_docs %}
-         <div class="card mb-4"> <div class="card-header"><i class="bi bi-lightbulb-fill text-warning"></i> Gợi ý cho bạn</div>
-            <div class="card-body suggestion-card-body">
-                <div class="row">
-                    {% for sugg_doc in suggested_docs %}
-                    <div class="col-lg-4 col-md-6 mb-3">
-                        <div class="card h-100 border-0 shadow-sm"> <div class="card-body d-flex flex-column">
-                                <h6 class="card-title suggestion-card-title">
-                                    {% if sugg_doc.doc_type == 'pdf' %}<i class="bi bi-file-earmark-pdf text-danger doc-icon" title="PDF"></i>
-                                    {% elif sugg_doc.doc_type == 'link' %}<i class="bi bi-link-45deg text-primary doc-icon" title="Link Web"></i>
-                                    {% elif sugg_doc.doc_type == 'image' %}<i class="bi bi-image text-success doc-icon" title="Ảnh"></i>
-                                    {% elif sugg_doc.doc_type == 'video' %}<i class="bi bi-film text-warning doc-icon" title="Video"></i>
-                                    {% elif sugg_doc.doc_type == 'googledrive_link' %}<i class="bi bi-google text-info doc-icon" title="Google Drive"></i>
-                                    {% elif sugg_doc.doc_type == 'docx' %}<i class="bi bi-file-earmark-word text-primary doc-icon" title="Word"></i>
-                                    {% elif sugg_doc.doc_type == 'txt' %}<i class="bi bi-file-earmark-text text-secondary doc-icon" title="Text"></i>
-                                    {% else %}<i class="bi bi-file-earmark doc-icon" title="File"></i>
-                                    {% endif %}
-                                    {{ sugg_doc.filename | truncate(40) }}
-                                </h6>
-                                <p class="card-text suggestion-card-text"><span class="badge bg-secondary rounded-pill">{{ sugg_doc.category }}</span></p>
-                                {% set suggestion_reason = 'Chưa đọc' if not sugg_doc.last_viewed_date else ('Thiếu thông tin' if not sugg_doc.engagement_level or not sugg_doc.context_event else 'Xem lại') %}
-                                {% set badge_color = 'bg-warning text-dark' if suggestion_reason == 'Chưa đọc' else ('bg-info text-dark' if suggestion_reason == 'Thiếu thông tin' else 'bg-light text-dark') %}
-                                <div class="mt-auto suggestion-card-footer d-flex justify-content-between align-items-center">
-                                    <span class="badge {{ badge_color }} rounded-pill">{{ suggestion_reason }}</span>
-                                    <div>
-                                        <a href="{{ url_for('view_document', document_id=sugg_doc.id) }}" class="btn btn-sm btn-outline-primary action-btn" title="Xem & Bổ sung thông tin"><i class="bi bi-eye-fill"></i> Xem</a>
-                                        <a href="{{ url_for('lazy_market', suggest_job='summary', doc_id=sugg_doc.id) }}" class="btn btn-sm btn-outline-info action-btn" title="Mô phỏng gửi job tóm tắt"><i class="bi bi-send-check-fill"></i> Job?</a>
-                                    </div>
-                                </div>
-                            </div>
+        <div class="card mb-4 border-info">
+            <div class="card-header bg-info-subtle text-info-emphasis">
+               <i class="bi bi-stars me-2"></i> Tài liệu Cộng đồng Hot Nhất (Demo)
+            </div>
+            <div class="card-body">
+                <div class="d-flex flex-nowrap overflow-auto pb-2" style="gap: 1rem;">
+                    <div class="card flex-shrink-0" style="width: 18rem; border-top-color: var(--bs-warning);">
+                        <div class="card-body small">
+                            <h6 class="card-title text-truncate"><i class="bi bi-file-earmark-pdf text-danger me-1"></i>Tổng hợp Đề thi Kinh tế Vĩ mô</h6>
+                            <p class="card-text text-muted mb-1">Danh mục: Kinh tế học</p>
+                            <p class="card-text mb-1">
+                                <i class="bi bi-star-fill text-warning"></i><i class="bi bi-star-fill text-warning"></i><i class="bi bi-star-fill text-warning"></i><i class="bi bi-star-fill text-warning"></i><i class="bi bi-star-half text-warning"></i><span class="ms-1 small">(4.6)</span>
+                            </p>
+                            <a href="#" class="btn btn-sm btn-outline-primary mt-1" onclick="return false;">Xem chi tiết (Demo)</a>
                         </div>
                     </div>
-                    {% endfor %}
+                    <div class="card flex-shrink-0" style="width: 18rem; border-top-color: var(--bs-success);">
+                         <div class="card-body small">
+                            <h6 class="card-title text-truncate"><i class="bi bi-filetype-py text-primary me-1"></i>Giải thuật Quy hoạch động cơ bản</h6>
+                            <p class="card-text text-muted mb-1">Danh mục: Lập trình</p>
+                            <p class="card-text mb-1">
+                                <i class="bi bi-star-fill text-warning"></i><i class="bi bi-star-fill text-warning"></i><i class="bi bi-star-fill text-warning"></i><i class="bi bi-star-fill text-warning"></i><i class="bi bi-star text-warning"></i><span class="ms-1 small">(4.1)</span>
+                            </p>
+                            <a href="#" class="btn btn-sm btn-outline-primary mt-1" onclick="return false;">Xem chi tiết (Demo)</a>
+                        </div>
+                    </div>
+                     <div class="card flex-shrink-0" style="width: 18rem; border-top-color: var(--bs-danger);">
+                        <div class="card-body small">
+                            <h6 class="card-title text-truncate"><i class="bi bi-file-earmark-word text-primary me-1"></i>Từ vựng IELTS Band 8+</h6>
+                            <p class="card-text text-muted mb-1">Danh mục: Ngoại ngữ</p>
+                             <p class="card-text mb-1">
+                                <i class="bi bi-star-fill text-warning"></i><i class="bi bi-star-fill text-warning"></i><i class="bi bi-star-fill text-warning"></i><i class="bi bi-star-fill text-warning"></i><i class="bi bi-star-fill text-warning"></i><span class="ms-1 small">(4.9)</span>
+                            </p>
+                            <a href="#" class="btn btn-sm btn-outline-primary mt-1" onclick="return false;">Xem chi tiết (Demo)</a>
+                        </div>
+                    </div>
+                     <div class="card flex-shrink-0" style="width: 18rem; border-top-color: var(--bs-purple);">
+                        <div class="card-body small">
+                            <h6 class="card-title text-truncate"><i class="bi bi-calculator text-success me-1"></i>Công thức Tích phân cơ bản</h6>
+                            <p class="card-text text-muted mb-1">Danh mục: Toán học</p>
+                             <p class="card-text mb-1">
+                                <i class="bi bi-star-fill text-warning"></i><i class="bi bi-star-fill text-warning"></i><i class="bi bi-star-fill text-warning"></i><i class="bi bi-star-fill text-warning"></i><i class="bi bi-star-half text-warning"></i><span class="ms-1 small">(4.7)</span>
+                            </p>
+                            <a href="#" class="btn btn-sm btn-outline-primary mt-1" onclick="return false;">Xem chi tiết (Demo)</a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-        {% endif %}
+        {% if suggested_docs %}
+         <div class="card mb-4">
+             <div class="card-header"><i class="bi bi-lightbulb-fill text-warning"></i> Gợi ý cho bạn</div>
+             <div class="card-body suggestion-card-body">
+                 <div class="row">
+                     {% for sugg_doc in suggested_docs %}
+                     <div class="col-lg-4 col-md-6 mb-3">
+                         <div class="card h-100 border-0 shadow-sm">
+                             <div class="card-body d-flex flex-column">
+                                 <h6 class="card-title suggestion-card-title">
+                                     {% set sugg_icon = 'bi-file-earmark' %}
+                                     {% if sugg_doc.doc_type == 'pdf' %}{% set sugg_icon = 'bi-file-earmark-pdf text-danger' %}
+                                     {% elif sugg_doc.doc_type == 'link' %}{% set sugg_icon = 'bi-link-45deg text-primary' %}
+                                     {% elif sugg_doc.doc_type == 'image' %}{% set sugg_icon = 'bi-image text-success' %}
+                                     {% elif sugg_doc.doc_type == 'video' %}{% set sugg_icon = 'bi-film text-warning' %}
+                                     {% elif sugg_doc.doc_type == 'googledrive_link' %}{% set sugg_icon = 'bi-google text-info' %}
+                                     {% elif sugg_doc.doc_type == 'docx' %}{% set sugg_icon = 'bi-file-earmark-word text-primary' %}
+                                     {% elif sugg_doc.doc_type == 'txt' %}{% set sugg_icon = 'bi-file-earmark-text text-secondary' %}
+                                     {% endif %}
+                                     <i class="bi {{ sugg_icon }} doc-icon" title="{{ sugg_doc.doc_type | capitalize }}"></i>
+                                     {{ sugg_doc.filename | truncate(40) }}
+                                 </h6>
+                                 <p class="card-text suggestion-card-text"><span class="badge bg-secondary rounded-pill">{{ sugg_doc.category }}</span></p>
+                                 {% set suggestion_reason = 'Chưa đọc' if not sugg_doc.last_viewed_date else ('Thiếu thông tin' if not sugg_doc.engagement_level or not sugg_doc.context_event else 'Xem lại') %}
+                                 {% set badge_color = 'bg-warning text-dark' if suggestion_reason == 'Chưa đọc' else ('bg-info text-dark' if suggestion_reason == 'Thiếu thông tin' else 'bg-light text-dark') %}
+                                 <div class="mt-auto suggestion-card-footer d-flex justify-content-between align-items-center">
+                                     <span class="badge {{ badge_color }} rounded-pill">{{ suggestion_reason }}</span>
+                                     <div>
+                                         <a href="{{ url_for('view_document', document_id=sugg_doc.id) }}" class="btn btn-sm btn-outline-primary action-btn" title="Xem & Bổ sung thông tin"><i class="bi bi-eye-fill"></i> Xem</a>
+                                         <a href="{{ url_for('lazy_market', suggest_job='summary', doc_id=sugg_doc.id) }}" class="btn btn-sm btn-outline-info action-btn" title="Mô phỏng gửi job tóm tắt"><i class="bi bi-send-check-fill"></i> Job?</a>
+                                     </div>
+                                 </div>
+                             </div>
+                         </div>
+                     </div>
+                     {% endfor %}
+                 </div>
+             </div>
+         </div>
+         {% endif %}
+        <h1 class="mb-3"><i class="bi bi-collection-fill"></i> Tất cả Tài liệu</h1>
 
-        <h1 class="mb-3"><i class="bi bi-collection-fill"></i> Tất cả Tài liệu</h1> <div class="row mb-4">
+        <div class="row mb-4">
             <div class="col-md-6 mb-2 mb-md-0">
                 <form method="GET" action="{{ url_for('index') }}">
                     <div class="input-group">
-                        <span class="input-group-text bg-white"><i class="bi bi-search text-primary"></i></span> <input type="text" class="form-control" placeholder="Tìm theo tên file hoặc keyword..." name="search_query" value="{{ search_query or '' }}">
+                        <span class="input-group-text bg-white"><i class="bi bi-search text-primary"></i></span>
+                        <input type="text" class="form-control" placeholder="Tìm theo tên file hoặc keyword..." name="search_query" value="{{ search_query or '' }}">
                         {% if category_filter %} <input type="hidden" name="category" value="{{ category_filter }}"> {% endif %}
                          {% if search_query or category_filter %}
                            <a href="{{ url_for('index') }}" class="btn btn-outline-secondary" style="border-radius: 0 var(--element-border-radius) var(--element-border-radius) 0;" title="Xóa bộ lọc/tìm kiếm">&times;</a>
@@ -159,13 +203,15 @@
                     </button>
                     <ul class="dropdown-menu w-100" aria-labelledby="categoryDropdown">
                         <li><a class="dropdown-item {% if not category_filter %}active{% endif %}" href="{{ url_for('index', search_query=search_query) }}">-- Tất cả --</a></li>
-                        {% for cat in categories %} <li><a class="dropdown-item {% if category_filter == cat %}active{% endif %}" href="{{ url_for('index', category=cat, search_query=search_query) }}">{{ cat }}</a></li> {% endfor %}
+                        {% for cat in categories %}
+                        <li><a class="dropdown-item {% if category_filter == cat %}active{% endif %}" href="{{ url_for('index', category=cat, search_query=search_query) }}">{{ cat }}</a></li>
+                        {% endfor %}
                     </ul>
                 </div>
             </div>
         </div>
-
-        <div class="card"> <div class="table-responsive">
+        <div class="card">
+            <div class="table-responsive">
                  <table class="table table-hover align-middle">
                     <thead>
                        <tr>
@@ -210,11 +256,24 @@
                                 {% else %} <span class="text-muted small">N/A</span> {% endif %}
                             </td>
                             <td class="text-center text-muted small">{{ doc.uploaded_date.strftime('%d/%m/%y') }}</td>
-                            <td class="text-center"> <form method="POST" action="{{ url_for('delete_document', document_id=doc.id) }}" style="display: inline;" onsubmit="return confirm('Xóa vĩnh viễn tài liệu này?');">
-                                    <button type="submit" class="btn btn-danger btn-sm action-btn" title="Xóa"><i class="bi bi-trash"></i></button> </form>
+                            <td class="text-center">
+                                <form method="POST" action="{{ url_for('delete_document', document_id=doc.id) }}" style="display: inline;" onsubmit="return confirm('Xóa vĩnh viễn tài liệu này?');">
+                                    <button type="submit" class="btn btn-danger btn-sm action-btn" title="Xóa"><i class="bi bi-trash"></i></button>
+                                </form>
+                                <button type="button"
+                                        class="btn btn-outline-success btn-sm action-btn share-doc-btn"
+                                        title="Chia sẻ lên BXH (Demo)"
+                                        data-doc-id="{{ doc.id }}"
+                                        data-doc-filename="{{ doc.filename }}"
+                                        data-doc-category="{{ doc.category | default('N/A', true) }}"
+                                        data-doc-type="{{ doc.doc_type }}">
+                                    <i class="bi bi-share-fill"></i>
+                                </button>
                                 <button type="button" class="btn btn-outline-secondary btn-sm action-btn" title="Sửa Danh mục"
                                         data-bs-toggle="modal" data-bs-target="#editCategoryModal"
-                                        data-doc-id="{{ doc.id }}" data-doc-filename="{{ doc.filename }}" data-doc-category="{{ doc.category }}">
+                                        data-doc-id="{{ doc.id }}"
+                                        data-doc-filename="{{ doc.filename }}"
+                                        data-doc-category="{{ doc.category }}">
                                     <i class="bi bi-pencil-square"></i>
                                 </button>
                             </td>
@@ -226,8 +285,7 @@
                 </table>
             </div>
         </div>
-
-         {% if pagination and pagination.pages > 1 %}
+        {% if pagination and pagination.pages > 1 %}
          <nav aria-label="Document navigation" class="mt-4 d-flex justify-content-center">
             <ul class="pagination">
                 <li class="page-item {% if not pagination.has_prev %}disabled{% endif %}"> <a class="page-link" href="{{ url_for('index', page=pagination.prev_num, search_query=search_query, category=category_filter) if pagination.has_prev else '#' }}" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a> </li>
@@ -239,11 +297,12 @@
          {% elif pagination and pagination.total > 0 %}
          <p class="text-center text-muted small mt-2"> Hiển thị tất cả {{ pagination.total }} tài liệu. </p>
          {% endif %}
-
-        <div class="mt-4 mb-5 text-center"> <a href="{{ url_for('upload_file') }}" class="btn btn-primary btn-lg"><i class="bi bi-cloud-arrow-up-fill"></i> Tải lên tài liệu mới</a> </div>
-    </div>
-
-     <div class="modal fade" id="editCategoryModal" tabindex="-1" aria-labelledby="editCategoryModalLabel" aria-hidden="true">
+        <div class="mt-4 mb-5 text-center">
+            <a href="{{ url_for('upload_file') }}" class="btn btn-primary btn-lg">
+                <i class="bi bi-cloud-arrow-up-fill"></i> Tải lên tài liệu mới
+            </a>
+        </div>
+        </div> <div class="modal fade" id="editCategoryModal" tabindex="-1" aria-labelledby="editCategoryModalLabel" aria-hidden="true">
       <div class="modal-dialog">
         <div class="modal-content">
           <form id="editCategoryForm" method="POST" action="">
@@ -254,10 +313,9 @@
         </div>
       </div>
     </div>
-
-    <button type="button" class="btn btn-primary" id="focusLockBtn" title="Kích hoạt Chế độ Tập trung (Demo)"> <i class="bi bi-lock-fill"></i>
+    <button type="button" class="btn btn-primary" id="focusLockBtn" title="Kích hoạt Chế độ Tập trung (Demo)">
+        <i class="bi bi-lock-fill"></i>
     </button>
-
     <div class="modal fade" id="focusLockModal" tabindex="-1" aria-labelledby="focusLockModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
       <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
@@ -267,16 +325,58 @@
         </div>
       </div>
     </div>
-
-
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         // --- Script Modal Sửa Danh mục ---
-        var editModalEl = document.getElementById('editCategoryModal'); if (editModalEl) { editModalEl.addEventListener('show.bs.modal', function (event) { var button = event.relatedTarget; var docId = button.getAttribute('data-doc-id'); var docFilename = button.getAttribute('data-doc-filename'); var currentCategory = button.getAttribute('data-doc-category'); var modalFilenameEl = editModalEl.querySelector('#modal-doc-filename'); var categorySelectEl = editModalEl.querySelector('#edit-category-select'); var formEl = editModalEl.querySelector('#editCategoryForm'); if(modalFilenameEl) modalFilenameEl.textContent = docFilename; if(categorySelectEl) categorySelectEl.value = currentCategory; if(formEl) formEl.action = '/edit_category/' + docId; }); }
+        var editModalEl = document.getElementById('editCategoryModal');
+        if (editModalEl) {
+            editModalEl.addEventListener('show.bs.modal', function (event) {
+                var button = event.relatedTarget;
+                var docId = button.getAttribute('data-doc-id');
+                var docFilename = button.getAttribute('data-doc-filename');
+                var currentCategory = button.getAttribute('data-doc-category');
+                var modalFilenameEl = editModalEl.querySelector('#modal-doc-filename');
+                var categorySelectEl = editModalEl.querySelector('#edit-category-select');
+                var formEl = editModalEl.querySelector('#editCategoryForm');
+                if(modalFilenameEl) modalFilenameEl.textContent = docFilename;
+                if(categorySelectEl) {
+                    let categoryExists = false;
+                    for(let i=0; i < categorySelectEl.options.length; i++) {
+                        if (categorySelectEl.options[i].value === currentCategory) {
+                            categoryExists = true;
+                            break;
+                        }
+                    }
+                    categorySelectEl.value = categoryExists ? currentCategory : (categorySelectEl.options[0] ? categorySelectEl.options[0].value : '');
+                 }
+                if(formEl) formEl.action = '/edit_category/' + docId;
+            });
+        }
 
         // --- Script cho Focus Lock ---
         const focusLockBtn = document.getElementById('focusLockBtn'); const focusLockModalEl = document.getElementById('focusLockModal'); const focusQuestionEl = document.getElementById('focusQuestion'); const focusQuestionCategoryEl = document.getElementById('focusQuestionCategory'); const focusAnswerInput = document.getElementById('focusAnswerInput'); const checkFocusAnswerBtn = document.getElementById('checkFocusAnswerBtn'); const focusFeedbackEl = document.getElementById('focusFeedback'); const focusQuestions = [ { q: "Trong Python, sự khác biệt chính giữa `list` và `tuple` là gì?", a: "Tuple không thể thay đổi (immutable), list có thể thay đổi (mutable)", cat: "Lập trình" }, { q: "Nêu định nghĩa về 'Lạm phát' trong kinh tế học.", a: "Sự tăng mức giá chung của hàng hóa và dịch vụ theo thời gian, làm mất giá trị của một đơn vị tiền tệ.", cat: "Kinh tế học" }, { q: "Công thức tính diện tích hình tròn là gì? (Pi*R^2)", a: "pi nhân với bình phương bán kính", cat: "Toán học" }, { q: "Thì 'Present Perfect' dùng để diễn tả điều gì?", a: "Hành động xảy ra trong quá khứ nhưng có liên quan đến hiện tại hoặc kết quả còn ở hiện tại.", cat: "Ngoại ngữ" }, { q: "Biến `let` và `const` trong JavaScript khác nhau như thế nào?", a: "const khai báo hằng số không thể gán lại giá trị, let khai báo biến có thể gán lại.", cat: "Lập trình" }, { q: "'Chi phí cơ hội' (Opportunity Cost) là gì?", a: "Giá trị của lựa chọn tốt nhất bị bỏ lỡ khi đưa ra một quyết định kinh tế.", cat: "Kinh tế học" }, { q: "Định lý Pythagoras áp dụng cho loại tam giác nào?", a: "Tam giác vuông", cat: "Toán học" }, { q: "Thủ đô của nước Pháp là gì?", a: "Paris", cat: "Kiến thức chung" }, { q: "Câu lệnh SQL nào dùng để chọn TẤT CẢ các cột từ bảng 'Users'?", a: "SELECT * FROM Users", cat: "Lập trình" }, { q: "GDP là viết tắt của cụm từ tiếng Anh nào?", a: "Gross Domestic Product", cat: "Kinh tế học" } ]; let currentFocusQuestion = null; let focusModal = null;
         if (focusLockModalEl) { focusModal = new bootstrap.Modal(focusLockModalEl); } function getRandomQuestion() { const randomIndex = Math.floor(Math.random() * focusQuestions.length); return focusQuestions[randomIndex]; } if (focusLockBtn && focusModal) { focusLockBtn.addEventListener('click', function() { currentFocusQuestion = getRandomQuestion(); if (focusQuestionEl) focusQuestionEl.textContent = currentFocusQuestion.q; if (focusQuestionCategoryEl) focusQuestionCategoryEl.textContent = `(Lĩnh vực: ${currentFocusQuestion.cat})`; if (focusAnswerInput) focusAnswerInput.value = ''; if (focusFeedbackEl) focusFeedbackEl.textContent = ''; if (focusFeedbackEl) focusFeedbackEl.className = ''; if (checkFocusAnswerBtn) checkFocusAnswerBtn.disabled = false; focusModal.show(); }); } if (checkFocusAnswerBtn) { checkFocusAnswerBtn.addEventListener('click', function() { if (!currentFocusQuestion || !focusAnswerInput || !focusFeedbackEl) return; const userAnswer = focusAnswerInput.value.trim().toLowerCase(); const correctAnswer = currentFocusQuestion.a.toLowerCase(); let isCorrect = false; if (correctAnswer.includes(userAnswer) && userAnswer.length > 3) { isCorrect = true; } else if (userAnswer.includes(correctAnswer) && correctAnswer.length > 3) { isCorrect = true; } else if (userAnswer === correctAnswer) { isCorrect = true; } else if (currentFocusQuestion.cat === "Toán học" && userAnswer.replace(/\s/g, '') === 'pi*r^2') { isCorrect = true; } if (isCorrect) { focusFeedbackEl.textContent = 'Chính xác! Bạn đã mở khóa thành công! (Mô phỏng)'; focusFeedbackEl.className = 'alert alert-success'; checkFocusAnswerBtn.disabled = true; } else { focusFeedbackEl.textContent = 'Chưa đúng. Hãy thử suy nghĩ lại hoặc chọn Hủy.'; focusFeedbackEl.className = 'alert alert-danger'; } }); } if (focusLockModalEl) { focusLockModalEl.addEventListener('hidden.bs.modal', function () { if (focusAnswerInput) focusAnswerInput.value = ''; if (focusFeedbackEl) focusFeedbackEl.textContent = ''; if (focusFeedbackEl) focusFeedbackEl.className = ''; if (checkFocusAnswerBtn) checkFocusAnswerBtn.disabled = false; currentFocusQuestion = null; }) }
+
+        // --- Script cho Nút Share (dùng localStorage) ---
+        document.addEventListener('click', function(event) {
+            const shareButton = event.target.closest('.share-doc-btn');
+            if (shareButton) {
+                event.preventDefault();
+                const docData = {
+                    id: shareButton.dataset.docId,
+                    name: shareButton.dataset.docFilename,
+                    category: shareButton.dataset.docCategory,
+                    doc_type: shareButton.dataset.docType
+                };
+                console.log("Sharing doc from index.html:", docData); // Thêm log
+                try {
+                    localStorage.setItem('sharedDocForRanking', JSON.stringify(docData));
+                    window.location.href = "/lazymarket#ranking-tab"; // Dùng URL tuyệt đối
+                } catch (e) {
+                    console.error("Lỗi khi lưu vào localStorage hoặc chuyển hướng từ index.html:", e);
+                }
+            }
+        });
     </script>
 </body>
 </html>

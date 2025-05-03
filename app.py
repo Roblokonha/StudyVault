@@ -4,13 +4,14 @@
 import os
 import traceback
 import random # Thêm để mô phỏng AI và dữ liệu
-from datetime import datetime, date, timedelta # Thêm date, timedelta
+from datetime import datetime, date, timedelta # Đảm bảo timedelta được import
 from flask import (Flask, render_template, request, redirect, url_for, flash,
                    send_from_directory, abort)
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from werkzeug.utils import secure_filename
-from sqlalchemy import or_, and_ # Thêm and_
+# Thêm desc để sắp xếp trong lazymarket
+from sqlalchemy import or_, and_, desc
 from sqlalchemy.sql.expression import func
 from sqlalchemy.exc import SQLAlchemyError
 
@@ -26,13 +27,22 @@ except ImportError:
             "Lập trình": ["python", "java", "code", "script", "lập trình"],
             "Kinh tế học": ["kinh tế", "thị trường", "gdp", "lạm phát"],
             "Toán học": ["toán", "công thức", "phương trình", "tích phân"],
-            "Ngoại ngữ": ["english", "tiếng anh", "từ vựng", "grammar"]
+            "Ngoại ngữ": ["english", "tiếng anh", "từ vựng", "grammar"],
+            "Kỹ năng mềm": ["cv", "giao tiếp", "thuyết trình"],
+            "Pháp luật": ["luật", "hiến pháp", "điều khoản"],
+            "AI/ML": ["machine learning", "ai", "neural network"],
+            "Link Web": ["http", "https", "link", "url"],
+            "Hình ảnh": ["image", "picture", "photo", "scan"],
+            "Video": ["video", "media", "recording", "lecture"],
+            "Google Drive": ["google drive", "shared", "gdoc", "gsheet"]
         }
         def extract_text(self, filepath): return None # Không trích xuất thật
         def extract_keywords(self, text): return [] # Không trích xuất thật
         def categorize_document(self, keywords): # Phân loại giả lập rất cơ bản
             for cat, keys in self.CATEGORY_KEYWORDS.items():
-                if any(k in ' '.join(keywords).lower() for k in keys):
+                # Check if keywords is a list or string before joining
+                keyword_string = ' '.join(keywords).lower() if isinstance(keywords, list) else (keywords or '').lower()
+                if any(k in keyword_string for k in keys):
                     return cat
             return self.DEFAULT_CATEGORY
     fp = MockFileProcessor()
@@ -311,8 +321,18 @@ def view_document(document_id):
     if doc.doc_type not in ['link', 'googledrive_link']:
         try:
             upload_dir = os.path.abspath(app.config['UPLOAD_FOLDER'])
-            physical_filepath_to_check = os.path.join(upload_dir, doc.filename)
-        except Exception as path_err: print(f"ERROR constructing file path for doc {document_id}: {path_err}")
+            # Cố gắng tìm file bằng tên đã được secure_filename hoặc tên gốc
+            potential_paths = [
+                os.path.join(upload_dir, secure_filename(doc.filename)),
+                os.path.join(upload_dir, doc.filename) # Thêm tên gốc phòng trường hợp secure_filename thay đổi tên
+            ]
+            for path_to_check in potential_paths:
+                if os.path.exists(path_to_check):
+                    physical_filepath_to_check = path_to_check
+                    break # Dừng lại khi tìm thấy file
+            # print(f"DEBUG: physical_filepath_to_check set to: {physical_filepath_to_check}") # Bỏ comment để debug nếu cần
+        except Exception as path_err:
+            print(f"ERROR constructing file path for doc {document_id}: {path_err}")
 
     if request.method == 'GET':
         try:
@@ -320,11 +340,13 @@ def view_document(document_id):
         except SQLAlchemyError as e: db.session.rollback(); print(f"ERROR updating last_viewed_date: {e}")
 
     try:
-        if doc.doc_type in ['pdf', 'docx', 'txt', 'file']:
-             if physical_filepath_to_check and os.path.exists(physical_filepath_to_check):
+        if doc.doc_type in ['pdf', 'docx', 'txt', 'file']: # Thêm 'file' nếu có thể
+             if physical_filepath_to_check: # Kiểm tra xem đã tìm được đường dẫn hợp lệ chưa
                  extracted_text_content = fp.extract_text(physical_filepath_to_check) # Sẽ là None nếu dùng mock
                  if not extracted_text_content: extracted_text_content = "[Không trích xuất được nội dung văn bản hoặc file trống]"
-             else: extracted_text_content = f"[Lỗi: Không tìm thấy file gốc]"
+             else:
+                extracted_text_content = f"[Lỗi: Không tìm thấy file gốc trên server]"
+                print(f"ERROR: File not found on server for doc {document_id}, expected near {os.path.join(app.config['UPLOAD_FOLDER'], doc.filename)}")
     except Exception as extract_error:
         print(f"ERROR extracting content for view page (doc {document_id}): {extract_error}")
         extracted_text_content = "[Lỗi khi trích xuất nội dung xem trước]"
@@ -339,11 +361,13 @@ def view_document(document_id):
             print(f"Error finding related documents for doc {doc.id}: {related_err}")
             related_docs = []
 
+    # *** Đảm bảo truyền timedelta vào render_template ***
     return render_template(
         'view_document.html',
         doc=doc,
         extracted_content=extracted_text_content,
-        related_docs=related_docs
+        related_docs=related_docs,
+        timedelta=timedelta # <<< Đã thêm dòng này
     )
 
 
@@ -357,19 +381,24 @@ def download_file(document_id):
 
     try:
         upload_dir = os.path.abspath(app.config['UPLOAD_FOLDER'])
-        safe_filename = secure_filename(doc.filename)
-        file_path_to_send = os.path.join(upload_dir, safe_filename)
+        # Cố gắng tìm file bằng secure_filename trước, sau đó là tên gốc
+        filename_to_send = None
+        potential_filenames = [secure_filename(doc.filename), doc.filename]
+        for fname in potential_filenames:
+            if os.path.exists(os.path.join(upload_dir, fname)):
+                 filename_to_send = fname
+                 break
 
-        if not os.path.exists(file_path_to_send):
-            print(f"File not found on download attempt: {file_path_to_send}")
-            original_path_maybe = os.path.join(upload_dir, doc.filename)
-            if os.path.exists(original_path_maybe): file_path_to_send = original_path_maybe
-            else: abort(404)
+        if not filename_to_send:
+             print(f"File not found on download attempt for doc {doc.id}: Checked {potential_filenames} in {upload_dir}")
+             abort(404)
+
+        file_path_to_send = os.path.join(upload_dir, filename_to_send)
 
         if not os.path.abspath(file_path_to_send).startswith(upload_dir):
              print(f"Potential path traversal detected on download: {file_path_to_send}"); abort(403)
 
-        return send_from_directory(upload_dir, os.path.basename(file_path_to_send), as_attachment=True)
+        return send_from_directory(upload_dir, filename_to_send, as_attachment=True)
 
     except Exception as e:
         flash(f"Lỗi tải file: {e}", "danger"); print(f"ERROR download: {e}")
@@ -381,24 +410,37 @@ def delete_document(document_id):
     if not doc: flash(f"Tài liệu ID {document_id} không tồn tại.", "warning"); return redirect(url_for('index'))
 
     filename_to_delete = doc.filename
-    filepath_stored = doc.filepath
+    filepath_stored = doc.filepath # Có thể là URL hoặc path
 
     try:
+        # Chỉ xóa file vật lý nếu nó không phải là link
         if doc.doc_type not in ['link', 'googledrive_link']:
             try:
                 upload_dir = os.path.abspath(app.config['UPLOAD_FOLDER'])
-                physical_path_to_delete = os.path.abspath(os.path.join(upload_dir, secure_filename(doc.filename)))
+                # Cố gắng xóa cả tên gốc và tên đã secure
+                paths_to_try_deleting = [
+                    os.path.abspath(os.path.join(upload_dir, secure_filename(doc.filename))),
+                    os.path.abspath(os.path.join(upload_dir, doc.filename))
+                ]
+                deleted_physically = False
+                for path_to_delete in paths_to_try_deleting:
+                     if not path_to_delete.startswith(upload_dir):
+                         print(f"Potential path traversal detected on delete: {path_to_delete}"); continue # Bỏ qua nếu nghi ngờ
 
-                if not physical_path_to_delete.startswith(upload_dir):
-                     print(f"Potential path traversal detected on delete: {physical_path_to_delete}"); raise Exception("Path deletion attempt outside designated folder.")
+                     if os.path.exists(path_to_delete):
+                         os.remove(path_to_delete); print(f"Đã xóa file vật lý: {path_to_delete}")
+                         deleted_physically = True
+                         # Không cần break vì tên gốc và tên secure có thể khác nhau nhưng cùng chỉ 1 file đã lưu
 
-                if os.path.exists(physical_path_to_delete):
-                    os.remove(physical_path_to_delete); print(f"Đã xóa file vật lý: {physical_path_to_delete}")
-                else: print(f"Cảnh báo: File vật lý không tồn tại để xóa: {physical_path_to_delete}.")
+                if not deleted_physically:
+                     print(f"Cảnh báo: File vật lý không tồn tại để xóa cho doc {doc.id}. Đã kiểm tra các đường dẫn liên quan đến '{doc.filename}'.")
+
             except Exception as file_del_err:
                 print(f"ERROR deleting physical file for doc {doc.id}: {file_del_err}")
-                flash(f'Lỗi khi xóa file vật lý "{filename_to_delete}". Vui lòng kiểm tra thủ công.', 'warning')
+                # Không flash lỗi ở đây nữa để tránh gây hoang mang nếu file DB xóa thành công
+                # flash(f'Lỗi khi xóa file vật lý "{filename_to_delete}". Vui lòng kiểm tra thủ công.', 'warning')
 
+        # Luôn xóa khỏi DB bất kể file vật lý có tồn tại hay không
         db.session.delete(doc)
         db.session.commit()
         flash(f'Đã xóa thành công tài liệu "{filename_to_delete}" khỏi cơ sở dữ liệu.', 'success')
@@ -447,10 +489,19 @@ def study_timeline():
         ).count()
     except Exception as e: print(f"Error fetching real stats for timeline: {e}")
 
+    # --- PHẦN DEMO ---
+    # Giữ nguyên cách tạo streak ngẫu nhiên như cũ (để demo)
     streak_days = random.choice([0] + list(range(3, 16)))
     avg_session_time = random.randint(10, 45)
+    # Không cần tính unlocked_moods nếu không dùng đến
+    # unlocked_moods = ['friendly']
+    # if streak_days >= 7: unlocked_moods.append('strict')
+    # if streak_days >= 15: unlocked_moods.append('sad')
+    # --- KẾT THÚC PHẦN DEMO ---
+
     review_queue = []
     try:
+        # Giữ nguyên cách lấy review queue
         random_docs = Document.query.order_by(func.random()).limit(5).all()
         review_queue_with_dates = []
         for i, doc_item in enumerate(random_docs):
@@ -466,6 +517,7 @@ def study_timeline():
         print(f"Error fetching random docs for review queue: {e}")
         review_queue = [{"id": 0, "name": "Lỗi lấy dữ liệu ôn tập", "due": "N/A"}]
 
+    # Giữ nguyên cách tính achievements
     achievements = []
     if streak_days >= 5: achievements.append({"icon": "bi-fire", "text": f"{streak_days}-Day Streak!"})
     if docs_summarized_count >= 1: achievements.append({"icon": "bi-lightbulb-fill", "text": "Viết tóm tắt đầu tiên!"})
@@ -480,7 +532,8 @@ def study_timeline():
         current_streak=streak_days,
         avg_session_minutes=avg_session_time,
         review_items=review_queue,
-        earned_achievements=achievements
+        earned_achievements=achievements,
+        # unlocked_moods=unlocked_moods # Bỏ dòng này nếu không dùng đến
     )
 
 @app.route('/lazymarket', endpoint='lazy_market')
@@ -522,7 +575,7 @@ def lazy_market():
             Document.id, Document.filename
         ).order_by(desc(Document.uploaded_date)).all() # Sắp xếp để file mới nhất lên đầu dropdown
         user_documents = [{'id': d.id, 'filename': d.filename} for d in all_user_docs]
-        print(f"Fetched {len(user_documents)} documents for forum select.") # Log để kiểm tra
+        # print(f"Fetched {len(user_documents)} documents for forum select.") # Bỏ comment để debug
     except Exception as e_docs:
         print(f"Error fetching user documents for forum form: {e_docs}")
         flash("Lỗi: Không thể tải danh sách tài liệu của bạn.", "warning") # Thông báo lỗi nhẹ nhàng

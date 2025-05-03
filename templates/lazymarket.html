@@ -5,21 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
-    <title>LazyMarket & Cộng đồng - StudyVault</title>
+    <title>Chia sẻ tài liệu & BXH - StudyVault</title>
     <style>
         /* --- Phong cách chung --- */
         :root {
-             --primary-blue: #0d6efd;
-             --light-bg: #f8f9fa;
-             --white-bg: #ffffff;
-             --card-border-radius: 0.75rem;
-             --element-border-radius: 0.5rem;
-             --card-shadow: 0 4px 15px rgba(0, 0, 0, 0.07);
-             --text-dark: #212529;
-             --text-muted: #6c757d;
-             --accent-red: #dc3545;
-             --accent-green: #198754; /* Màu success */
-             --accent-info: #0dcaf0; /* Màu info */
+             --primary-blue: #0d6efd; --light-bg: #f8f9fa; --white-bg: #ffffff; --card-border-radius: 0.75rem; --element-border-radius: 0.5rem; --card-shadow: 0 4px 15px rgba(0, 0, 0, 0.07); --text-dark: #212529; --text-muted: #6c757d; --accent-red: #dc3545; --accent-green: #198754; --accent-info: #0dcaf0; --bs-warning: #ffc107;
+             --bs-info-subtle: #cff4fc; /* Thêm màu để highlight */
         }
         body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; background-color: var(--light-bg); color: var(--text-dark); }
         .navbar { background-color: var(--white-bg) !important; box-shadow: var(--card-shadow); }
@@ -27,182 +18,241 @@
         .navbar-brand i { color: var(--primary-blue); }
         .nav-link { color: #495057 !important; font-weight: 500; }
         .nav-link.active { color: var(--primary-blue) !important; font-weight: 600;}
-        .card { border-radius: var(--card-border-radius); border: none; box-shadow: var(--card-shadow); margin-bottom: 1.5rem; background-color: var(--white-bg); border-top: 4px solid var(--primary-blue); /* <<< Thêm border top màu xanh */}
+        .card { border-radius: var(--card-border-radius); border: none; box-shadow: var(--card-shadow); margin-bottom: 1.5rem; background-color: var(--white-bg); border-top: 4px solid var(--primary-blue); }
         .card-header { background-color: transparent; border-bottom: 1px solid #f1f3f5; font-weight: 600; padding: 1rem 1.25rem; color: var(--primary-blue); }
-         .card-header i { color: var(--primary-blue) !important; } /* Icon header màu xanh */
+         .card-header i { color: var(--primary-blue) !important; }
         .btn { border-radius: var(--element-border-radius); padding: 0.5rem 1rem; font-weight: 500; }
-        .btn-primary { background-color: var(--primary-blue); border-color: var(--primary-blue); }
-        .btn-primary:hover { background-color: #0b5ed7; border-color: #0a58ca; }
         .btn-secondary { background-color: #6c757d; border-color: #6c757d; color: white;}
         .btn-secondary:hover { background-color: #5a6268; border-color: #545b62;}
-        .btn-success { background-color: var(--accent-green); border-color: var(--accent-green); }
-        .btn-success:hover { background-color: #157347; border-color: #146c43; }
-        .btn-danger { background-color: var(--accent-red); border-color: var(--accent-red); color: white;} /* Nút đỏ solid */
-        .btn-danger:hover { background-color: #c82333; border-color: #bd2130; }
-        .btn-info { background-color: var(--accent-info); border-color: var(--accent-info); color: white;}
-        .btn-info:hover { background-color: #0aa1bd; border-color: #0aa1bd;}
-        .btn-outline-secondary { border-color: #ced4da; color: #495057;}
-        .btn-outline-secondary:hover { background-color: #e9ecef; color: #343a40;}
-
-        .form-control, .form-select { border-radius: var(--element-border-radius); border-color: #dee2e6; }
-        .form-control:focus, .form-select:focus { border-color: var(--primary-blue); box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25); }
         .badge { border-radius: 50px; font-weight: 500; padding: 0.35em 0.65em; }
-        h1, h4 { margin-bottom: 1.5rem !important; font-weight: 600; }
-        h1 { color: var(--primary-blue); }
-         h1 i { color: var(--accent-green) !important; } /* Icon tiêu đề chính màu xanh lá */
+        h1 { margin-bottom: 1.5rem !important; font-weight: 600; color: var(--primary-blue); }
+         h1 i { color: var(--primary-blue) !important; }
 
-        /* --- CSS dành riêng cho LazyMarket --- */
-        .nav-tabs { border-bottom: none; margin-bottom: 0; }
-        .nav-tabs .nav-link { border-top-left-radius: var(--element-border-radius); border-top-right-radius: var(--element-border-radius); border: 1px solid transparent; border-bottom: none; margin-right: 2px; background-color: transparent; color: var(--text-muted); padding: 0.75rem 1.25rem;}
-        .nav-tabs .nav-link.active { background-color: var(--white-bg); border-color: #dee2e6 #dee2e6 var(--white-bg); color: var(--primary-blue); font-weight: 600; border-top: 3px solid var(--primary-blue); /* Nhấn mạnh tab active */}
-        .tab-content { background-color: var(--white-bg); padding: 1.5rem; border-radius: 0 var(--card-border-radius) var(--card-border-radius) var(--card-border-radius); /* Bo góc dưới và phải */ box-shadow: var(--card-shadow); border: 1px solid #dee2e6; border-top: none; }
-        .task-card, .freelancer-card, .post-card, .submission-card { margin-bottom: 1.5rem; box-shadow: none; border: 1px solid #eee; border-radius: var(--element-border-radius); /* Bo góc nhẹ hơn card lớn */ }
-        .task-card h5 { font-weight: 600; color: var(--text-dark); }
-        .list-group-item { border-color: #f1f3f5; } /* Viền list item mờ */
-        .list-group-item-action:hover { background-color: var(--light-bg); } /* Hover nhẹ */
-
-        .rating-stars i { color: #ffc107; font-size: 0.9em; }
-        .rating-stars i.bi-star { color: #e9ecef; }
-        .rank-badge { font-size: 0.8em; margin-right: 10px;}
-
-        .forum-post { border-bottom: 1px dashed #eee; padding-bottom: 1rem; margin-bottom: 1rem; }
-        .forum-post:last-child { border-bottom: none; margin-bottom: 0; }
-        .forum-post-title { font-weight: 600; color: var(--text-dark); margin-bottom: 0.25rem; }
-        .forum-post-meta { font-size: 0.8em; color: var(--text-muted); margin-bottom: 0.5rem; }
-
-        .ranking-item { display: flex; align-items: center; justify-content: space-between; padding: 0.6rem 0; border-bottom: 1px solid #f1f3f5; }
+        /* --- CSS Bảng xếp hạng --- */
+        .ranking-item { display: flex; flex-direction: column; align-items: stretch; padding: 0.8rem 0.5rem; /* Giảm padding ngang */ border-bottom: 1px solid #f1f3f5; transition: background-color 0.2s ease; }
         .ranking-item:last-child { border-bottom: none; }
-        .ranking-info { display: flex; align-items: center; overflow: hidden; }
+        .ranking-item.highlight { background-color: var(--bs-info-subtle); } /* Class highlight */
+        .ranking-main-info { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.5rem; }
+        .ranking-info { display: flex; align-items: center; overflow: hidden; flex-grow: 1; margin-right: 1rem; }
         .ranking-rank { font-weight: bold; min-width: 30px; text-align: center; color: #adb5bd; margin-right: 10px; }
-        .ranking-name { font-weight: 500; }
-        .ranking-details { font-size: 0.85em; color: var(--text-muted); margin-left: 5px; }
-        .ranking-score { font-weight: bold; color: var(--accent-green); white-space: nowrap; }
+        .ranking-name { font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: block;}
+        .ranking-details { font-size: 0.85em; color: var(--text-muted); margin-left: 5px; white-space: nowrap;}
+        .ranking-score { font-weight: bold; white-space: nowrap; display: flex; align-items: center; }
+        .ranking-score .rating-stars i { color: var(--bs-warning); font-size: 0.9em; }
+        .ranking-score .rating-stars i.bi-star { color: #e9ecef; }
+        .ranking-score .score-number { text-muted small ms-1 }
+        .ranking-criteria { font-size: 0.75em; color: var(--text-muted); padding-left: 40px; display: flex; flex-wrap: wrap; gap: 0 1rem; }
+        .criteria-item { white-space: nowrap; }
+        .criteria-item .value { font-weight: 500; color: var(--text-dark); }
         .refresh-btn { font-size: 0.8em; padding: 0.2rem 0.5rem; }
     </style>
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-white mb-4 sticky-top">
-        <div class="container"> <a class="navbar-brand fw-bold" href="{{ url_for('index') }}"><i class="bi bi-book-half text-primary"></i> StudyVault</a> <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"><span class="navbar-toggler-icon"></span></button> <div class="collapse navbar-collapse" id="navbarNav"> <ul class="navbar-nav ms-auto"> <li class="nav-item"><a class="nav-link" href="{{ url_for('index') }}">Dashboard</a></li> <li class="nav-item"><a class="nav-link" href="{{ url_for('upload_file') }}">Tải lên</a></li> <li class="nav-item"><a class="nav-link" href="{{ url_for('study_timeline') }}">Timeline</a></li> <li class="nav-item"><a class="nav-link active" aria-current="page" href="{{ url_for('lazy_market') }}">LazyMarket & Cộng đồng</a></li> </ul> </div> </div>
+        <div class="container"> <a class="navbar-brand fw-bold d-flex align-items-center" href="{{ url_for('index') }}">
+            <img src="{{ url_for('static', filename='img/logo.png') }}" alt="StudyVault Logo" height="30" class="d-inline-block align-text-top me-2">
+            StudyVault
+        </a>
+         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"><span class="navbar-toggler-icon"></span></button> <div class="collapse navbar-collapse" id="navbarNav"> <ul class="navbar-nav ms-auto"> <li class="nav-item"><a class="nav-link" href="{{ url_for('index') }}">Dashboard</a></li> <li class="nav-item"><a class="nav-link" href="{{ url_for('upload_file') }}">Tải lên</a></li> <li class="nav-item"><a class="nav-link" href="{{ url_for('study_timeline') }}">Timeline</a></li>
+                     <li class="nav-item"><a class="nav-link active" aria-current="page" href="{{ url_for('lazy_market') }}">Chia sẻ tài liệu & BXH</a></li> </ul> </div> </div>
     </nav>
-
-    <div class="container mt-4" id="lazyMarketContainer">
-        <h1 class="mb-4"><i class="bi bi-shop-window"></i> Chợ việc làm & Cộng đồng StudyVault</h1>
-
-        <ul class="nav nav-tabs" id="myTab" role="tablist">
-          <li class="nav-item" role="presentation"> <button class="nav-link active" id="market-tab" data-bs-toggle="tab" data-bs-target="#market-tab-pane" type="button" role="tab" aria-controls="market-tab-pane" aria-selected="true"><i class="bi bi-briefcase-fill me-1"></i>Chợ việc làm</button> </li>
-          <li class="nav-item" role="presentation"> <button class="nav-link" id="community-tab" data-bs-toggle="tab" data-bs-target="#community-tab-pane" type="button" role="tab" aria-controls="community-tab-pane" aria-selected="false"><i class="bi bi-people-fill me-1"></i>Diễn đàn Cộng đồng</button> </li>
-          <li class="nav-item" role="presentation"> <button class="nav-link" id="ranking-tab" data-bs-toggle="tab" data-bs-target="#ranking-tab-pane" type="button" role="tab" aria-controls="ranking-tab-pane" aria-selected="false"><i class="bi bi-bar-chart-line-fill me-1"></i>Bảng xếp hạng</button> </li>
-        </ul>
-
-        <div class="tab-content" id="myTabContent">
-
-          <div class="tab-pane fade show active" id="market-tab-pane" role="tabpanel" aria-labelledby="market-tab" tabindex="0">
-               {% if suggested_job_info %} <div class="alert alert-success alert-dismissible fade show rounded-3" role="alert"> <i class="bi bi-stars"></i> <strong>Gợi ý từ StudyVault!</strong> <p class="mb-0 mt-2">Bạn có muốn đăng yêu cầu <span class="fw-bold">"Làm {{ suggested_job_info.type | capitalize }}"</span> cho tài liệu <span class="fst-italic">"{{ suggested_job_info.doc_filename }}"</span> không? Hãy điền thông tin bên dưới!</p> <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button> </div> {% endif %}
-               <div class="row">
-                   <div class="col-lg-7">
-                       <div class="card post-card"> <div class="card-header"><i class="bi bi-plus-circle-fill me-2"></i>Đăng Task Mới</div>
-                           <div class="card-body">
-                               <form id="postTaskForm"> <div class="mb-3"> <label for="taskRequirement" class="form-label">Yêu cầu công việc:</label> <textarea class="form-control" id="taskRequirement" name="requirement" rows="3" placeholder="Ví dụ: Làm slide thuyết trình (10 trang)..." required></textarea> </div> <div class="row"> <div class="col-md-6 mb-3"> <label for="taskPrice" class="form-label">Giá đề xuất (VNĐ):</label> <input type="number" class="form-control" id="taskPrice" name="price" placeholder="Ví dụ: 300000" min="0"> </div> <div class="col-md-6 mb-3"> <label for="taskDeadline" class="form-label">Deadline:</label> <input type="date" class="form-control" id="taskDeadline" name="deadline" required> </div> </div> <button type="submit" class="btn btn-primary w-100"><i class="bi bi-send-fill"></i> Đăng Task </button> </form>
-                           </div>
-                       </div>
-                       <h4 class="mt-5 mb-3"><i class="bi bi-briefcase-fill text-info me-2"></i>Task đang tìm người làm</h4>
-                       <div class="list-group" id="availableTasksList">
-                           <div class="list-group-item list-group-item-action task-card" data-task-title="Làm slide thuyết trình môn Marketing"> <div class="d-flex w-100 justify-content-between"> <h5 class="mb-1">Làm slide thuyết trình môn Marketing</h5> <small class="text-muted">Deadline: 05/05/2025</small> </div> <p class="mb-1 small text-muted">Cần làm 10-12 slide chủ đề "Digital Marketing Trends 2025", yêu cầu có hình ảnh minh họa, template hiện đại.</p> <div class="d-flex justify-content-between align-items-center mt-2"> <strong class="text-success fs-6">Giá: 250.000 VNĐ</strong> <div> <button type="button" class="btn btn-success btn-sm btn-accept-task"><i class="bi bi-check-circle"></i> Nhận Task</button> <button type="button" class="btn btn-danger btn-sm action-btn" title="Xóa Task"><i class="bi bi-trash"></i></button> </div> </div> </div>
-                           <div class="list-group-item list-group-item-action task-card" data-task-title="Viết code Python phân tích dữ liệu CSV"> <div class="d-flex w-100 justify-content-between"> <h5 class="mb-1">Viết code Python phân tích dữ liệu CSV</h5> <small class="text-muted">Deadline: 08/05/2025</small> </div> <p class="mb-1 small text-muted">Input là file data.csv. Output là biểu đồ dạng bar chart và pie chart bằng Matplotlib/Seaborn thể hiện tần suất các cột A, B.</p> <div class="d-flex justify-content-between align-items-center mt-2"> <strong class="text-success fs-6">Giá: 400.000 VNĐ</strong> <div> <button type="button" class="btn btn-success btn-sm btn-accept-task"><i class="bi bi-check-circle"></i> Nhận Task</button> <button type="button" class="btn btn-danger btn-sm action-btn" title="Xóa Task"><i class="bi bi-trash"></i></button> </div> </div> </div>
-                       </div>
-                   </div>
-                   <div class="col-lg-5">
-                       <div class="card submission-card"> <div class="card-header"><i class="bi bi-check-all text-success me-2"></i>Sản phẩm đã nộp & Đánh giá</div> <div class="card-body" id="submissionsList"> <div class="mb-3 pb-3 border-bottom submission-item"> <p class="mb-1"><span class="fw-bold">Task:</span> Làm slide thuyết trình môn Marketing</p> <p class="mb-1"><span class="fw-bold">Sản phẩm:</span> <a href="#" onclick="return false;"><i class="bi bi-file-earmark-ppt-fill text-danger"></i> marketing_slides_final_v2.pptx</a></p> <div class="d-flex align-items-center flex-wrap"> <span class="me-2 small text-muted">Đánh giá:</span> <div class="rating-stars me-2 mb-1 mb-md-0" data-rating-value="4.5"> <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-half"></i> </div> <div class="input-group input-group-sm rating-input-group" style="width: 150px;"> <select class="form-select rating-select" title="Chọn đánh giá"> <option selected disabled value="">1-10</option> {% for i in range(10, 0, -1) %}<option value="{{i}}">{{i}}</option>{% endfor %} </select> <button type="button" class="btn btn-info btn-sm btn-submit-rating"><i class="bi bi-star-fill"></i> Gửi</button> </div> </div> </div> <div class="mb-2 submission-item"> <p class="mb-1"><span class="fw-bold">Task:</span> Viết code Python phân tích dữ liệu CSV</p> <p class="mb-1"><span class="fw-bold">Sản phẩm:</span> <a href="#" onclick="return false;"><i class="bi bi-filetype-py text-primary"></i> analysis_script.py</a></p> <div class="d-flex align-items-center"> <span class="me-2 small text-muted">Đánh giá:</span> <div class="rating-stars me-2" data-rating-value="5"> <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i> <span class="ms-1 rating-score-text">(10/10)</span> </div> <button type="button" class="btn btn-secondary btn-sm btn-submit-rating" disabled><i class="bi bi-check-lg"></i> Đã gửi</button> </div> </div> </div> </div>
-                       <div class="card freelancer-card mt-4"> <div class="card-header d-flex justify-content-between align-items-center"> <span><i class="bi bi-person-check-fill text-info me-2"></i>Gợi ý Người làm phù hợp</span> <button id="resetSuggestionsBtn" type="button" class="btn btn-sm btn-outline-secondary refresh-btn"><i class="bi bi-arrow-clockwise"></i></button> </div> <ul class="list-group list-group-flush" id="freelancerList"> </ul> </div>
-                   </div>
-               </div>
-          </div>
-
-          <div class="tab-pane fade" id="community-tab-pane" role="tabpanel" aria-labelledby="community-tab" tabindex="0">
-                <div class="row">
-                    <div class="col-lg-8">
-                        <h4 class="mb-3"><i class="bi bi-chat-left-text-fill text-primary me-2"></i>Bài đăng gần đây</h4>
-                        <div id="forumPostsList"> </div>
-                    </div>
-                    <div class="col-lg-4">
-                        <div class="card post-card">
-                            <div class="card-header"><i class="bi bi-plus-square-fill me-2"></i>Đăng bài mới (Demo)</div>
-                            <div class="card-body">
-                                <form id="newPostForm">
-                                    <div class="mb-3"> <label for="postTitle" class="form-label">Tiêu đề:</label> <input type="text" class="form-control" id="postTitle" required> </div>
-                                    <div class="mb-3"> <label for="postContent" class="form-label">Nội dung:</label> <textarea class="form-control" id="postContent" rows="4" required></textarea> </div>
-                                    <div class="mb-3"> <label for="postDocSelect" class="form-label">Đính kèm tài liệu (Tùy chọn):</label> <select class="form-select form-select-sm" id="postDocSelect"> <option value="" selected>-- Không đính kèm --</option> {% for doc in user_documents %} <option value="{{ doc.id }}">{{ doc.filename | truncate(60) }}</option> {% else %} <option value="" disabled> (Bạn chưa tải lên tài liệu nào)</option> {% endfor %} </select> </div>
-                                    <button type="submit" class="btn btn-success w-100"><i class="bi bi-send"></i> Đăng bài</button> </form>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-          </div>
-
-          <div class="tab-pane fade" id="ranking-tab-pane" role="tabpanel" aria-labelledby="ranking-tab" tabindex="0">
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="card"> <div class="card-header d-flex justify-content-between align-items-center"> <span><i class="bi bi-file-earmark-arrow-up-fill me-2"></i>BXH Tài liệu Hot (Top 10)</span> <button id="refreshDocRankingBtn" class="btn btn-sm btn-outline-secondary refresh-btn"><i class="bi bi-arrow-clockwise"></i></button> </div> <div class="card-body" id="documentRankingList"> </div> </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="card"> <div class="card-header d-flex justify-content-between align-items-center"> <span><i class="bi bi-person-lines-fill me-2"></i>BXH Thành viên Tích cực (Top 10)</span> <button id="refreshUserRankingBtn" class="btn btn-sm btn-outline-secondary refresh-btn"><i class="bi bi-arrow-clockwise"></i></button> </div> <div class="card-body" id="userRankingList"> </div> </div>
-                    </div>
-                </div>
-          </div>
-
-        </div> <div class="mt-4 mb-5 text-center"> <a href="{{ url_for('index') }}" class="btn btn-secondary"><i class="bi bi-arrow-left-circle"></i> Quay lại Dashboard</a> </div>
-
-    </div> <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <div class="container mt-4">
+        <h1 class="mb-4"><i class="bi bi-trophy-fill"></i> Chia sẻ tài liệu & Bảng xếp hạng</h1>
+        <div id="rankingContent">
+             <div class="row">
+                 <div class="col-md-6">
+                     <div class="card">
+                         <div class="card-header d-flex justify-content-between align-items-center">
+                             <span><i class="bi bi-file-earmark-arrow-up-fill me-2"></i>BXH Tài liệu Hot (Top 10)</span>
+                             <button id="refreshDocRankingBtn" class="btn btn-sm btn-outline-secondary refresh-btn"><i class="bi bi-arrow-clockwise"></i></button>
+                         </div>
+                         <div class="card-body" id="documentRankingList">
+                             <p class="text-center text-muted p-3">Đang tải bảng xếp hạng...</p>
+                         </div>
+                     </div>
+                 </div>
+                 <div class="col-md-6">
+                     <div class="card">
+                         <div class="card-header d-flex justify-content-between align-items-center">
+                             <span><i class="bi bi-person-lines-fill me-2"></i>BXH Thành viên Tích cực (Top 10)</span>
+                             <button id="refreshUserRankingBtn" class="btn btn-sm btn-outline-secondary refresh-btn"><i class="bi bi-arrow-clockwise"></i></button>
+                         </div>
+                         <div class="card-body" id="userRankingList">
+                             <p class="text-center text-muted p-3">Đang tải bảng xếp hạng...</p>
+                         </div>
+                     </div>
+                 </div>
+                 </div>
+        </div>
+        <div class="mt-4 mb-5 text-center">
+            <a href="{{ url_for('index') }}" class="btn btn-secondary">
+                <i class="bi bi-arrow-left-circle"></i> Quay lại Dashboard
+            </a>
+        </div>
+        </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
+        // === PHẦN CODE JAVASCRIPT ===
+
         const realDocsSample = {{ real_docs_sample | tojson | safe }};
-        // user_documents được dùng trực tiếp trong vòng lặp Jinja ở trên
 
+        // --- HÀM TẠO SAO ĐÁNH GIÁ ---
+        function createRatingStarsHTML(scoreOutOf10) {
+            let starsHTML = '';
+            let scoreOutOf5 = Math.max(0, Math.min(5, scoreOutOf10 / 2));
+            for (let i = 1; i <= 5; i++) {
+                if (scoreOutOf5 >= i) { starsHTML += `<i class="bi bi-star-fill"></i>`; }
+                else if (scoreOutOf5 >= i - 0.5) { starsHTML += `<i class="bi bi-star-half"></i>`; }
+                else { starsHTML += `<i class="bi bi-star"></i>`; }
+            }
+            return starsHTML;
+        }
+
+        // --- Logic cho Bảng xếp hạng ---
         document.addEventListener('DOMContentLoaded', function() {
+            const docRankingList = document.getElementById('documentRankingList');
+            const userRankingList = document.getElementById('userRankingList');
+            const refreshDocBtn = document.getElementById('refreshDocRankingBtn');
+            const refreshUserBtn = document.getElementById('refreshUserRankingBtn');
+            const fakeDocs = [ {"id":101,"name":"Introduction to Machine Learning.pdf","category":"AI/ML","doc_type":"pdf"},{"id":102,"name":"Kinh tế vi mô nâng cao.docx","category":"Kinh tế học","doc_type":"docx"},{"id":103,"name":"Bài tập giải tích 1.pdf","category":"Toán học","doc_type":"pdf"},{"id":104,"name":"ielts_speaking_tips.txt","category":"Ngoại ngữ","doc_type":"txt"},{"id":105,"name":"https://react.dev/learn","category":"Lập trình Web","doc_type":"link"},{"id":106,"name":"Deep Work - Cal Newport.epub","category":"Kỹ năng mềm","doc_type":"file"},{"id":107,"name":"Đề cương ôn tập Luật Hành chính.pdf","category":"Pháp luật","doc_type":"pdf"},{"id":108,"name":"Algorithms Design Manual.pdf","category":"Lập trình","doc_type":"pdf"},{"id":109,"name":"Macroeconomics Principles.docx","category":"Kinh tế học","doc_type":"docx"},{"id":110,"name":"Linear Algebra Done Right.pdf","category":"Toán học","doc_type":"pdf"} ];
+            const fakeUsers = [ "Anh Khoa","Bảo Ngọc","Chí Thành","Diễm Quỳnh","Gia Huy","Hồng Anh","Kim Long","Minh Thư","Nam Khánh","Phương Linh" ];
+            function getDocRating() { return (Math.random() * (5 - 3.5) + 3.5).toFixed(1); }
+            function getUserScore() { return Math.floor(Math.random() * (2500 - 500 + 1) + 500); }
+            function getRandomCriteriaScore() { return Math.floor(Math.random() * (99 - 60 + 1)) + 60; }
 
-            // --- Logic cho Tab Chợ việc làm ---
-            const allFreelancers = [ { name: "Nguyễn Văn An", skills: "Python, Data Analysis", rating: 4.8 }, { name: "Trần Thị Bình", skills: "Slide Design, Canva", rating: 4.9 }, { name: "Lê Minh Cường", skills: "Video Editing, Premiere", rating: 4.5 }, { name: "Phạm Thùy Dung", skills: "Content Writing, Slide", rating: 4.7 }, { name: "Hoàng Đức Anh", skills: "Web Dev, Python", rating: 4.9 }, { name: "Vũ Kiều My", skills: "Infographic, Illustrator", rating: 4.6 }, { name: "Đặng Bảo Châu", skills: "Data Viz, Python", rating: 4.8 }, { name: "Mai Tiến Đạt", skills: "Animation, After Effects", rating: 4.4 }, { name: "Hồ Phương Nga", skills: "Academic Writing", rating: 4.9 }, { name: "Trịnh Quang Huy", skills: "PHP, Laravel", rating: 4.7 }, { name: "Đỗ Gia Hân", skills: "Graphic Design, Ps", rating: 4.6 }, { name: "Bùi Anh Tuấn", skills: "React, Frontend", rating: 4.8 } ];
-            const freelancerList = document.getElementById('freelancerList'); const resetSuggestionsBtn = document.getElementById('resetSuggestionsBtn'); const postTaskForm = document.getElementById('postTaskForm'); const availableTasksList = document.getElementById('availableTasksList'); const submissionsList = document.getElementById('submissionsList'); const marketContainer = document.getElementById('market-tab-pane'); function createRatingStarsHTML(scoreOutOf10) { let starsHTML = ''; let scoreOutOf5 = scoreOutOf10 / 2; for (let i = 1; i <= 5; i++) { starsHTML += `<i class="bi bi-star${scoreOutOf5 >= i ? '-fill' : (scoreOutOf5 >= i - 0.5 ? '-half' : '')}"></i>`; } return starsHTML; } function createFreelancerHTML(freelancer, rank) { const starsHTML = createRatingStarsHTML(freelancer.rating * 2); return ` <li class="list-group-item d-flex justify-content-between align-items-center"> <div> <span class="badge bg-secondary rounded-pill rank-badge">#${rank}</span> <span class="fw-bold">${freelancer.name}</span> <small class="text-muted d-block">(${freelancer.skills})</small> <div class="rating-stars d-inline-block mt-1" style="font-size: 0.8em;"> ${starsHTML} <span class="ms-1 text-muted">(${freelancer.rating.toFixed(1)}/5.0)</span> </div> </div> <button type="button" class="btn btn-outline-primary btn-sm btn-send-request"><i class="bi bi-send"></i> Yêu cầu</button> </li>`; } function displayFreelancerSuggestions() { if (!freelancerList) return; let shuffled = allFreelancers.sort(() => 0.5 - Math.random()); let selected = shuffled.slice(0, 5); freelancerList.innerHTML = ''; selected.forEach((f, i) => { freelancerList.innerHTML += createFreelancerHTML(f, i + 1); }); } function createTaskItemHTML(requirement, price, deadline) { let title = requirement.length > 60 ? requirement.substring(0, 57) + '...' : requirement; let formattedPrice = price ? `${parseInt(price).toLocaleString('vi-VN')} VNĐ` : 'Thỏa thuận'; let formattedDeadline = deadline ? new Date(deadline).toLocaleDateString('vi-VN') : 'N/A'; return ` <div class="list-group-item list-group-item-action task-card" data-task-title="${requirement.substring(0, 60)}"> <div class="d-flex w-100 justify-content-between"> <h5 class="mb-1">${title}</h5> <small class="text-muted">Deadline: ${formattedDeadline}</small> </div> <p class="mb-1 small text-muted">${requirement}</p> <div class="d-flex justify-content-between align-items-center mt-2"> <strong class="text-success fs-6">Giá: ${formattedPrice}</strong> <div> <button type="button" class="btn btn-success btn-sm btn-accept-task"><i class="bi bi-check-circle"></i> Nhận Task</button> <button type="button" class="btn btn-danger btn-sm action-btn" title="Xóa Task"><i class="bi bi-trash"></i></button> </div> </div> </div>`; } function createSubmissionItemHTML(taskTitle) { let ratingOptions = '<option selected disabled value="">1-10</option>'; for (let i = 10; i >= 1; i--) { ratingOptions += `<option value="${i}">${i}</option>`; } return ` <div class="mb-3 pb-3 border-bottom submission-item"> <p class="mb-1"><span class="fw-bold">Task:</span> ${taskTitle}</p> <p class="mb-1"><span class="fw-bold">Sản phẩm:</span> <span class="text-muted fst-italic">(Chưa có)</span></p> <div class="d-flex align-items-center flex-wrap"> <span class="me-2 small text-muted">Đánh giá:</span> <div class="rating-stars me-2 mb-1 mb-md-0" data-rating-value="0"> <i class="bi bi-star"></i><i class="bi bi-star"></i><i class="bi bi-star"></i><i class="bi bi-star"></i><i class="bi bi-star"></i> </div> <div class="input-group input-group-sm rating-input-group" style="width: 150px;"> <select class="form-select rating-select" title="Chọn đánh giá"> ${ratingOptions} </select> <button type="button" class="btn btn-info btn-sm btn-submit-rating"><i class="bi bi-star-fill"></i> Gửi</button> </div> </div> </div>`; } function updateRatingStars(ratingSelectElement) { const ratingValue = parseInt(ratingSelectElement.value); const submissionItem = ratingSelectElement.closest('.submission-item'); const starContainer = submissionItem?.querySelector('.rating-stars'); const scoreTextContainer = submissionItem?.querySelector('.rating-score-text'); if (!isNaN(ratingValue) && starContainer) { const starsHTML = createRatingStarsHTML(ratingValue); starContainer.innerHTML = starsHTML; if (scoreTextContainer) { scoreTextContainer.textContent = `(${ratingValue}/10)`; } } }
-            if (postTaskForm) { postTaskForm.addEventListener('submit', function(event) { event.preventDefault(); const requirementInput = document.getElementById('taskRequirement'); const priceInput = document.getElementById('taskPrice'); const deadlineInput = document.getElementById('taskDeadline'); const requirement = requirementInput.value.trim(); const price = priceInput.value; const deadline = deadlineInput.value; if (!requirement || !deadline) { alert('Vui lòng nhập Yêu cầu và Deadline.'); return; } const newTaskHTML = createTaskItemHTML(requirement, price, deadline); if (availableTasksList) availableTasksList.insertAdjacentHTML('beforeend', newTaskHTML); let taskTitle = requirement.substring(0,60) + (requirement.length > 60 ? '...' : ''); const newSubmissionHTML = createSubmissionItemHTML(taskTitle); if (submissionsList) submissionsList.insertAdjacentHTML('beforeend', newSubmissionHTML); postTaskForm.reset(); if (availableTasksList) availableTasksList.lastElementChild?.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }); }
-            if (marketContainer) { marketContainer.addEventListener('click', function(event) { const targetButton = event.target.closest('button'); if (!targetButton) return; if (targetButton.classList.contains('btn-delete-task')) { const taskItem = targetButton.closest('.list-group-item'); if (taskItem && confirm(`Xóa task "${taskItem.querySelector('h5')?.textContent || 'này'}"?`)) { taskItem.remove(); } } else if (targetButton.classList.contains('btn-accept-task')) { targetButton.innerHTML = '<i class="bi bi-check-lg"></i> Đã nhận'; targetButton.classList.replace('btn-success','btn-secondary'); targetButton.disabled = true; const taskItem = targetButton.closest('.list-group-item'); const deleteBtn = taskItem?.querySelector('.btn-danger'); if(deleteBtn) deleteBtn.disabled = true; } else if (targetButton.classList.contains('btn-send-request')) { targetButton.innerHTML = '<i class="bi bi-check-lg"></i> Đã gửi'; targetButton.classList.replace('btn-outline-primary','btn-outline-secondary'); targetButton.disabled = true; } else if (targetButton.classList.contains('btn-submit-rating')) { const ratingGroup = targetButton.closest('.rating-input-group'); const ratingSelect = ratingGroup?.querySelector('.rating-select'); if (ratingSelect && ratingSelect.value && ratingSelect.value !== '') { targetButton.innerHTML = '<i class="bi bi-check-lg"></i> Đã gửi'; targetButton.classList.replace('btn-info','btn-secondary'); targetButton.disabled = true; ratingSelect.disabled = true; updateRatingStars(ratingSelect); } else { alert("Vui lòng chọn điểm đánh giá (1-10) trước khi gửi."); } } }); marketContainer.addEventListener('change', function(event) { if (event.target.classList.contains('rating-select')) { updateRatingStars(event.target); } }); }
-            if (resetSuggestionsBtn) { resetSuggestionsBtn.addEventListener('click', displayFreelancerSuggestions); }
-            if (typeof displayFreelancerSuggestions === 'function') { displayFreelancerSuggestions(); }
+            // === BIẾN LƯU TÀI LIỆU ĐƯỢC SHARE ===
+            let sharedDocData = null;
 
-            // --- Logic cho Tab Cộng đồng ---
-            const forumPostsList = document.getElementById('forumPostsList');
-            const newPostForm = document.getElementById('newPostForm');
-            function displayForumPosts() { if (!forumPostsList) return; const samplePosts = [ { title: "Cách học Python hiệu quả cho người mới?", author: "An Nguyễn", time: "2 giờ trước", content: "Mình đang tự học Python mà thấy hơi mông lung, mọi người có tips gì không ạ?", docLink: null }, { title: "Tài liệu hay về Marketing Digital 2025", author: "Bình Trần", time: "5 giờ trước", content: "Chia sẻ cho mọi người file PDF tổng hợp các xu hướng mới nhất.", docLink: "/document/1", docFilename: "marketing_trends.pdf" }, { title: "Hỏi về giải thuật tìm đường đi ngắn nhất", author: "Cường Lê", time: "1 ngày trước", content: "Mình đang vướng bài tập Dijkstra, đoạn code này chạy sai ở đâu nhỉ...", docLink: null }, { title: "Review sách 'Tư duy phản biện'", author: "Dung Phạm", time: "2 ngày trước", content: "Sách khá hay, cung cấp nhiều góc nhìn thú vị về cách lập luận và đánh giá thông tin.", docLink: null }, ]; forumPostsList.innerHTML = samplePosts.map(post => ` <div class="forum-post"> <h6 class="forum-post-title">${post.title}</h6> <div class="forum-post-meta">Đăng bởi <strong>${post.author}</strong> - ${post.time}</div> <p class="forum-post-content small text-muted">${post.content}</p> ${post.docLink ? `<a href="${post.docLink}" target="_blank" class="btn btn-sm btn-outline-primary mt-1"><i class="bi bi-paperclip"></i> ${post.docFilename || 'Xem tài liệu'}</a>` : ''} </div> `).join(''); }
-            if (newPostForm) {
-                newPostForm.addEventListener('submit', function(event) {
-                    event.preventDefault();
-                    const title = document.getElementById('postTitle').value.trim();
-                    const content = document.getElementById('postContent').value.trim();
-                    const selectedDocId = document.getElementById('postDocSelect').value;
-                    let docLink = null; let docFilename = '';
-                    if (selectedDocId) { docLink = `/document/${selectedDocId}`; const selectedOption = document.getElementById('postDocSelect').selectedOptions[0]; if (selectedOption) { docFilename = selectedOption.text; } }
-                    if (!title || !content) { alert("Vui lòng nhập Tiêu đề và Nội dung."); return; }
-                    const newPostHTML = ` <div class="forum-post"> <h6 class="forum-post-title">${title}</h6> <div class="forum-post-meta">Đăng bởi <strong>Bạn</strong> - Vừa xong</div> <p class="forum-post-content small text-muted">${content}</p> ${docLink ? `<a href="${docLink}" target="_blank" class="btn btn-sm btn-outline-primary mt-1"><i class="bi bi-paperclip"></i> ${docFilename || 'Xem tài liệu'}</a>` : ''} </div>`;
-                    if(forumPostsList) forumPostsList.insertAdjacentHTML('afterbegin', newPostHTML);
-                    newPostForm.reset();
-                });
-             }
-             if (typeof displayForumPosts === 'function') { displayForumPosts(); }
+            // === KIỂM TRA LOCALSTORAGE KHI TẢI TRANG ===
+            try {
+                const storedData = localStorage.getItem('sharedDocForRanking');
+                if (storedData) {
+                    sharedDocData = JSON.parse(storedData);
+                    console.log("Found shared doc in localStorage:", sharedDocData);
+                    localStorage.removeItem('sharedDocForRanking'); // Xóa đi sau khi đọc
+                    console.log("Removed item from localStorage.");
+                } else {
+                    console.log("No shared doc found in localStorage.");
+                }
+            } catch(e) {
+                console.error("Error reading from localStorage:", e);
+                sharedDocData = null;
+            }
 
+            // === HÀM TẠO RANKING TÀI LIỆU ===
+            function generateDocumentRanking() {
+                if (!docRankingList) return;
+                console.log("Generating document ranking. Shared data:", sharedDocData);
 
-            // --- Logic cho Tab Bảng xếp hạng ---
-            const docRankingList = document.getElementById('documentRankingList'); const userRankingList = document.getElementById('userRankingList'); const refreshDocBtn = document.getElementById('refreshDocRankingBtn'); const refreshUserBtn = document.getElementById('refreshUserRankingBtn'); const fakeDocs = [ { id: 101, name: "Introduction to Machine Learning.pdf", category: "AI/ML", doc_type: "pdf" }, { id: 102, name: "Kinh tế vi mô nâng cao.docx", category: "Kinh tế học", doc_type: "docx" }, { id: 103, name: "Bài tập giải tích 1.pdf", category: "Toán học", doc_type: "pdf" }, { id: 104, name: "ielts_speaking_tips.txt", category: "Ngoại ngữ", doc_type: "txt" }, { id: 105, name: "https://react.dev/learn", category: "Lập trình Web", doc_type: "link" }, { id: 106, name: "Deep Work - Cal Newport.epub", category: "Kỹ năng mềm", doc_type: "file" }, { id: 107, name: "Đề cương ôn tập Luật Hành chính.pdf", category: "Pháp luật", doc_type: "pdf" }, { id: 108, name: "Algorithms Design Manual.pdf", category: "Lập trình", doc_type: "pdf" }, { id: 109, name: "Macroeconomics Principles.docx", category: "Kinh tế học", doc_type: "docx" }, { id: 110, name: "Linear Algebra Done Right.pdf", category: "Toán học", doc_type: "pdf" }, { id: 111, name: "TOEFL Grammar Guide.txt", category: "Ngoại ngữ", doc_type: "txt" }, { id: 112, name: "Vue.js Documentation.link", category: "Lập trình Web", doc_type: "link" }, { id: 113, name: "Atomic Habits - James Clear.pdf", category: "Kỹ năng mềm", doc_type: "pdf" }, { id: 114, name: "Hiến pháp 2013.pdf", category: "Pháp luật", doc_type: "pdf" }, { id: 115, name: "Clean Code - Robert C. Martin.pdf", category: "Lập trình", doc_type: "pdf" }, { id: 116, name: "Freakonomics Rev Ed.epub", category: "Kinh tế học", doc_type: "file" }, { id: 117, name: "Calculus Early Transcendentals.pdf", category: "Toán học", doc_type: "pdf" }, { id: 118, name: "Common English Phrasal Verbs.docx", category: "Ngoại ngữ", doc_type: "docx" }, { id: 119, name: "https://angular.io/docs", category: "Lập trình Web", doc_type: "link" }, { id: 120, name: "Getting Things Done - David Allen.mobi", category: "Kỹ năng mềm", doc_type: "file" }, { id: 121, name: "Luật Doanh nghiệp 2020.docx", category: "Pháp luật", doc_type: "docx" }, { id: 122, name: "Cracking the Coding Interview.pdf", category: "Lập trình", doc_type: "pdf" }, { id: 123, name: "Nudge - Thaler Sunstein.pdf", category: "Kinh tế học", doc_type: "pdf" }, { id: 124, name: "Abstract Algebra - Dummit Foote.djvu", category: "Toán học", doc_type: "file" }, { id: 125, name: "Advanced English Vocabulary.txt", category: "Ngoại ngữ", doc_type: "txt" }, { id: 126, name: "Svelte Tutorial.link", category: "Lập trình Web", doc_type: "link" }, { id: 127, name: "Mindset - Carol Dweck.pdf", category: "Kỹ năng mềm", doc_type: "pdf" }, { id: 128, name: "Bộ luật Dân sự 2015.pdf", category: "Pháp luật", doc_type: "pdf" }, { id: 129, name: "Design Patterns - GoF.pdf", category: "Lập trình", doc_type: "pdf" }, { id: 130, name: "Thinking, Fast and Slow.epub", category: "Kinh tế học", doc_type: "file" } ];
-            const fakeUsers = [ "Anh Khoa", "Bảo Ngọc", "Chí Thành", "Diễm Quỳnh", "Gia Huy", "Hồng Anh", "Kim Long", "Minh Thư", "Nam Khánh", "Phương Linh", "Quốc Bảo", "Thanh Trúc", "Văn Minh", "Xuân Mai", "Yến Nhi", "Đức Anh", "Hà Trang", "Công Danh", "Bích Thủy", "Đăng Khoa", "Hải Yến", "Nhật Minh", "Thùy Dương", "Quang Vinh", "Tú Anh", "Đình Phúc", "Lan Hương", "Mạnh Cường", "Ngọc Hà", "Thế Bảo" ];
-            function getDocRating() { return (Math.random() * (5 - 3.5) + 3.5).toFixed(1); } function getUserScore() { return Math.floor(Math.random() * (2500 - 500 + 1) + 500); } function generateDocumentRanking() { if (!docRankingList) return; let combinedDocs = [...realDocsSample, ...fakeDocs]; let shuffledDocs = combinedDocs.sort(() => 0.5 - Math.random()); let ratedDocs = shuffledDocs.map(doc => ({ ...doc, rating: getDocRating() })).sort((a, b) => b.rating - a.rating); let top10Docs = ratedDocs.slice(0, 10); docRankingList.innerHTML = top10Docs.map((doc, index) => { let iconClass = 'bi-file-earmark'; const nameLower = doc.name ? doc.name.toLowerCase() : ''; const type = doc.doc_type ? doc.doc_type.toLowerCase() : ''; if (type === 'pdf') { iconClass = 'bi-file-earmark-pdf text-danger'; } else if (type === 'docx') { iconClass = 'bi-file-earmark-word text-primary'; } else if (type === 'txt') { iconClass = 'bi-file-earmark-text text-secondary'; } else if (type === 'link' || nameLower.startsWith('http')) { iconClass = 'bi-link-45deg text-info'; } else if (type === 'googledrive_link') { iconClass = 'bi-google text-info'; } else if (type === 'image') { iconClass = 'bi-image text-success'; } else if (type === 'video') { iconClass = 'bi-film text-warning'; } else if (type === 'epub' || type === 'mobi' || type === 'djvu' || type === 'file') { iconClass = 'bi-book'; } const displayName = doc.name.length > 35 ? doc.name.substring(0, 32) + '...' : doc.name; const isRealDoc = realDocsSample.some(realDoc => realDoc.id === doc.id); const realDocIcon = isRealDoc ? '<i class="bi bi-cloud-check-fill text-success ms-1" title="Tài liệu của bạn"></i>' : ''; return ` <div class="ranking-item"> <div class="ranking-info"> <span class="ranking-rank">#${index + 1}</span> <div class="d-flex align-items-center" style="overflow: hidden;"> <i class="bi ${iconClass} me-1"></i> <div class="ranking-name" title="${doc.name}"> ${displayName} ${realDocIcon} </div> <div class="ranking-details ms-2">(${doc.category || 'N/A'})</div> </div> </div> <div class="ranking-score"><i class="bi bi-star-fill text-warning me-1"></i>${doc.rating}</div> </div>`; }).join(''); } function generateUserRanking() { if (!userRankingList) return; let usersToRank = fakeUsers.map(name => ({ name: name, score: getUserScore() })); const sharedScore = localStorage.getItem('myTimelineScore'); let myScore = null; if (sharedScore) { myScore = parseInt(sharedScore); if (isNaN(myScore)) { myScore = null; } localStorage.removeItem('myTimelineScore'); console.log(`Retrieved and removed timeline score: ${myScore}`); } if (myScore !== null) { const existingUserIndex = usersToRank.findIndex(u => u.name === "Bạn"); if (existingUserIndex !== -1) { usersToRank[existingUserIndex].score = myScore; } else { usersToRank.push({ name: "Bạn", score: myScore }); } } let rankedUsers = usersToRank.sort((a, b) => b.score - a.score).slice(0, 10); userRankingList.innerHTML = rankedUsers.map((user, index) => ` <div class="ranking-item"> <div class="ranking-info"> <span class="ranking-rank">#${index + 1}</span> <div> <div class="ranking-name" style="${user.name === 'Bạn' ? 'color: var(--primary-blue); font-weight: 600;' : ''}"> <i class="bi ${user.name === 'Bạn' ? 'bi-person-check-fill text-primary' : 'bi-person-circle'} me-1"></i>${user.name} </div> </div> </div> <div class="ranking-score">${user.score.toLocaleString('vi-VN')} <small>pts</small></div> </div> `).join(''); }
+                let combinedDocs = [...realDocsSample, ...fakeDocs];
+                // Loại bỏ doc trùng ID nếu có từ danh sách gốc
+                if(sharedDocData && sharedDocData.id) { // Thêm kiểm tra sharedDocData.id
+                    combinedDocs = combinedDocs.filter(doc => String(doc.id) !== String(sharedDocData.id)); // So sánh chuỗi để chắc chắn
+                }
+
+                let shuffledDocs = combinedDocs.sort(() => 0.5 - Math.random());
+
+                let ratedDocs = shuffledDocs.map(doc => ({
+                     id: doc.id, // Đảm bảo ID được giữ lại
+                     name: doc.name || "Unknown Document",
+                     category: doc.category || "N/A",
+                     doc_type: doc.doc_type || "file",
+                     rating: getDocRating(),
+                     relevance: getRandomCriteriaScore(),
+                     learnability: getRandomCriteriaScore(),
+                     structure: getRandomCriteriaScore(),
+                     practicality: getRandomCriteriaScore(),
+                     updatedness: getRandomCriteriaScore(),
+                }));
+
+                 // === CHÈN TÀI LIỆU ĐƯỢC SHARE VÀO ĐẦU ===
+                 let finalDocList = ratedDocs;
+                 if (sharedDocData && sharedDocData.id) { // Thêm kiểm tra sharedDocData.id
+                     const sharedDocFullData = {
+                         id: sharedDocData.id,
+                         name: sharedDocData.name || "Unknown Shared Doc",
+                         category: sharedDocData.category || "N/A",
+                         doc_type: sharedDocData.doc_type || "file",
+                         rating: (Math.random() * (5.0 - 4.5) + 4.5).toFixed(1),
+                         relevance: Math.floor(Math.random() * (99 - 90 + 1)) + 90,
+                         learnability: Math.floor(Math.random() * (99 - 88 + 1)) + 88,
+                         structure: Math.floor(Math.random() * (99 - 85 + 1)) + 85,
+                         practicality: Math.floor(Math.random() * (99 - 80 + 1)) + 80,
+                         updatedness: Math.floor(Math.random() * (99 - 80 + 1)) + 80,
+                         isSharedHighlight: true
+                     };
+                     finalDocList.unshift(sharedDocFullData);
+                     console.log("Prepended shared doc data:", sharedDocFullData);
+                 } else {
+                     console.log("No valid shared doc data to prepend.");
+                 }
+
+                let top10Docs = finalDocList.slice(0, 10);
+                console.log("Final top 10 docs for display:", top10Docs);
+
+                if (top10Docs.length === 0) {
+                    docRankingList.innerHTML = '<p class="text-center text-muted p-3">Chưa có tài liệu nào trong bảng xếp hạng.</p>';
+                    return;
+                }
+
+                docRankingList.innerHTML = top10Docs.map((doc, index) => {
+                    // Xác định icon
+                    let iconClass = 'bi-file-earmark'; const nameLower = doc.name ? doc.name.toLowerCase() : ''; const type = doc.doc_type ? doc.doc_type.toLowerCase() : ''; if (type === 'pdf') { iconClass = 'bi-file-earmark-pdf text-danger'; } else if (type === 'docx') { iconClass = 'bi-file-earmark-word text-primary'; } else if (type === 'txt') { iconClass = 'bi-file-earmark-text text-secondary'; } else if (type === 'link' || nameLower.startsWith('http')) { iconClass = 'bi-link-45deg text-info'; } else if (type === 'googledrive_link') { iconClass = 'bi-google text-info'; } else if (type === 'image') { iconClass = 'bi-image text-success'; } else if (type === 'video') { iconClass = 'bi-film text-warning'; } else if (type === 'epub' || type === 'mobi' || type === 'djvu' || type === 'file') { iconClass = 'bi-book'; }
+                    // Tên hiển thị
+                    const displayName = doc.name.length > 45 ? doc.name.substring(0, 42) + '...' : doc.name;
+                    // Check nếu là tài liệu thật từ user
+                    const isRealDoc = realDocsSample.some(realDoc => String(realDoc.id) === String(doc.id)); // So sánh chuỗi
+                    const realDocIcon = isRealDoc ? '<i class="bi bi-cloud-check-fill text-success ms-1" title="Tài liệu của bạn"></i>' : '';
+                    // Sao đánh giá
+                    const starsHTML = createRatingStarsHTML(doc.rating * 2);
+                    // Class highlight
+                    const highlightClass = doc.isSharedHighlight ? 'highlight' : '';
+                    // Icon vừa share
+                    const sharedIcon = doc.isSharedHighlight ? '<i class="bi bi-send-check-fill text-primary ms-1" title="Vừa chia sẻ"></i>' : '';
+                    // Criteria HTML
+                    const criteriaHTML = `
+                        <div class="ranking-criteria mt-1">
+                            <span class="criteria-item" title="Mức độ liên quan mục tiêu"><i class="bi bi-bullseye"></i> Rel: <span class="value">${doc.relevance}%</span></span>
+                            <span class="criteria-item" title="Mức độ dễ học/dễ hiểu"><i class="bi bi-lightbulb"></i> Learn: <span class="value">${doc.learnability}%</span></span>
+                            <span class="criteria-item" title="Cấu trúc mạch lạc"><i class="bi bi-diagram-3"></i> Struct: <span class="value">${doc.structure}%</span></span>
+                            <span class="criteria-item" title="Tính thực tế/áp dụng"><i class="bi bi-tools"></i> Pract: <span class="value">${doc.practicality}%</span></span>
+                            <span class="criteria-item" title="Tính cập nhật"><i class="bi bi-calendar-check"></i> Update: <span class="value">${doc.updatedness}%</span></span>
+                        </div>`;
+
+                    return `
+                     <div class="ranking-item ${highlightClass} p-2 rounded">
+                         <div class="ranking-main-info">
+                             <div class="ranking-info">
+                                 <span class="ranking-rank">#${index + 1}</span>
+                                 <div class="d-flex align-items-center" style="overflow: hidden;">
+                                     <i class="bi ${iconClass} me-1"></i>
+                                     <div class="ranking-name" title="${doc.name}">
+                                         ${displayName} ${realDocIcon} ${sharedIcon}
+                                     </div>
+                                     <div class="ranking-details ms-2">(${doc.category || 'N/A'})</div>
+                                 </div>
+                             </div>
+                             <div class="ranking-score">
+                                 <span class="rating-stars me-1">${starsHTML}</span>
+                                 <span class="score-number text-muted small">(${parseFloat(doc.rating).toFixed(1)})</span>
+                             </div>
+                         </div>
+                         ${criteriaHTML}
+                     </div>`;
+                }).join('');
+            } // Kết thúc generateDocumentRanking
+
+            // === HÀM TẠO RANKING USER (Giữ nguyên) ===
+            function generateUserRanking() { /* ... code generateUserRanking giữ nguyên ... */ if (!userRankingList) return; let usersToRank = fakeUsers.map(name => ({ name: name, score: getUserScore() })); const sharedScore = localStorage.getItem('myTimelineScore'); let myScore = null; if (sharedScore) { myScore = parseInt(sharedScore); if (isNaN(myScore)) { myScore = null; } localStorage.removeItem('myTimelineScore'); } if (myScore !== null) { const existingUserIndex = usersToRank.findIndex(u => u.name === "Bạn"); if (existingUserIndex !== -1) { usersToRank[existingUserIndex].score = myScore; } else { usersToRank.push({ name: "Bạn", score: myScore }); } } let rankedUsers = usersToRank.sort((a, b) => b.score - a.score).slice(0, 10); userRankingList.innerHTML = rankedUsers.map((user, index) => ` <div class="ranking-item"> <div class="ranking-main-info"> <div class="ranking-info"> <span class="ranking-rank">#${index + 1}</span> <div> <div class="ranking-name" style="${user.name === 'Bạn' ? 'color: var(--primary-blue); font-weight: 600;' : ''}"> <i class="bi ${user.name === 'Bạn' ? 'bi-person-check-fill text-primary' : 'bi-person-circle'} me-1"></i>${user.name} </div> </div> </div> <div class="ranking-score">${user.score.toLocaleString('vi-VN')} <small>pts</small></div> </div> </div> `).join(''); }
 
              // Gắn sự kiện và gọi lần đầu
-             if (refreshDocBtn) refreshDocBtn.addEventListener('click', generateDocumentRanking);
-             if (refreshUserBtn) refreshUserBtn.addEventListener('click', generateUserRanking);
+             if (refreshDocBtn) { refreshDocBtn.addEventListener('click', generateDocumentRanking); }
+             if (refreshUserBtn) { refreshUserBtn.addEventListener('click', generateUserRanking); }
+             // Gọi hàm ranking sau khi DOM load
              if (typeof generateDocumentRanking === 'function') { generateDocumentRanking(); }
              if (typeof generateUserRanking === 'function') { generateUserRanking(); }
 
-            // --- Code tự động kích hoạt Tab ---
-            const hash = window.location.hash; if (hash) { const triggerEl = document.querySelector(`#myTab button[id="${hash.substring(1)}"]`); if (triggerEl) { console.log(`Found tab trigger for hash ${hash}:`, triggerEl); try { const tab = new bootstrap.Tab(triggerEl); tab.show(); console.log(`Successfully activated tab: ${hash}`); const tabContent = document.getElementById('myTabContent'); if(tabContent) { tabContent.scrollIntoView({ behavior: 'smooth', block: 'start' }); } } catch (e) { console.error(`Error showing tab ${hash}:`, e); } } else { console.warn(`Could not find tab trigger for hash: ${hash}`); } }
-
-        });
+        }); // Kết thúc DOMContentLoaded
     </script>
     </body>
 </html>

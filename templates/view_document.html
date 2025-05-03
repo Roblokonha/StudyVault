@@ -15,9 +15,9 @@
         .navbar-brand i { color: var(--primary-blue); }
         .nav-link { color: #495057 !important; font-weight: 500; }
         .nav-link.active { color: var(--primary-blue) !important; font-weight: 600;}
-        .card { border-radius: var(--card-border-radius); border: none; box-shadow: var(--card-shadow); margin-bottom: 1.5rem; background-color: var(--white-bg); border-top: 4px solid var(--primary-blue); /* <<< Thêm border top màu xanh */}
+        .card { border-radius: var(--card-border-radius); border: none; box-shadow: var(--card-shadow); margin-bottom: 1.5rem; background-color: var(--white-bg); border-top: 4px solid var(--primary-blue); }
         .card-header { background-color: transparent; border-bottom: 1px solid #f1f3f5; font-weight: 600; padding: 1rem 1.25rem; color: var(--primary-blue); }
-         .card-header i { color: var(--primary-blue) !important; } /* Icon header màu xanh */
+         .card-header i { color: var(--primary-blue) !important; }
         .btn { border-radius: var(--element-border-radius); padding: 0.5rem 1rem; font-weight: 500; }
         .btn-primary { background-color: var(--primary-blue); border-color: var(--primary-blue); }
         .btn-primary:hover { background-color: #0b5ed7; border-color: #0a58ca; }
@@ -31,38 +31,60 @@
         .btn-outline-info:hover { background-color: #0dcaf0; color: white;}
         .btn-outline-secondary { border-color: #ced4da; color: #495057;}
         .btn-outline-secondary:hover { background-color: #e9ecef; color: #343a40;}
-
         .form-control, .form-select { border-radius: var(--element-border-radius); border-color: #dee2e6; }
         .form-control:focus, .form-select:focus { border-color: var(--primary-blue); box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25); }
         .badge { border-radius: 50px; font-weight: 500; padding: 0.35em 0.65em; }
-        h1 { margin-bottom: 1.5rem !important; font-weight: 600; /* Giữ màu mặc định */ }
-        .list-group-item { border-color: #f1f3f5; padding: 0.8rem 1.25rem; /* Điều chỉnh padding list */ }
+        h1 { margin-bottom: 1.5rem !important; font-weight: 600; }
+        .list-group-item { border-color: #f1f3f5; padding: 0.8rem 1.25rem; }
         .list-group-item strong { min-width: 120px; display: inline-block; font-weight: 500; color: var(--text-muted); }
-
-        /* --- CSS Trang chi tiết --- */
         .content-preview { background-color: #f8f9fa; border: 1px solid #e9ecef; padding: 1.5rem; border-radius: var(--element-border-radius); max-height: 60vh; overflow-y: auto; white-space: pre-wrap; word-wrap: break-word; font-family: Consolas, 'Courier New', monospace; font-size: 0.9em; line-height: 1.6; margin-top: 1rem;}
         #quizSection { display: none; padding: 1.5rem; background-color: #e9ecef; border-radius: var(--element-border-radius); margin: 1rem;}
         .related-doc-link { display: block; padding: 0.5rem 0.75rem; text-decoration: none; color: var(--primary-blue); border-radius: var(--element-border-radius); margin-bottom: 0.25rem;}
         .related-doc-link:hover { background-color: #eef2f7; }
         .summary-preview { background-color: #eef2f7; border-left: 4px solid var(--info-border); padding: 1rem; font-style: italic; color: #555; border-radius: var(--element-border-radius); }
-        .alert { border-radius: var(--element-border-radius); } /* Bo góc cho alert */
+        .alert { border-radius: var(--element-border-radius); }
         blockquote { background-color: #e9ecef; padding: 0.5rem 1rem; border-left: 3px solid #adb5bd; border-radius: var(--element-border-radius); }
      </style>
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-white mb-4 sticky-top">
-         <div class="container"> <a class="navbar-brand fw-bold" href="{{ url_for('index') }}"><i class="bi bi-book-half text-primary"></i> StudyVault</a> <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"><span class="navbar-toggler-icon"></span></button> <div class="collapse navbar-collapse" id="navbarNav"> <ul class="navbar-nav ms-auto"> <li class="nav-item"><a class="nav-link" href="{{ url_for('index') }}">Dashboard</a></li> <li class="nav-item"><a class="nav-link" href="{{ url_for('upload_file') }}">Tải lên</a></li> <li class="nav-item"><a class="nav-link" href="{{ url_for('study_timeline') }}">Timeline</a></li> <li class="nav-item"><a class="nav-link" href="{{ url_for('lazy_market') }}">LazyMarket & Cộng đồng</a></li> </ul> </div> </div>
+         <div class="container"> <a class="navbar-brand fw-bold d-flex align-items-center" href="{{ url_for('index') }}">
+            <img src="{{ url_for('static', filename='img/logo.png') }}" alt="StudyVault Logo" height="30" class="d-inline-block align-text-top me-2">
+            StudyVault
+        </a>
+         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"><span class="navbar-toggler-icon"></span></button> <div class="collapse navbar-collapse" id="navbarNav"> <ul class="navbar-nav ms-auto"> <li class="nav-item"><a class="nav-link" href="{{ url_for('index') }}">Dashboard</a></li> <li class="nav-item"><a class="nav-link" href="{{ url_for('upload_file') }}">Tải lên</a></li> <li class="nav-item"><a class="nav-link" href="{{ url_for('study_timeline') }}">Timeline</a></li>
+                     <li class="nav-item"><a class="nav-link" href="{{ url_for('lazy_market') }}">Chia sẻ tài liệu & BXH</a></li>
+                 </ul> </div> </div>
     </nav>
-
     <div class="container mt-4">
-        {% with messages = get_flashed_messages(with_categories=true) %} {% if messages %} {% for category, message in messages %} <div class="alert alert-{{ category if category in ['success', 'danger', 'warning', 'info'] else 'info' }} alert-dismissible fade show rounded-pill" role="alert"> {{ message }} <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button> </div> {% endfor %} {% endif %} {% endwith %}
-
-         <h1 class="mb-3 d-flex align-items-center">
-            {% set icon_class = 'bi-file-earmark' %} {% if doc.doc_type == 'pdf' %}{% set icon_class = 'bi-file-earmark-pdf text-danger' %} {% elif doc.doc_type == 'link' %}{% set icon_class = 'bi-link-45deg text-primary' %} {% elif doc.doc_type == 'image' %}{% set icon_class = 'bi-image text-success' %} {% elif doc.doc_type == 'video' %}{% set icon_class = 'bi-film text-warning' %} {% elif doc.doc_type == 'googledrive_link' %}{% set icon_class = 'bi-google text-info' %} {% elif doc.doc_type == 'docx' %}{% set icon_class = 'bi-file-earmark-word text-primary' %} {% elif doc.doc_type == 'txt' %}{% set icon_class = 'bi-file-earmark-text text-secondary' %} {% endif %}
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                <div class="alert alert-{{ category if category in ['success', 'danger', 'warning', 'info'] else 'info' }} alert-dismissible fade show rounded-pill" role="alert">
+                    {{ message }} <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        <h1 class="mb-3 d-flex align-items-center">
+            {% set icon_class = 'bi-file-earmark' %}
+            {% if doc.doc_type == 'pdf' %}{% set icon_class = 'bi-file-earmark-pdf text-danger' %}
+            {% elif doc.doc_type == 'link' %}{% set icon_class = 'bi-link-45deg text-primary' %}
+            {% elif doc.doc_type == 'image' %}{% set icon_class = 'bi-image text-success' %}
+            {% elif doc.doc_type == 'video' %}{% set icon_class = 'bi-film text-warning' %}
+            {% elif doc.doc_type == 'googledrive_link' %}{% set icon_class = 'bi-google text-info' %}
+            {% elif doc.doc_type == 'docx' %}{% set icon_class = 'bi-file-earmark-word text-primary' %}
+            {% elif doc.doc_type == 'txt' %}{% set icon_class = 'bi-file-earmark-text text-secondary' %}
+            {% endif %}
             <i class="bi {{ icon_class }} me-2 fs-2"></i>
-            <span style="word-break: break-all;"> {% if doc.doc_type in ['link', 'googledrive_link'] %} <a href="{{ doc.filepath }}" target="_blank" rel="noopener noreferrer" class="text-decoration-none" title="Mở link trong tab mới">{{ doc.filepath | truncate(80)}}</a> {% else %} {{ doc.filename | truncate(80) }} {% endif %} </span>
+            <span style="word-break: break-all;">
+                {% if doc.doc_type in ['link', 'googledrive_link'] %}
+                    <a href="{{ doc.filepath }}" target="_blank" rel="noopener noreferrer" class="text-decoration-none" title="Mở link trong tab mới">{{ doc.filepath | truncate(80)}}</a>
+                {% else %}
+                    {{ doc.filename | truncate(80) }}
+                {% endif %}
+            </span>
         </h1>
-
         <div class="row">
             <div class="col-lg-8">
 
@@ -73,7 +95,14 @@
                         <button id="quizMeBtn" class="btn btn-sm btn-outline-success rounded-pill"><i class="bi bi-question-circle"></i> Quiz Me (Demo)</button>
                         {% endif %}
                      </div>
-                     <div id="quizSection" class="m-3"> <h6 class="mb-3">Ôn tập nhanh (Demo)</h6> <p>Dựa trên tóm tắt bạn đã viết:</p> <blockquote class="blockquote"> <p class="mb-0 small" id="quizSummary"></p> </blockquote> <div class="mb-3 mt-3"> <label for="quizAnswerInput" class="form-label" id="quizQuestionLabel"></label> <input type="text" class="form-control form-control-sm" id="quizAnswerInput" placeholder="Nhập câu trả lời..."> </div> <button id="checkQuizAnswerBtn" class="btn btn-sm btn-primary">Kiểm tra</button> <button id="closeQuizBtn" class="btn btn-sm btn-secondary ms-1">Đóng Quiz</button> <div id="quizFeedback" class="mt-2 small"></div> </div>
+                     <div id="quizSection" class="m-3" style="display: none;"> <h6 class="mb-3">Ôn tập nhanh (Demo)</h6>
+                         <p>Dựa trên tóm tắt bạn đã viết:</p>
+                         <blockquote class="blockquote"> <p class="mb-0 small" id="quizSummary"></p> </blockquote>
+                         <div class="mb-3 mt-3"> <label for="quizAnswerInput" class="form-label" id="quizQuestionLabel"></label> <input type="text" class="form-control form-control-sm" id="quizAnswerInput" placeholder="Nhập câu trả lời..."> </div>
+                         <button id="checkQuizAnswerBtn" class="btn btn-sm btn-primary">Kiểm tra</button>
+                         <button id="closeQuizBtn" class="btn btn-sm btn-secondary ms-1">Đóng Quiz</button>
+                         <div id="quizFeedback" class="mt-2 small"></div>
+                     </div>
                      <ul class="list-group list-group-flush">
                         <li class="list-group-item"><strong>Danh mục:</strong> <span class="badge bg-info-subtle text-info-emphasis border border-info-subtle rounded-pill">{{ doc.category | default('N/A', true) }}</span></li>
                         <li class="list-group-item"><strong>Keywords:</strong> {{ doc.keywords if doc.keywords else 'N/A' }}</li>
@@ -82,30 +111,94 @@
                         {% if doc.doc_type not in ['link', 'googledrive_link'] %}
                         <li class="list-group-item"> <strong>Tải xuống:</strong> <a href="{{ url_for('download_file', document_id=doc.id) }}" class="btn btn-sm btn-success"><i class="bi bi-download"></i> Tải file gốc</a> </li>
                         {% endif %}
-                         <li class="list-group-item"> <strong>Gợi ý Job (Demo):</strong> <a href="{{ url_for('lazy_market', suggest_job='infographic', doc_id=doc.id) }}" class="btn btn-sm btn-outline-info" title="Mô phỏng gửi job làm infographic"><i class="bi bi-send-check-fill"></i> Infographic?</a> <a href="{{ url_for('lazy_market', suggest_job='summary', doc_id=doc.id) }}" class="btn btn-sm btn-outline-secondary ms-1" title="Mô phỏng gửi job tóm tắt"><i class="bi bi-send-check-fill"></i> Tóm tắt?</a> {% if doc.doc_type == 'video' %} <a href="{{ url_for('lazy_market', suggest_job='full_analysis', doc_id=doc.id) }}" class="btn btn-sm btn-outline-danger ms-1" title="Mô phỏng yêu cầu phân tích video đầy đủ (trả phí)"><i class="bi bi-currency-dollar"></i> Phân tích Full Video?</a> {% endif %} </li>
+                        <li class="list-group-item">
+                            <strong>Chia sẻ:</strong>
+                            <button type="button"
+                                    class="btn btn-sm btn-outline-success share-doc-btn"
+                                    title="Chia sẻ lên BXH (Demo)"
+                                    data-doc-id="{{ doc.id }}"
+                                    data-doc-filename="{{ doc.filename }}"
+                                    data-doc-category="{{ doc.category | default('N/A', true) }}"
+                                    data-doc-type="{{ doc.doc_type }}">
+                                <i class="bi bi-share-fill"></i> Chia sẻ lên Cộng đồng (Demo)
+                            </button>
+                        </li>
+                         <li class="list-group-item">
+                            <strong>Gợi ý Job (Demo):</strong>
+                            <a href="{{ url_for('lazy_market', suggest_job='infographic', doc_id=doc.id) }}" class="btn btn-sm btn-outline-info" title="Mô phỏng gửi job làm infographic"><i class="bi bi-send-check-fill"></i> Infographic?</a>
+                            <a href="{{ url_for('lazy_market', suggest_job='summary', doc_id=doc.id) }}" class="btn btn-sm btn-outline-secondary ms-1" title="Mô phỏng gửi job tóm tắt"><i class="bi bi-send-check-fill"></i> Tóm tắt?</a>
+                            {% if doc.doc_type == 'video' %} <a href="{{ url_for('lazy_market', suggest_job='full_analysis', doc_id=doc.id) }}" class="btn btn-sm btn-outline-danger ms-1" title="Mô phỏng yêu cầu phân tích video đầy đủ (trả phí)"><i class="bi bi-currency-dollar"></i> Phân tích Full Video?</a> {% endif %}
+                         </li>
                     </ul>
                 </div>
-
-                 <div class="card">
+                <div class="card">
                     <div class="card-header"><i class="bi bi-pencil-square me-2"></i>Bổ sung thông tin & Ngữ cảnh</div>
-                    <div class="card-body"> <form id="contextForm" method="POST" action="{{ url_for('view_document', document_id=doc.id) }}"> <input type="hidden" name="form_marker" value="update_context"> <div class="mb-3"> <label for="engagement_level" class="form-label">Mức độ bạn muốn tìm hiểu?</label> <select class="form-select" id="engagement_level" name="engagement_level"> <option value="" {% if not doc.engagement_level %}selected{% endif %}>-- Chọn mức độ --</option> <option value="Hiểu qua" {% if doc.engagement_level == 'Hiểu qua' %}selected{% endif %}>Hiểu qua (Skim)</option> <option value="Học sâu" {% if doc.engagement_level == 'Học sâu' %}selected{% endif %}>Học sâu (Deep dive)</option> <option value="Tham khảo" {% if doc.engagement_level == 'Tham khảo' %}selected{% endif %}>Chỉ tham khảo (Reference)</option> <option value="Áp dụng ngay" {% if doc.engagement_level == 'Áp dụng ngay' %}selected{% endif %}>Áp dụng ngay (Apply)</option> </select> </div> <div class="mb-3"> <label for="context_event" class="form-label">Gắn với sự kiện/mục tiêu?</label> <input type="text" class="form-control" id="context_event" name="context_event" value="{{ doc.context_event | default('', true) }}" placeholder="Ví dụ: Project cá nhân, Cuộc thi ABC..."> </div> <div class="mb-3"> <label for="custom_note" class="form-label">Ghi chú thêm:</label> <textarea class="form-control" id="custom_note" name="custom_note" rows="3" placeholder="Nhập ghi chú cá nhân...">{{ doc.custom_note | default('', true) }}</textarea> </div> <button type="submit" class="btn btn-secondary"><i class="bi bi-save"></i> Lưu thông tin</button> </form> </div>
+                    <div class="card-body">
+                        <form id="contextForm" method="POST" action="{{ url_for('view_document', document_id=doc.id) }}">
+                            <input type="hidden" name="form_marker" value="update_context">
+                            <div class="mb-3">
+                                <label for="engagement_level" class="form-label">Mức độ bạn muốn tìm hiểu?</label>
+                                <select class="form-select" id="engagement_level" name="engagement_level">...</select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="context_event" class="form-label">Gắn với sự kiện/mục tiêu?</label>
+                                <input type="text" class="form-control" id="context_event" name="context_event" value="{{ doc.context_event | default('', true) }}" placeholder="...">
+                            </div>
+                            <div class="mb-3">
+                                <label for="learning_goal" class="form-label">Mục tiêu học tập:</label>
+                                <input type="text" class="form-control" id="learning_goal" name="learning_goal" value="{{ doc.learning_goal or '' }}" placeholder="...">
+                            </div>
+                            <div class="mb-3">
+                                <label for="deadline" class="form-label">Thời hạn hoàn thành:</label>
+                                <input type="date" class="form-control" id="deadline" name="deadline" value="{{ doc.deadline.strftime('%Y-%m-%d') if doc.deadline else '' }}">
+                            </div>
+                            <div class="mb-3">
+                                <label for="custom_note" class="form-label">Ghi chú thêm:</label>
+                                <textarea class="form-control" id="custom_note" name="custom_note" rows="3" placeholder="...">{{ doc.custom_note | default('', true) }}</textarea>
+                            </div>
+                            <button type="submit" class="btn btn-secondary"><i class="bi bi-save"></i> Lưu thông tin</button>
+                        </form>
+                    </div>
                 </div>
-
-                 <div class="card">
+                <div class="card">
                     <div class="card-header"><i class="bi bi-lightbulb me-2"></i>Tóm tắt & Phân loại AI (Demo)</div>
-                    <div class="card-body"> <p class="card-text small text-muted">Hãy tóm tắt kiến thức chính trong một dòng. AI (mô phỏng) sẽ cố gắng đoán lĩnh vực.</p> <form id="summaryForm" method="POST" action="{{ url_for('view_document', document_id=doc.id) }}"> <input type="hidden" name="form_marker" value="submit_summary"> <div class="input-group"> <input type="text" class="form-control" name="user_summary" placeholder="Nhập tóm tắt của bạn..." required value="{{ doc.user_summary | default('', true) }}"> <button class="btn btn-primary" type="submit" {% if doc.user_summary %}disabled{% endif %}><i class="bi bi-magic"></i> {{ 'Đã gửi' if doc.user_summary else 'Gửi (Demo)' }}</button> </div> </form> <p class="mt-2 small"><em>AI gợi ý chủ đề: {{ doc.ai_topic_label | default('Chưa có', true) }}</em></p> </div>
+                    <div class="card-body">
+                         <p class="card-text small text-muted">Hãy tóm tắt kiến thức chính trong một dòng. AI (mô phỏng) sẽ cố gắng đoán lĩnh vực.</p>
+                         <form id="summaryForm" method="POST" action="{{ url_for('view_document', document_id=doc.id) }}">
+                             <input type="hidden" name="form_marker" value="submit_summary">
+                             <div class="input-group">
+                                 <input type="text" class="form-control" name="user_summary" placeholder="Nhập tóm tắt của bạn..." required value="{{ doc.user_summary | default('', true) }}">
+                                 <button class="btn btn-primary" type="submit" {% if doc.user_summary %}disabled{% endif %}>
+                                     <i class="bi bi-magic"></i> {{ 'Đã gửi' if doc.user_summary else 'Gửi (Demo)' }}
+                                 </button>
+                             </div>
+                         </form>
+                         <p class="mt-2 small"><em>AI gợi ý chủ đề: {{ doc.ai_topic_label | default('Chưa có', true) }}</em></p>
+                     </div>
                  </div>
-
-                 {% if doc.doc_type == 'link' %} <div class="alert alert-primary d-flex align-items-center rounded-3" role="alert"> <i class="bi bi-link-45deg fs-4 me-3"></i> <div> Đây là một liên kết web. Nhấn vào đây để mở: <a href="{{ doc.filepath }}" target="_blank" rel="noopener noreferrer" class="alert-link">{{ doc.filepath }}</a> </div> </div>
-                {% elif doc.doc_type == 'googledrive_link' %} <div class="alert alert-info d-flex align-items-center rounded-3" role="alert"> <i class="bi bi-google fs-4 me-3"></i> <div> Đây là Link Google Drive. Nhấn vào đây để mở: <a href="{{ doc.filepath }}" target="_blank" rel="noopener noreferrer" class="alert-link">{{ doc.filepath }}</a> </div> </div>
-                {% elif doc.doc_type == 'image' %} <div class="card border-0"><div class="card-header bg-light"><i class="bi bi-image me-2"></i>Xem trước Ảnh</div><div class="card-body text-center"><img src="{{ url_for('download_file', document_id=doc.id) }}" class="img-fluid rounded" alt="{{ doc.filename }}" style="max-height: 70vh; border-radius: var(--element-border-radius);"></div></div>
-                {% elif doc.doc_type == 'video' %} <div class="card border-0"><div class="card-header bg-light"><i class="bi bi-film me-2"></i>Thông tin Video</div><div class="card-body"><div class="alert alert-warning rounded-3"><i class="bi bi-exclamation-triangle-fill"></i> [Đây là file Video]<br><strong>Mô phỏng:</strong> Chỉ lưu trữ file, chưa hỗ trợ xem trực tiếp hoặc phân tích.</div></div></div>
-                {% else %}
-                 <div class="card"> <div class="card-header"><i class="bi bi-file-text me-2"></i>Nội dung xem trước (Trích xuất)</div> <div class="card-body"> {% if extracted_content and '[Lỗi' not in extracted_content and '[Không trích xuất được' not in extracted_content %} <pre class="content-preview"><code>{{ extracted_content }}</code></pre> {% elif extracted_content %} <div class="alert alert-warning rounded-3">{{ extracted_content }}</div> {% else %} <p class="text-center text-muted p-4">Không có nội dung văn bản để xem trước.</p> {% endif %} </div> </div>
-                {% endif %}
-            </div>
-
-            <div class="col-lg-4">
+                 {% if doc.doc_type == 'link' %}
+                     <div class="alert alert-primary d-flex align-items-center rounded-3" role="alert"> <i class="bi bi-link-45deg fs-4 me-3"></i> <div> Đây là một liên kết web. Nhấn vào đây để mở: <a href="{{ doc.filepath }}" target="_blank" rel="noopener noreferrer" class="alert-link">{{ doc.filepath }}</a> </div> </div>
+                 {% elif doc.doc_type == 'googledrive_link' %}
+                     <div class="alert alert-info d-flex align-items-center rounded-3" role="alert"> <i class="bi bi-google fs-4 me-3"></i> <div> Đây là Link Google Drive. Nhấn vào đây để mở: <a href="{{ doc.filepath }}" target="_blank" rel="noopener noreferrer" class="alert-link">{{ doc.filepath }}</a> </div> </div>
+                 {% elif doc.doc_type == 'image' %}
+                     <div class="card border-0"><div class="card-header bg-light"><i class="bi bi-image me-2"></i>Xem trước Ảnh</div><div class="card-body text-center"><img src="{{ url_for('download_file', document_id=doc.id) }}" class="img-fluid rounded" alt="{{ doc.filename }}" style="max-height: 70vh; border-radius: var(--element-border-radius);"></div></div>
+                 {% elif doc.doc_type == 'video' %}
+                     <div class="card border-0"><div class="card-header bg-light"><i class="bi bi-film me-2"></i>Thông tin Video</div><div class="card-body"><div class="alert alert-warning rounded-3"><i class="bi bi-exclamation-triangle-fill"></i> [Đây là file Video]<br><strong>Mô phỏng:</strong> Chỉ lưu trữ file, chưa hỗ trợ xem trực tiếp hoặc phân tích.</div></div></div>
+                 {% else %}
+                     <div class="card">
+                         <div class="card-header"><i class="bi bi-file-text me-2"></i>Nội dung xem trước (Trích xuất)</div>
+                         <div class="card-body">
+                             {% if extracted_content and '[Lỗi' not in extracted_content and '[Không trích xuất được' not in extracted_content %}
+                                 <pre class="content-preview"><code>{{ extracted_content }}</code></pre>
+                             {% elif extracted_content %}
+                                 <div class="alert alert-warning rounded-3">{{ extracted_content }}</div>
+                             {% else %}
+                                 <p class="text-center text-muted p-4">Không có nội dung văn bản để xem trước.</p>
+                             {% endif %}
+                         </div>
+                     </div>
+                     {% endif %}
+                 </div> <div class="col-lg-4">
                  <div class="card">
                      <div class="card-header"><i class="bi bi-card-text me-2"></i>Tóm tắt Nhanh (Demo)</div>
                      <div class="card-body">
@@ -124,7 +217,6 @@
                          {% endif %}
                      </div>
                  </div>
-
                  <div class="card">
                      <div class="card-header"><i class="bi bi-diagram-3-fill me-2"></i>Tài liệu liên quan (Cùng danh mục)</div>
                      <div class="card-body">
@@ -145,15 +237,70 @@
                         {% endif %}
                      </div>
                  </div>
+                 </div> </div> <div class="mt-4 mb-5 text-center">
+             <a href="{{ url_for('index') }}" class="btn btn-secondary">
+                 <i class="bi bi-arrow-left-circle"></i> Quay lại Dashboard
+             </a>
+        </div>
 
-            </div> </div> <div class="mt-4 mb-5 text-center"> <a href="{{ url_for('index') }}" class="btn btn-secondary"><i class="bi bi-arrow-left-circle"></i> Quay lại Dashboard</a> </div>
     </div> <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         // --- Script cho Quiz Me ---
-        const quizMeBtn = document.getElementById('quizMeBtn'); const quizSection = document.getElementById('quizSection'); const quizSummaryEl = document.getElementById('quizSummary'); const quizQuestionLabel = document.getElementById('quizQuestionLabel'); const quizAnswerInput = document.getElementById('quizAnswerInput'); const checkQuizAnswerBtn = document.getElementById('checkQuizAnswerBtn'); const closeQuizBtn = document.getElementById('closeQuizBtn'); const quizFeedbackEl = document.getElementById('quizFeedback'); const docUserSummary = {{ doc.user_summary | tojson | safe }}; const docFilename = {{ doc.filename | tojson | safe }}; const docCategory = {{ doc.category | tojson | safe }}; const docType = {{ doc.doc_type | tojson | safe }}; let quizCorrectAnswer = ''; let quizQuestionType = '';
-        if (quizMeBtn && quizSection && docUserSummary) { quizMeBtn.addEventListener('click', function() { quizSection.style.display = 'block'; quizMeBtn.style.display = 'none'; quizSummaryEl.textContent = `"${docUserSummary}"`; quizAnswerInput.value = ''; quizFeedbackEl.textContent = ''; quizFeedbackEl.className = ''; if (Math.random() < 0.5 && docType !== 'link' && docType !== 'googledrive_link') { quizQuestionLabel.textContent = 'Tài liệu này tên là gì?'; quizCorrectAnswer = docFilename.toLowerCase(); quizQuestionType = 'filename'; quizAnswerInput.placeholder = 'Nhập tên file...'; } else { quizQuestionLabel.textContent = 'Tài liệu này thuộc danh mục nào?'; quizCorrectAnswer = docCategory ? docCategory.toLowerCase() : ''; quizQuestionType = 'category'; quizAnswerInput.placeholder = 'Nhập tên danh mục...'; } }); }
+        const quizMeBtn = document.getElementById('quizMeBtn'); const quizSection = document.getElementById('quizSection'); const quizSummaryEl = document.getElementById('quizSummary'); const quizQuestionLabel = document.getElementById('quizQuestionLabel'); const quizAnswerInput = document.getElementById('quizAnswerInput'); const checkQuizAnswerBtn = document.getElementById('checkQuizAnswerBtn'); const closeQuizBtn = document.getElementById('closeQuizBtn'); const quizFeedbackEl = document.getElementById('quizFeedback');
+        // Truyền dữ liệu từ Flask vào JS một cách an toàn
+        const docUserSummary = {{ doc.user_summary | tojson | safe }};
+        const docFilename = {{ doc.filename | tojson | safe }};
+        const docCategory = {{ doc.category | tojson | safe }};
+        const docType = {{ doc.doc_type | tojson | safe }};
+        let quizCorrectAnswer = '';
+        let quizQuestionType = '';
+
+        if (quizMeBtn && quizSection && docUserSummary) {
+            quizMeBtn.addEventListener('click', function() {
+                quizSection.style.display = 'block';
+                quizMeBtn.style.display = 'none';
+                quizSummaryEl.textContent = `"${docUserSummary}"`;
+                quizAnswerInput.value = '';
+                quizFeedbackEl.textContent = '';
+                quizFeedbackEl.className = '';
+                if (Math.random() < 0.5 && docType !== 'link' && docType !== 'googledrive_link') {
+                    quizQuestionLabel.textContent = 'Tài liệu này tên là gì?';
+                    quizCorrectAnswer = docFilename.toLowerCase();
+                    quizQuestionType = 'filename';
+                    quizAnswerInput.placeholder = 'Nhập tên file...';
+                } else {
+                    quizQuestionLabel.textContent = 'Tài liệu này thuộc danh mục nào?';
+                    quizCorrectAnswer = docCategory ? docCategory.toLowerCase() : '';
+                    quizQuestionType = 'category';
+                    quizAnswerInput.placeholder = 'Nhập tên danh mục...';
+                }
+            });
+         }
         if (closeQuizBtn && quizSection && quizMeBtn) { closeQuizBtn.addEventListener('click', function() { quizSection.style.display = 'none'; quizMeBtn.style.display = 'inline-block'; }); }
         if (checkQuizAnswerBtn) { checkQuizAnswerBtn.addEventListener('click', function() { const userAnswer = quizAnswerInput.value.trim().toLowerCase(); if (!userAnswer) return; let isCorrect = false; if (quizCorrectAnswer && userAnswer === quizCorrectAnswer) { isCorrect = true; } if (isCorrect) { quizFeedbackEl.textContent = 'Chính xác! Bạn nhớ tốt đấy!'; quizFeedbackEl.className = 'alert alert-success p-2 small'; } else { quizFeedbackEl.textContent = `Sai rồi. Đáp án đúng là: ${quizCorrectAnswer}`; quizFeedbackEl.className = 'alert alert-danger p-2 small'; } }); }
+
+        // --- Script cho Nút Share (dùng localStorage) ---
+        document.addEventListener('click', function(event) {
+            const shareButton = event.target.closest('.share-doc-btn');
+            if (shareButton) {
+                event.preventDefault();
+                const docData = {
+                    id: shareButton.dataset.docId,
+                    name: shareButton.dataset.docFilename,
+                    category: shareButton.dataset.docCategory,
+                    doc_type: shareButton.dataset.docType
+                };
+                console.log("Sharing doc:", docData);
+                try {
+                    localStorage.setItem('sharedDocForRanking', JSON.stringify(docData));
+                    // Chuyển hướng - sử dụng url tuyệt đối nếu url_for không hoạt động trong JS thuần
+                    window.location.href = "/lazymarket#ranking-tab"; // Đã sửa thành URL tuyệt đối
+                } catch (e) {
+                    console.error("Lỗi khi lưu vào localStorage hoặc chuyển hướng:", e);
+                    alert("Đã có lỗi xảy ra khi thực hiện chia sẻ (demo).");
+                }
+            }
+        });
     </script>
 </body>
 </html>

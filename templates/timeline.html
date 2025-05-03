@@ -14,6 +14,7 @@
         .navbar-brand { color: var(--text-dark) !important; font-weight: 600; }
         .navbar-brand i { color: var(--primary-blue); }
         .nav-link { color: #495057 !important; font-weight: 500; }
+        /* Đảm bảo link Timeline được active đúng */
         .nav-link.active { color: var(--primary-blue) !important; font-weight: 600;}
         .card { border-radius: var(--card-border-radius); border: none; box-shadow: var(--card-shadow); margin-bottom: 1.5rem; background-color: var(--white-bg); border-top: 4px solid var(--primary-blue); }
         .card-header { background-color: transparent; border-bottom: 1px solid #f1f3f5; font-weight: 600; padding: 1rem 1.25rem; color: var(--primary-blue); }
@@ -31,120 +32,188 @@
          h1 i { color: var(--primary-blue) !important; }
         .list-group-item { border-color: #f1f3f5; padding-top: 0.75rem; padding-bottom: 0.75rem;}
 
-        /* --- CSS Lịch Tuần (Sử dụng Background Xanh Lá - Tăng Cường CSS) --- */
+        /* --- CSS Lịch Tuần --- */
         .timeline-table-container { background-color: var(--white-bg); border-radius: var(--card-border-radius); padding: 15px; box-shadow: var(--card-shadow); }
         .timeline-table { table-layout: fixed; border-collapse: separate; border-spacing: 5px; width: 100%; }
         .timeline-table th { background-color: #e9ecef; color: #495057; border: none; font-weight: 600; text-align: center; height: auto; padding: 0.5rem 0.25rem; font-size: 0.8em; border-radius: var(--element-border-radius); text-transform: uppercase; }
-        .timeline-table td {
-            border: 1px solid #dee2e6 !important; /* Viền rõ hơn */
-            min-height: 100px;
-            height: auto !important; /* Bỏ height cố định, để nội dung quyết định */
-            text-align: left;
-            vertical-align: top;
-            padding: 8px !important;
-            font-size: 0.85em !important;
-            position: relative;
-            border-radius: var(--element-border-radius) !important;
-            word-wrap: break-word !important;
-            overflow: hidden !important;
-            background-color: #f8f9fa; /* Nền mặc định */
-            transition: background-color 0.2s ease-in-out;
-            border-left: none !important; /* Bỏ border left */
-        }
-
-        /* --- Màu sắc Hoạt động và Chữ (Xanh Lá - Tăng Cường CSS) --- */
+        .timeline-table td { border: 1px solid #dee2e6 !important; min-height: 100px; height: auto !important; text-align: left; vertical-align: top; padding: 8px !important; font-size: 0.85em !important; position: relative; border-radius: var(--element-border-radius) !important; word-wrap: break-word !important; overflow: hidden !important; background-color: #f8f9fa; transition: background-color 0.2s ease-in-out; border-left: none !important; }
         .timeline-table td .day-number { color: #212529 !important; font-weight: bold !important; display: block !important; margin-bottom: 4px !important; text-align: right !important; font-size: 1em !important; }
         .timeline-table td .activity-content { font-size: 0.9em !important; line-height: 1.4 !important; color: #212529 !important; }
         .timeline-table td .activity-content .badge { font-size: 0.85em !important; padding: 0.25em 0.4em !important; margin-bottom: 3px !important; }
-
         .timeline-table td.activity-0 { background-color: #f8f9fa !important; }
         .timeline-table td.activity-0 .day-number, .timeline-table td.activity-0 .activity-content { color: #212529 !important; }
         .timeline-table td.activity-0 .activity-content.text-muted { color: #6c757d !important; }
-
         .timeline-table td.activity-1 { background-color: var(--green-act-1) !important; }
-        .timeline-table td.activity-1 .day-number, .timeline-table td.activity-1 .activity-content { color: #333 !important; } /* Chữ đậm hơn */
+        .timeline-table td.activity-1 .day-number, .timeline-table td.activity-1 .activity-content { color: #333 !important; }
         .timeline-table td.activity-1 .badge { color: #155724 !important; background-color: rgba(255, 255, 255, 0.7) !important; border-color: #c3e6cb !important; }
-
         .timeline-table td.activity-2 { background-color: var(--green-act-2) !important; }
-        .timeline-table td.activity-2 .day-number, .timeline-table td.activity-2 .activity-content { color: #111 !important; } /* Chữ đen hơn */
+        .timeline-table td.activity-2 .day-number, .timeline-table td.activity-2 .activity-content { color: #111 !important; }
         .timeline-table td.activity-2 .badge { color: #155724 !important; background-color: rgba(255, 255, 255, 0.75) !important; border-color: #b1dfbb !important; }
-
         .timeline-table td.activity-3 { background-color: var(--green-act-3) !important; color: white !important; }
         .timeline-table td.activity-3 .day-number, .timeline-table td.activity-3 .activity-content { color: white !important; }
         .timeline-table td.activity-3 .badge { color: #196127 !important; background-color: rgba(255, 255, 255, 0.85) !important; border: none !important;}
-
         .timeline-table td.activity-4 { background-color: var(--green-act-4) !important; color: white !important; }
         .timeline-table td.activity-4 .day-number, .timeline-table td.activity-4 .activity-content { color: white !important; }
         .timeline-table td.activity-4 .badge { color: #196127 !important; background-color: rgba(255, 255, 255, 0.9) !important; border: none !important; }
 
-
-        /* --- CSS Phần còn lại (Stats, AI, Achievements, Monthly) --- */
-        .stat-card .card-body { display: flex; align-items: center; justify-content: space-around; }
+        /* --- CSS Phần còn lại --- */
+        .stat-card .card-body { display: flex; align-items: center; justify-content: space-around; flex-wrap: wrap; gap: 1rem;}
         .stat-icon { font-size: 2rem; margin-bottom: 0.25rem;}
         .stat-value { font-size: 1.75rem; font-weight: 600; }
         .stat-label { font-size: 0.85rem; color: var(--text-muted); }
-        .achievement-badge { padding: 0.4em 0.8em;}
+        .achievement-badge { padding: 0.4em 0.8em; margin: 2px; display: inline-block;}
         #aiMascotSection { background-color: var(--white-bg); border-radius: var(--card-border-radius); padding: 1.5rem; text-align: center; border-top: 4px solid var(--primary-blue); }
-        #mascotIcon { font-size: 3rem; display: block; margin-bottom: 0.5rem; }
-        #mascotMessage { background-color: #e9ecef; border-radius: var(--element-border-radius); padding: 0.8rem 1rem; min-height: 60px; display: flex; align-items: center; justify-content: center; font-style: italic; color: #495057; }
-        #aiMoodSelector label { margin-left: 5px; margin-right: 15px; font-size: 0.9em; }
+        #mascotIcon { font-size: 3rem; display: block; margin-bottom: 0.5rem; transition: transform 0.3s ease-in-out; }
+        #mascotMessage { background-color: #e9ecef; border-radius: var(--element-border-radius); padding: 0.8rem 1rem; min-height: 60px; display: flex; align-items: center; justify-content: center; font-style: italic; color: #495057; transition: background-color 0.3s ease; }
+        #personalitySelector label { margin-left: 5px; margin-right: 15px; font-size: 0.9em; cursor: pointer;}
+        #personalitySelector .form-check-input { cursor: pointer; }
 
-        /* --- CSS Lịch Tháng (Sửa lỗi hiển thị) --- */
+        /* --- CSS Lịch Tháng --- */
         .monthly-heatmap-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 1rem; }
         .month-grid { background-color: var(--white-bg); padding: 10px; border-radius: var(--element-border-radius); border: 1px solid #eee;}
         .month-header { font-weight: 500; margin-bottom: 8px; font-size: 0.9rem; text-align: center; color: var(--primary-blue); }
-        .month-days-header {
-            display: grid !important; /* <<< Ép kiểu hiển thị */
-            grid-template-columns: repeat(7, 1fr) !important; /* <<< Chia 7 cột */
-            text-align: center; font-size: 0.65em; color: var(--text-muted); margin-bottom: 4px; padding: 0 2px !important; /* <<< Reset padding */ width: 100% !important; /* <<< Đảm bảo full width */
-        }
-         .month-days-header > div { /* Style cho từng chữ T2, T3... */
-             padding: 2px 0;
-         }
-        .month-days-grid {
-            display: grid !important; /* <<< Ép kiểu hiển thị */
-            grid-template-columns: repeat(7, 1fr) !important; /* <<< Chia 7 cột */
-            gap: 2px;
-        }
-        .month-day {
-            width: 100%;
-            padding-bottom: 100%; /* Giữ tỷ lệ vuông */
-            position: relative;
-            border-radius: 3px;
-            background-color: #f0f0f0 !important; /* <<< Màu nền ô trống + important */
-            transition: background-color 0.2s ease-in-out;
-            border: none;
-        }
-        /* Màu cho ô tháng - Dùng màu xanh lá */
+        .month-days-header { display: grid !important; grid-template-columns: repeat(7, 1fr) !important; text-align: center; font-size: 0.65em; color: var(--text-muted); margin-bottom: 4px; padding: 0 2px !important; width: 100% !important; }
+         .month-days-header > div { padding: 2px 0; }
+        .month-days-grid { display: grid !important; grid-template-columns: repeat(7, 1fr) !important; gap: 2px; }
+        .month-day { width: 100%; padding-bottom: 100%; position: relative; border-radius: 3px; background-color: #f0f0f0 !important; transition: background-color 0.2s ease-in-out; border: none; }
         .month-day.activity-1 { background-color: var(--green-act-1) !important; }
         .month-day.activity-2 { background-color: var(--green-act-2) !important; }
         .month-day.activity-3 { background-color: var(--green-act-3) !important; }
         .month-day.activity-4 { background-color: var(--green-act-4) !important; }
-
     </style>
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-white mb-4 sticky-top">
-        <div class="container"> <a class="navbar-brand fw-bold" href="{{ url_for('index') }}"><i class="bi bi-book-half text-primary"></i> StudyVault</a> <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"><span class="navbar-toggler-icon"></span></button> <div class="collapse navbar-collapse" id="navbarNav"> <ul class="navbar-nav ms-auto"> <li class="nav-item"><a class="nav-link" href="{{ url_for('index') }}">Dashboard</a></li> <li class="nav-item"><a class="nav-link" href="{{ url_for('upload_file') }}">Tải lên</a></li> <li class="nav-item"><a class="nav-link active" aria-current="page" href="{{ url_for('study_timeline') }}">Timeline</a></li> <li class="nav-item"><a class="nav-link" href="{{ url_for('lazy_market') }}">LazyMarket & Cộng đồng</a></li> </ul> </div> </div>
+        <div class="container"> <a class="navbar-brand fw-bold d-flex align-items-center" href="{{ url_for('index') }}">
+            <img src="{{ url_for('static', filename='img/logo.png') }}" alt="StudyVault Logo" height="30" class="d-inline-block align-text-top me-2">
+            StudyVault
+        </a>
+         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"><span class="navbar-toggler-icon"></span></button> <div class="collapse navbar-collapse" id="navbarNav"> <ul class="navbar-nav ms-auto"> <li class="nav-item"><a class="nav-link" href="{{ url_for('index') }}">Dashboard</a></li> <li class="nav-item"><a class="nav-link" href="{{ url_for('upload_file') }}">Tải lên</a></li>
+                     <li class="nav-item"><a class="nav-link active" aria-current="page" href="{{ url_for('study_timeline') }}">Timeline</a></li>
+                     <li class="nav-item"><a class="nav-link" href="{{ url_for('lazy_market') }}">Chia sẻ tài liệu & BXH</a></li> </ul> </div> </div>
     </nav>
 
     <div class="container mt-4">
         <h1 class="mb-4 fw-bold"><i class="bi bi-calendar-check text-primary"></i> Dòng thời gian & Hiệu suất học tập</h1>
         <div class="row">
             <div class="col-lg-5">
-                 <div class="card" id="aiMascotSection"> <span id="mascotIcon">🦉</span> <div id="mascotMessage" class="alert alert-info">Chào bạn! Cùng xem tiến độ học tập hôm nay nhé!</div> <div class="mt-3" id="aiMoodSelector"> <span class="me-2 small text-muted">Tâm trạng Cú:</span> <div class="form-check form-check-inline"> <input class="form-check-input" type="radio" name="aiMood" id="moodFriendly" value="friendly" checked> <label class="form-check-label" for="moodFriendly">Thân thiện</label> </div> <div class="form-check form-check-inline"> <input class="form-check-input" type="radio" name="aiMood" id="moodStrict" value="strict"> <label class="form-check-label" for="moodStrict">Nghiêm khắc</label> </div> <div class="form-check form-check-inline"> <input class="form-check-input" type="radio" name="aiMood" id="moodSad" value="sad"> <label class="form-check-label" for="moodSad">Ủ rũ</label> </div> </div> </div>
-                 <div class="card stat-card"> <div class="card-header"><i class="bi bi-bar-chart-line-fill"></i> Hiệu suất Tuần Này (Demo)</div> <div class="card-body"> <div class="text-center"> <i class="bi bi-fire stat-icon text-danger"></i> <div class="stat-value">{{ current_streak }}</div> <div class="stat-label">Ngày Streak</div> </div> <div class="text-center"> <i class="bi bi-check2-square stat-icon text-success"></i> <div class="stat-value">{{ docs_viewed_today }}</div> <div class="stat-label">Xem hôm nay</div> </div> <div class="text-center"> <i class="bi bi-clock-history stat-icon text-info"></i> <div class="stat-value">{{ avg_session_minutes }}<small>p</small></div> <div class="stat-label">TB / lần học</div> </div> </div> <div class="card-footer text-muted small"> Tổng tài liệu đã tóm tắt: {{ total_docs_summarized }} </div> </div>
-                 <div class="card"> <div class="card-header"><i class="bi bi-calendar-check-fill"></i> Hàng đợi Ôn tập (Demo)</div> <ul class="list-group list-group-flush"> {% if review_items %} {% for item in review_items %} <li class="list-group-item d-flex justify-content-between align-items-center"> <a href="{{ url_for('view_document', document_id=item.id) if item.id else '#' }}" class="text-decoration-none text-dark" title="{{ item.name }}"><i class="bi bi-file-earmark-text me-2"></i>{{ item.name | truncate(35) }}</a> <span class="badge bg-warning text-dark rounded-pill">{{ item.due }}</span> </li> {% endfor %} {% else %} <li class="list-group-item text-muted">Không có tài liệu nào cần ôn tập ngay.</li> {% endif %} </ul> </div>
-                 <div class="card"> <div class="card-header"><i class="bi bi-award-fill"></i> Thành Tựu Đạt Được (Demo)</div> <div class="card-body"> <div id="achievementsList"> {% for ach in earned_achievements %} <span class="achievement-badge"> <i class="bi {{ ach.icon }}"></i> {{ ach.text }} </span> {% else %} <p class="text-muted">Hãy bắt đầu học để mở khóa thành tựu nhé!</p> {% endfor %} </div> <hr> <button id="shareAchievementsBtn" class="btn btn-primary w-100"> <i class="bi bi-share-fill"></i> Cập nhật Điểm vào BXH </button> </div> </div>
-            </div>
+                 <div class="card" id="aiMascotSection">
+                     <span id="mascotIcon">😊</span>
+                     <div id="mascotMessage" class="alert alert-secondary">Chọn một tính cách để bắt đầu!</div>
+                     <div class="mt-3 text-start" id="personalitySelector">
+                         <span class="me-2 small text-muted d-block mb-2">Chọn tính cách chatbot:</span>
+                         <div class="form-check mb-1">
+                             <input class="form-check-input" type="radio" name="aiPersonality" id="p_cute_lover" value="cute_lover" checked>
+                             <label class="form-check-label" for="p_cute_lover">👧 Người yêu dễ thương</label>
+                         </div>
+                         <div class="form-check mb-1">
+                             <input class="form-check-input" type="radio" name="aiPersonality" id="p_kind_grandparents" value="kind_grandparents">
+                             <label class="form-check-label" for="p_kind_grandparents">👵 Ông bà hiền từ</label>
+                         </div>
+                         <div class="form-check mb-1">
+                            <input class="form-check-input" type="radio" name="aiPersonality" id="p_angry_mom" value="angry_mom">
+                             <label class="form-check-label" for="p_angry_mom">🙎‍♀️ Mẹ giận dữ</label>
+                         </div>
+                          <div class="form-check mb-1">
+                             <input class="form-check-input" type="radio" name="aiPersonality" id="p_quiet_dad" value="quiet_dad">
+                             <label class="form-check-label" for="p_quiet_dad">🧔‍♂️ Bố ít nói</label>
+                         </div>
+                         <div class="form-check mb-1">
+                             <input class="form-check-input" type="radio" name="aiPersonality" id="p_patriarchal_lover" value="patriarchal_lover">
+                             <label class="form-check-label" for="p_patriarchal_lover">🙎‍♂️ Người yêu gia trưởng</label>
+                         </div>
+                     </div>
+                 </div>
 
-            <div class="col-lg-7">
+                 <div class="card mb-4">
+                    <div class="card-header">
+                        <i class="bi bi-calendar3-range me-2"></i>Lộ trình học tập đề xuất (Demo)
+                    </div>
+                    <div class="card-body small">
+                        <p class="text-muted" id="pathway-description">Đang tải lộ trình...</p>
+                        <ul class="list-group list-group-flush" id="suggested-pathway-list">
+                            <li class="list-group-item">Đang tải...</li>
+                        </ul>
+                         <p class="text-center mt-3">
+                            <button type="button" class="btn btn-sm btn-outline-primary" id="change-pathway-btn">
+                                <i class="bi bi-shuffle me-1"></i>Đổi lộ trình học
+                            </button>
+                         </p>
+                    </div>
+                 </div>
+
+                 <div class="card stat-card">
+                     <div class="card-header"><i class="bi bi-bar-chart-line-fill"></i> Hiệu suất Tuần Này (Demo)</div>
+                     <div class="card-body">
+                         <div class="text-center">
+                            <i class="bi bi-fire stat-icon text-danger"></i>
+                            <div class="stat-value">{{ current_streak }}</div>
+                            <div class="stat-label">Ngày Streak</div>
+                         </div>
+                         <div class="text-center">
+                            <i class="bi bi-check2-square stat-icon text-success"></i>
+                            <div class="stat-value">{{ docs_viewed_today }}</div>
+                            <div class="stat-label">Xem hôm nay</div>
+                         </div>
+                         <div class="text-center">
+                            <i class="bi bi-clock-history stat-icon text-info"></i>
+                            <div class="stat-value">{{ avg_session_minutes }}<small>p</small></div>
+                            <div class="stat-label">TB / lần học</div>
+                         </div>
+                         <div class="text-center">
+                            <i class="bi bi-brain stat-icon text-warning"></i>
+                            <div class="stat-value" id="recall-rate-value">--<small>%</small></div>
+                            <div class="stat-label">Tỉ lệ Ghi nhớ (Demo)</div>
+                        </div>
+                     </div>
+                     <div class="card-footer text-muted small"> Tổng tài liệu đã tóm tắt: {{ total_docs_summarized }} </div>
+                 </div>
+
                  <div class="card">
-                    <div class="card-header"><i class="bi bi-calendar-week"></i> Hoạt động Tuần Này (Ngẫu nhiên)</div>
+                     <div class="card-header"><i class="bi bi-calendar-check-fill"></i> Hàng đợi Ôn tập (Demo)</div>
+                     <ul class="list-group list-group-flush">
+                         {% if review_items %}
+                             {% for item in review_items %}
+                             <li class="list-group-item d-flex justify-content-between align-items-center">
+                                 <a href="{{ url_for('view_document', document_id=item.id) if item.id else '#' }}" class="text-decoration-none text-dark" title="{{ item.name }}">
+                                     <i class="bi bi-file-earmark-text me-2"></i>{{ item.name | truncate(35) }}
+                                 </a>
+                                 <span class="badge bg-warning text-dark rounded-pill">{{ item.due }}</span>
+                             </li>
+                             {% endfor %}
+                         {% else %}
+                             <li class="list-group-item text-muted">Không có tài liệu nào cần ôn tập ngay.</li>
+                         {% endif %}
+                     </ul>
+                 </div>
+
+                 <div class="card">
+                     <div class="card-header"><i class="bi bi-award-fill"></i> Thành Tựu Đạt Được (Demo)</div>
+                     <div class="card-body">
+                         <div id="achievementsList">
+                             {% if earned_achievements %}
+                                 {% for ach in earned_achievements %}
+                                 <span class="badge bg-light text-dark border rounded-pill achievement-badge">
+                                     <i class="bi {{ ach.icon }} me-1"></i>{{ ach.text }}
+                                 </span>
+                                 {% endfor %}
+                             {% else %}
+                                 <p class="text-muted">Hãy bắt đầu học để mở khóa thành tựu nhé!</p>
+                             {% endif %}
+                         </div>
+                         <hr>
+                         <button id="shareAchievementsBtn" class="btn btn-primary w-100">
+                             <i class="bi bi-share-fill"></i> Cập nhật Điểm vào BXH
+                         </button>
+                     </div>
+                 </div>
+            </div> <div class="col-lg-7">
+                 <div class="card">
+                    <div class="card-header"><i class="bi bi-calendar-week"></i> Kế hoạch học tâp</div>
                     <div class="card-body p-3">
                          <div class="d-flex align-items-center mb-3 justify-content-center small text-muted">
                             <span class="me-1">Ít</span>
-                            <span class="me-1" style="width:15px; height:15px; background-color: #f8f9fa !important; border: 1px solid #ccc;">&nbsp;</span>
+                            <span class="me-1" style="width:15px; height:15px; background-color: #f8f9fa !important; border: 1px solid #ccc; border-radius: 3px;">&nbsp;</span>
                             <span class="me-1" style="width:15px; height:15px; background-color: var(--green-act-1) !important; border-radius: 3px;"></span>
                             <span class="me-1" style="width:15px; height:15px; background-color: var(--green-act-2) !important; border-radius: 3px;"></span>
                             <span class="me-1" style="width:15px; height:15px; background-color: var(--green-act-3) !important; border-radius: 3px;"></span>
@@ -157,7 +226,7 @@
                                 <tbody> <tr> <td></td><td></td><td></td><td></td><td></td><td></td><td></td> </tr> </tbody>
                             </table>
                         </div>
-                        <p class="text-center small text-muted mt-3">**Dữ liệu hoạt động tuần này được tạo ngẫu nhiên.**</p>
+                        <p class="text-center small text-muted mt-3">**Kế hoạch dựa trên mục tiêu mà bạn đã thiết lập ở bước upload và chuyển hóa các tài liệu.**</p>
                     </div>
                  </div>
 
@@ -167,11 +236,11 @@
                          <p class="text-muted small">Hiển thị mức độ hoạt động giả lập trong các tháng qua. Màu ô vuông thể hiện mức độ.</p>
                          <div class="d-flex align-items-center mb-3 justify-content-center small text-muted">
                              <span class="me-1">Ít</span>
-                             <span class="badge me-1" style="width:15px; height:15px; background-color: #f8f9fa !important; border: 1px solid #ccc;">&nbsp;</span>
-                             <span class="badge me-1" style="width:15px; height:15px; background-color: var(--green-act-1) !important;">&nbsp;</span>
-                             <span class="badge me-1" style="width:15px; height:15px; background-color: var(--green-act-2) !important;">&nbsp;</span>
-                             <span class="badge me-1" style="width:15px; height:15px; background-color: var(--green-act-3) !important;">&nbsp;</span>
-                             <span class="badge me-1" style="width:15px; height:15px; background-color: var(--green-act-4) !important;">&nbsp;</span>
+                             <span class="badge me-1" style="width:15px; height:15px; background-color: #f8f9fa !important; border: 1px solid #ccc; border-radius: 3px;">&nbsp;</span>
+                             <span class="badge me-1" style="width:15px; height:15px; background-color: var(--green-act-1) !important; border-radius: 3px;">&nbsp;</span>
+                             <span class="badge me-1" style="width:15px; height:15px; background-color: var(--green-act-2) !important; border-radius: 3px;">&nbsp;</span>
+                             <span class="badge me-1" style="width:15px; height:15px; background-color: var(--green-act-3) !important; border-radius: 3px;">&nbsp;</span>
+                             <span class="badge me-1" style="width:15px; height:15px; background-color: var(--green-act-4) !important; border-radius: 3px;">&nbsp;</span>
                              <span class="ms-1">Nhiều</span>
                           </div>
                          <div id="monthlyActivitySection" class="monthly-heatmap-container">
@@ -181,113 +250,60 @@
 
             </div> </div> <div class="mt-4 mb-5 text-center"> <a href="{{ url_for('index') }}" class="btn btn-secondary"><i class="bi bi-arrow-left-circle"></i> Quay lại Dashboard</a> </div>
 
-    </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    </div> <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-         // --- Lấy dữ liệu thành tựu từ Flask để JS sử dụng ---
+         // --- Dữ liệu và Hàm cũ ---
          const earnedAchievementsData = {{ earned_achievements | tojson | safe }};
+         function shareAchievements() { /* Code hàm shareAchievements */ console.log("shareAchievements called!"); const achievementsContainer = document.getElementById('achievementsList'); const achievementsCount = achievementsContainer ? achievementsContainer.querySelectorAll('.achievement-badge').length : (Array.isArray(earnedAchievementsData) ? earnedAchievementsData.length : 0); console.log("Achievements count:", achievementsCount); const baseScore = achievementsCount * 4000; const bonusScore = Math.floor(Math.random() * 151) + 50; const totalScore = baseScore + bonusScore; console.log(`Calculated score: ${totalScore} (Base: ${baseScore}, Bonus: ${bonusScore})`); if (typeof(Storage) !== "undefined") { localStorage.setItem('myTimelineScore', totalScore); console.log(`Timeline score saved to localStorage: ${totalScore}`); window.location.href = "/lazymarket#ranking-tab"; } else { console.error("LocalStorage is not supported!"); alert("Trình duyệt của bạn không hỗ trợ lưu trữ cục bộ, không thể cập nhật điểm."); } }
+         const pathwayExamples = [ /* Dữ liệu pathwayExamples */ [{ icon: 'bi-book', text: 'Đọc Chương 1: Tổng quan', time: 'Thứ 2 - 60 phút', title: 'Giới thiệu Machine Learning' }, { icon: 'bi-check2-square', text: 'Quiz Chương 1', time: 'Thứ 3 - 15 phút', title: 'Giới thiệu Machine Learning' }, { icon: 'bi-book', text: 'Đọc Chương 2: Supervised Learning', time: 'Thứ 4 - 90 phút', title: 'Giới thiệu Machine Learning' }, { icon: 'bi-pencil-square', text: 'Ghi chú & Tóm tắt Chương 2', time: 'Thứ 5 - 30 phút', title: 'Giới thiệu Machine Learning' }, { icon: 'bi-arrow-clockwise', text: 'Ôn tập Chương 1 & 2', time: 'Thứ 7 - 45 phút', title: 'Giới thiệu Machine Learning' }], [{ icon: 'bi-filetype-py', text: 'Setup môi trường Python & Flask', time: 'Tối Thứ 2 - 45 phút', title: 'Dự án Web Flask' }, { icon: 'bi-journal-code', text: 'Tìm hiểu về Routing & Templates', time: 'Tối Thứ 3 - 60 phút', title: 'Dự án Web Flask' }, { icon: 'bi-database', text: 'Kết nối Database (SQLAlchemy)', time: 'Tối Thứ 5 - 75 phút', title: 'Dự án Web Flask' }, { icon: 'bi-card-checklist', text: 'Tạo Form Đăng nhập/Đăng ký', time: 'Chiều Thứ 7 - 90 phút', title: 'Dự án Web Flask' }, { icon: 'bi-bug', text: 'Debug và Refactor code', time: 'Sáng Chủ Nhật - 45 phút', title: 'Dự án Web Flask' }], [{ icon: 'bi-earbuds', text: 'Nghe Podcast Tiếng Anh chủ đề Kinh tế', time: 'Sáng T2,4,6 - 20 phút', title: 'Cải thiện Tiếng Anh' }, { icon: 'bi-blockquote-right', text: 'Học 10 từ vựng mới (Quizlet)', time: 'Mỗi ngày - 15 phút', title: 'Cải thiện Tiếng Anh' }, { icon: 'bi-chat-dots', text: 'Thực hành nói với bạn bè/AI', time: 'Tối Thứ 3, 5 - 30 phút', title: 'Cải thiện Tiếng Anh' }, { icon: 'bi-book-half', text: 'Đọc 1 bài báo ngắn (BBC/CNN)', time: 'Trưa T2-T6 - 25 phút', title: 'Cải thiện Tiếng Anh' }, { icon: 'bi-pencil', text: 'Viết 1 đoạn email/nhật ký ngắn', time: 'Tối Chủ Nhật - 30 phút', title: 'Cải thiện Tiếng Anh' }] ];
+         let currentPathwayIndex = 0;
+         function displayPathway(pathwayData, pathwayTitle) { /* Code hàm displayPathway */ const listElement = document.getElementById('suggested-pathway-list'); const descriptionElement = document.getElementById('pathway-description'); if (!listElement || !descriptionElement) return; descriptionElement.textContent = `Dựa trên mục tiêu và thời hạn của bạn cho tài liệu "${pathwayTitle}", AI đề xuất lịch trình sau:`; listElement.innerHTML = ''; pathwayData.forEach(item => { const li = document.createElement('li'); li.className = 'list-group-item d-flex justify-content-between align-items-center'; li.innerHTML = `<span><i class="bi ${item.icon} me-1"></i> ${item.text}</span><span class="badge bg-light text-dark rounded-pill">${item.time}</span>`; const iconElement = li.querySelector('i'); if (item.icon.includes('book') || item.icon.includes('journal')) iconElement.classList.add('text-primary'); else if (item.icon.includes('check') || item.icon.includes('database')) iconElement.classList.add('text-success'); else if (item.icon.includes('pencil') || item.icon.includes('card')) iconElement.classList.add('text-info'); else if (item.icon.includes('arrow') || item.icon.includes('earbuds') || item.icon.includes('bug')) iconElement.classList.add('text-warning'); else if (item.icon.includes('chat') || item.icon.includes('filetype')) iconElement.classList.add('text-primary'); listElement.appendChild(li); }); }
+         function updateRandomRecallRate() { /* Code hàm updateRandomRecallRate */ const recallRateElement = document.getElementById('recall-rate-value'); if (recallRateElement) { const randomRate = Math.floor(Math.random() * (98 - 65 + 1)) + 65; recallRateElement.innerHTML = `${randomRate}<small>%</small>`; } }
+         function randomizeWeeklyTimeline() { /* Code hàm randomizeWeeklyTimeline */ const weeklyTableBody = document.querySelector("#weeklyTimelineTable tbody"); if (!weeklyTableBody) return; const row = weeklyTableBody.querySelector('tr'); if (!row) return; row.innerHTML = ''; const sampleActivities = [ "Đọc tài liệu", "Xem video bài giảng", "Tóm tắt chương", "Làm Quiz ôn tập", "Tìm hiểu Link tham khảo", "Ôn tập Flashcards", "(Nghỉ ngơi)", "Giải bài tập", "Viết Code Demo", "Thực hành Lab", "Nghiên cứu Case Study", "Thảo luận nhóm", "Chuẩn bị thuyết trình", "Ghi chú ý chính", "Nghe Podcast học thuật", "Đọc báo cáo", "Phân tích dữ liệu", "Viết luận", "Sửa bài viết", "Brainstorm ý tưởng", "Lập dàn ý", "Học từ vựng mới", "Luyện nghe hội thoại", "Tập viết đoạn văn", "Luyện phát âm", "Dịch tài liệu", "Tìm kiếm thông tin", "Soạn slide", "Xem lại ghi chú cũ", "Thử giải thích lại khái niệm", "Tham gia Webinar", "Đọc sách chuyên khảo", "Học công thức", "Chứng minh định lý", "Vẽ sơ đồ tư duy", "Lập kế hoạch học tập", "Xem phim tài liệu", "Thực hành kỹ năng mềm", "Tìm lỗi code", "Review code bạn", "(Giải lao ngắn)", "Code LeetCode", "Đọc sách tiếng Anh" ]; const sampleTags = [ "Python", "Kinh tế", "Giải tích", "IELTS", "Thuyết trình", "Web",  "Thống kê", "Tiếng Nhật", "Khoa học", "Java", "Tài chính", "Đại số", "Tiếng Pháp", "App Mobile", "Data Science",  "Vật lý", "Tiếng Trung",  "Đồ án", "Thuật toán", "Kế toán", "Hình học", "Ngữ pháp", "UI/UX", "Seminar",  "Điện tử",  "Lịch sử",  "Viết Email", "Dự án",  "Blockchain", "Network", "Triết học" ]; const today = new Date(); const currentDayOfWeek = (today.getDay() + 6) % 7; for (let index = 0; index < 7; index++) { const cell = document.createElement('td'); let activityLevel = Math.floor(Math.random() * 5); if (index >= 5 && Math.random() < 0.4) { activityLevel = 0; } cell.className = 'activity-' + activityLevel; const dayNumberSpan = document.createElement('span'); dayNumberSpan.className = 'day-number'; const activityContentDiv = document.createElement('div'); activityContentDiv.className = 'activity-content'; let contentHTML = ''; let dayNumber = '??'; const dayDiff = index - currentDayOfWeek; const cellDate = new Date(today); cellDate.setDate(today.getDate() + dayDiff); dayNumber = cellDate.getDate(); dayNumberSpan.textContent = dayNumber; if (activityLevel === 0) { contentHTML = '(Nghỉ)'; activityContentDiv.classList.add('text-muted'); } else { activityContentDiv.classList.remove('text-muted'); let activity1 = sampleActivities[Math.floor(Math.random() * sampleActivities.length)]; while (activity1 === '(Nghỉ ngơi)' || activity1 === '(Giải lao ngắn)') { activity1 = sampleActivities[Math.floor(Math.random() * sampleActivities.length)]; } contentHTML = activity1; let hasTag = false; if (activityLevel >= 2 && Math.random() < 0.6) { contentHTML = `<span class="badge bg-primary-subtle text-primary-emphasis rounded-pill">${sampleTags[Math.floor(Math.random() * sampleTags.length)]}</span><br>` + contentHTML; hasTag = true; } if (activityLevel >= 3 && Math.random() < (hasTag ? 0.3 : 0.6)) { let activity2 = sampleActivities[Math.floor(Math.random() * sampleActivities.length)]; while (activity2 === activity1 || activity2 === '(Nghỉ ngơi)' || activity2 === '(Giải lao ngắn)') { activity2 = sampleActivities[Math.floor(Math.random() * sampleActivities.length)]; } contentHTML += `<br>${activity2}`; } } activityContentDiv.innerHTML = contentHTML; cell.appendChild(dayNumberSpan); cell.appendChild(activityContentDiv); row.appendChild(cell); } }
+         function generateMonthlyHeatmaps(containerId, numMonthsToShow) { /* Code hàm generateMonthlyHeatmaps */ const container = document.getElementById(containerId); if (!container) return; container.innerHTML = ''; const today = new Date(); const monthNames = ["Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6", "Tháng 7", "Tháng 8", "Tháng 9", "Tháng 10", "Tháng 11", "Tháng 12"]; const dayShortNames = ["T2", "T3", "T4", "T5", "T6", "T7", "CN"]; const totalLookbackRange = 12; const randomStartOffset = Math.floor(Math.random() * (totalLookbackRange - numMonthsToShow + 1)) - (totalLookbackRange - 1); let selectedMonths = []; for (let i = 0; i < numMonthsToShow; i++) { const targetDate = new Date(today.getFullYear(), today.getMonth() + randomStartOffset + i, 1); selectedMonths.push({ year: targetDate.getFullYear(), month: targetDate.getMonth() }); } selectedMonths.forEach(monthInfo => { const year = monthInfo.year; const month = monthInfo.month; const firstDayOfMonth = new Date(year, month, 1); const daysInMonth = new Date(year, month + 1, 0).getDate(); let startingDay = (firstDayOfMonth.getDay() + 6) % 7; const monthDiv = document.createElement('div'); monthDiv.className = 'month-grid'; const monthHeader = document.createElement('div'); monthHeader.className = 'month-header'; monthHeader.textContent = `${monthNames[month]} ${year}`; monthDiv.appendChild(monthHeader); const daysHeaderDiv = document.createElement('div'); daysHeaderDiv.className = 'month-days-header'; dayShortNames.forEach(dayName => { const dayHeader = document.createElement('div'); dayHeader.textContent = dayName; daysHeaderDiv.appendChild(dayHeader); }); monthDiv.appendChild(daysHeaderDiv); const daysGridDiv = document.createElement('div'); daysGridDiv.className = 'month-days-grid'; for (let j = 0; j < startingDay; j++) { const emptyCell = document.createElement('div'); emptyCell.className = 'month-day'; daysGridDiv.appendChild(emptyCell); } for (let day = 1; day <= daysInMonth; day++) { const dayCell = document.createElement('div'); const activityLevel = Math.floor(Math.random() * 5); dayCell.className = `month-day activity-${activityLevel}`; dayCell.title = `${day}/${month + 1}/${year} - Mức ${activityLevel}`; daysGridDiv.appendChild(dayCell); } monthDiv.appendChild(daysGridDiv); container.appendChild(monthDiv); }); }
 
-         // --- HÀM SHARE ACHIEVEMENTS ---
-         function shareAchievements() { console.log("shareAchievements called!"); const achievementsContainer = document.getElementById('achievementsList'); const achievementsCount = achievementsContainer ? achievementsContainer.querySelectorAll('.achievement-badge').length : (Array.isArray(earnedAchievementsData) ? earnedAchievementsData.length : 0); console.log("Achievements count:", achievementsCount); const baseScore = achievementsCount * 4000; const bonusScore = Math.floor(Math.random() * 151) + 50; const totalScore = baseScore + bonusScore; console.log(`Calculated score: ${totalScore} (Base: ${baseScore}, Bonus: ${bonusScore})`); if (typeof(Storage) !== "undefined") { localStorage.setItem('myTimelineScore', totalScore); console.log(`Timeline score saved to localStorage: ${totalScore}`); window.location.href = "/lazymarket#ranking-tab"; } else { console.error("LocalStorage is not supported!"); alert("Trình duyệt của bạn không hỗ trợ lưu trữ cục bộ, không thể cập nhật điểm."); } }
+         // --- Code Mascot mới ---
+         const mascotPersonalities = { cute_lover: { icon: '👧', dialogues: { reminder: ["Nhớ ôn bài nha tình yêu ❤️", "Anh/em ơi, tới giờ học rồi nè!", "Học xíu rồi mình đi chơi nha? 😉", "Đừng quên mục tiêu của tụi mình nha!"], streak_lost: ["Opps, mình mất streak rồi... không sao, làm lại từ đầu nhé 💪", "Buồn á... Hôm qua anh/em hứa học cùng em mà?", "Thôi không dỗi đâu, nay học bù nha! 😘"], milestone_streak: ["Wow, {N} ngày streak rồi! Giỏi quá đi mất! 😍", "Chúc mừng tụi mình đạt {N} ngày học liên tục!", "Yêu anh/em nhất vì sự kiên trì này!"], milestone_docs: ["Học được {N} tài liệu rồi nè, đỉnh quá! ✨", "Cày ghê vậy, {N} tài liệu rồi đó!", "Kiến thức đầy mình rồi nha!"], generic_greeting: ["Hôm nay học gì nè tình yêu?", "Có em ở đây học cùng anh/em nè!", "Cố lên nha người thương!", "Một ngày học tập vui vẻ nhé!"] } }, kind_grandparents: { icon: '👵', dialogues: { reminder: ["Đến giờ học rồi đó cháu", "Cháu ơi, ông/bà biết hơi mệt... nhưng 10 phút thôi nhé?", "Ráng học cho nên người nha con.", "Học chút rồi nghỉ ngơi nha cháu."], streak_lost: ["Không sao đâu, lỡ bữa thôi mà. Mai học lại nhé.", "Ông/bà thấy hơi tiếc, nhưng cố gắng là được.", "Ai cũng có lúc quên mà, đừng buồn nha cháu."], milestone_streak: ["Cháu giỏi quá, {N} ngày rồi!", "Ông/bà mừng cho cháu.", "Cứ đà này là tốt rồi con."], milestone_docs: ["Học được {N} tài liệu rồi, ông/bà tự hào về cháu!", "Chà, nhiều kiến thức quá ha.", "Vậy là sắp thành tài rồi!"], generic_greeting: ["Hôm nay cháu học tốt không?", "Có cần ông/bà giúp gì không?", "Cháu cứ từ từ mà học.", "Ông/bà tin ở cháu."] } }, angry_mom: { icon: '🙎‍♀️', dialogues: { reminder: ["Học bài ngay! Không nói nhiều!", "Lại định trốn học nữa đấy à?", "Có biết mấy giờ rồi không? Ngồi vào bàn!", "Học đi chứ, không học thì làm gì?"], streak_lost: ["Mất streak rồi! Thấy chưa! Lười nó thế đấy!", "Hôm qua làm gì mà không học?!", "Cấm được lặp lại nghe chưa!", "Liệu hồn đấy!"], milestone_streak: ["Được {N} ngày rồi đấy à? Tạm được! Đừng có mà lơ là!", "Cũng biết cố gắng đấy.", "Giữ cho chắc vào!", "{N} ngày thôi, chưa là gì đâu!"], milestone_docs: ["Học được {N} cái rồi à? Còn ít lắm!", "Chừng này đã nhằm nhò gì?", "Phải học nhiều hơn nữa!", "Còn bao nhiêu cái chưa học kìa!"], generic_greeting: ["Học hành nghiêm túc vào!", "Đừng có làm mẹ tức!", "Tập trung!", "Lo mà học đi!"] } }, quiet_dad: { icon: '🧔‍♂️', dialogues: { reminder: ["Học bài đi con.", "Đến giờ rồi.", "Tập trung.", "..."], streak_lost: ["Hôm qua không học à?", "Cần cố gắng hơn.", "...", "Ừm."], milestone_streak: ["{N} ngày. Tốt.", "Được.", "Tiếp tục.", "Ừm."], milestone_docs: ["{N}.", "Được.", "Xem tiếp đi.", "..."], generic_greeting: ["...", "Học đi.", "Ừm.", "Cố lên."] } }, patriarchal_lover: { icon: '🙎‍♂️', dialogues: { reminder: ["Học bài! Nghe lời anh/em!", "Em/anh phải học, biết chưa?", "Đừng để anh/em nhắc!", "Lo mà học cho giỏi vào!"], streak_lost: ["Mất streak rồi! Anh/em đã bảo mà!", "Thấy tác hại của việc không nghe lời chưa?", "Lần sau phải cố hơn, rõ chưa?", "Thật là làm anh/em thất vọng!"], milestone_streak: ["Được {N} ngày rồi, cũng được. Nhưng phải hơn nữa!", "Tạm chấp nhận.", "Đừng tự mãn!", "Phải giữ vững phong độ!"], milestone_docs: ["{N} tài liệu. Cần học nhiều hơn!", "Phải phấn đấu nữa!", "Kiến thức là phải hơn người!", "Chưa đủ đâu!"], generic_greeting: ["Học hành cho cẩn thận!", "Nghe lời anh/em!", "Phải chăm chỉ!", "Đừng làm anh/em phiền lòng!"] } } };
 
-         // --- ĐỊNH NGHĨA LỜI THOẠI ---
-         const mascotDialogues = { friendly: { streak: ["Tuyệt vời! Bạn đã giữ vững {N} ngày streak! Cố lên!", "Chuỗi {N} ngày rồi! Bạn đang làm rất tốt!", "Wow, {N} ngày liên tục! Giữ vững phong độ nhé!", "Tiếp tục phát huy! Streak {N} ngày thật ấn tượng!", "Đà này cứ giữ nhé, {N} ngày streak rồi!", "Bạn thật kiên trì! {N} ngày rồi đấy!", "Cú rất vui vì bạn chăm chỉ {N} ngày qua!", "Mỗi ngày một bước, {N} ngày thật đáng nể!", "Đừng quên tự thưởng cho mình sau {N} ngày cố gắng nha!", "Hành trình {N} ngày của bạn thật truyền cảm hứng!"], no_streak: ["Không sao cả! Bắt đầu lại chuỗi streak mới ngay hôm nay nào!", "Mỗi ngày mới là một cơ hội mới để bắt đầu!", "Đừng nản lòng, hôm nay là ngày tuyệt vời để học!", "Cú tin bạn sẽ sớm có lại streak thôi!", "Hãy biến hôm nay thành ngày đầu tiên của chuỗi mới!", "Bắt đầu lại thôi, không có gì là quá muộn!", "Một chút gián đoạn không sao, quan trọng là tiếp tục!", "Cú luôn ở đây cổ vũ bạn lấy lại phong độ!", "Hôm nay cố gắng nhé, ngày mai sẽ tốt hơn!", "Sẵn sàng cho một khởi đầu mới chưa nào?"] }, strict: { streak: ["Streak: {N} ngày. Tốt. Đừng dừng lại.", "{N} ngày. Duy trì kỷ luật là chìa khóa.", "Tiếp tục. Mục tiêu còn ở phía trước. ({N} ngày)", "Đừng lơ là. Streak {N} ngày cần được bảo vệ.", "{N} ngày rồi. Đảm bảo hoàn thành nhiệm vụ hôm nay.", "Sự nhất quán tạo nên kết quả. ({N} ngày)", "Ghi nhận: {N} ngày. Yêu cầu tiếp tục.", "Không có thời gian nghỉ ngơi. {N} ngày streak.", "Tập trung. {N} ngày chỉ là khởi đầu.", "Tiến độ: {N} ngày. Phải duy trì."], no_streak: ["Streak đã mất! Tập trung lại ngay! Không được lười biếng!", "Thất bại trong việc duy trì streak. Cần nghiêm túc hơn!", "Tại sao lại dừng? Bắt đầu lại ngay lập tức!", "Không có lý do gì cho sự gián đoạn. Học đi!", "Hậu quả của việc lơ là: mất streak. Phải khắc phục!", "Đừng để việc này lặp lại. Bắt đầu lại ngay!", "Thời gian là vàng bạc. Đừng lãng phí thêm!", "Yêu cầu quay lại guồng học tập ngay!", "Kỷ luật đâu rồi? Lấy lại streak ngay!", "Cơ hội đã mất. Phải nỗ lực gấp đôi!"] }, sad: { streak: ["Streak {N} ngày rồi! Đừng làm Cú buồn nha...", "Bạn vẫn đang cố gắng ({N} ngày), Cú đỡ buồn hơn chút...", "Nhớ duy trì nhé, Cú không muốn mất streak này đâu... ({N} ngày)", "Cú hơi lo lắng... nhưng bạn vẫn còn streak {N} ngày.", "({N} ngày) ... Liệu bạn có giữ được không?", "Hy vọng ngày mai vẫn thấy streak {N+1}...", "Đừng bỏ rơi Cú và streak {N} ngày nha...", "Cố gắng thêm chút nữa nhé... ({N} ngày)", "Cú sẽ vui hơn nếu bạn giữ được streak dài hơn... ({N} ngày)", "Chỉ cần đừng dừng lại là được... ({N} ngày)"], no_streak: ["Ôi không... streak mất rồi... Cú buồn lắm...", "Tại sao lại như vậy chứ... Cú rất thất vọng...", "Buồn quá... không còn thấy streak nữa...", "Giá như bạn cố thêm chút nữa...", "Cú không biết nói gì hơn... thật đáng tiếc...", "Có lẽ hôm nay bạn không vui... Cú cũng vậy...", "Mất streak rồi... cảm giác thật tệ...", "Hy vọng bạn sẽ sớm vui vẻ và học lại...", "Cú nhớ những ngày có streak...", "Thôi thì... ngày mai cố gắng nhé..."] } };
-
+        // --- Code chạy khi DOM tải xong ---
         document.addEventListener('DOMContentLoaded', function() {
-           // --- Script AI Mascot ---
-           const moodSelectors = document.querySelectorAll('input[name="aiMood"]'); const mascotIcon = document.getElementById('mascotIcon'); const mascotMessage = document.getElementById('mascotMessage'); const currentStreak = typeof {{ current_streak | default(0) }} !== 'undefined' ? {{ current_streak | default(0) }} : 0; function updateMascot() { const selectedMoodInput = document.querySelector('input[name="aiMood"]:checked'); if (!selectedMoodInput) return; const selectedMood = selectedMoodInput.value; let icon = '🦉'; let message = ''; let alertClass = 'alert-info'; const streakStatus = currentStreak > 0 ? 'streak' : 'no_streak'; const dialoguesForMood = mascotDialogues[selectedMood]; if (!dialoguesForMood) { console.error("Invalid mood selected:", selectedMood); return; } const possibleMessages = dialoguesForMood[streakStatus]; if (possibleMessages && possibleMessages.length > 0) { message = possibleMessages[Math.floor(Math.random() * possibleMessages.length)]; message = message.replace('{N}', currentStreak); message = message.replace('{N+1}', currentStreak + 1); } else { message = "Cú đang không biết nói gì..."; } if (streakStatus === 'streak') { if (selectedMood === 'friendly') { icon = '🥳'; alertClass = 'alert-success'; } else if (selectedMood === 'strict') { icon = '🧐'; alertClass = 'alert-warning'; } else { icon = '🥺'; alertClass = 'alert-primary'; } } else { if (selectedMood === 'friendly') { icon = '💪'; alertClass = 'alert-info'; } else if (selectedMood === 'strict') { icon = '😠'; alertClass = 'alert-danger'; } else { icon = '😢'; alertClass = 'alert-secondary'; } } if (mascotIcon) mascotIcon.textContent = icon; if (mascotMessage) { mascotMessage.textContent = message; mascotMessage.className = 'alert ' + alertClass; mascotMessage.id = 'mascotMessage'; } } if (moodSelectors.length > 0) { moodSelectors.forEach(radio => { radio.addEventListener('change', updateMascot); }); updateMascot(); }
+            // Các biến và hàm cho Mascot
+            const personalitySelectors = document.querySelectorAll('input[name="aiPersonality"]');
+            const mascotIconEl = document.getElementById('mascotIcon');
+            const mascotMessageEl = document.getElementById('mascotMessage');
+            const currentStreak = typeof {{ current_streak | default(0) }} !== 'undefined' ? {{ current_streak | default(0) }} : 0;
+            const docsToday = typeof {{ docs_viewed_today | default(0) }} !== 'undefined' ? {{ docs_viewed_today | default(0) }} : 0;
+            const docsSummarized = typeof {{ total_docs_summarized | default(0) }} !== 'undefined' ? {{ total_docs_summarized | default(0) }} : 0;
 
-            // --- Script Randomize Lịch Tuần (Dùng Background Xanh Lá) ---
-            function randomizeWeeklyTimeline() { const weeklyTableBody = document.querySelector("#weeklyTimelineTable tbody"); if (!weeklyTableBody) { console.error("Weekly timeline table body not found!"); return; } const row = weeklyTableBody.querySelector('tr'); if (!row) { console.error("Weekly timeline table row not found!"); return; } row.innerHTML = ''; const sampleActivities = [ "Đọc tài liệu", "Xem video bài giảng", "Tóm tắt chương", "Làm Quiz ôn tập", "Tìm hiểu Link tham khảo", "Ôn tập Flashcards", "(Nghỉ ngơi)", "Giải bài tập", "Viết Code Demo", "Thực hành Lab", "Nghiên cứu Case Study", "Thảo luận nhóm", "Chuẩn bị thuyết trình", "Ghi chú ý chính", "Nghe Podcast học thuật", "Đọc báo cáo", "Phân tích dữ liệu", "Viết luận", "Sửa bài viết", "Brainstorm ý tưởng", "Lập dàn ý", "Học từ vựng mới", "Luyện nghe hội thoại", "Tập viết đoạn văn", "Luyện phát âm", "Dịch tài liệu", "Tìm kiếm thông tin", "Soạn slide", "Xem lại ghi chú cũ", "Thử giải thích lại khái niệm", "Tham gia Webinar", "Đọc sách chuyên khảo", "Học công thức", "Chứng minh định lý", "Vẽ sơ đồ tư duy", "Lập kế hoạch học tập", "Xem phim tài liệu", "Thực hành kỹ năng mềm", "Tìm lỗi code", "Review code bạn", "(Giải lao ngắn)", "Code LeetCode", "Đọc sách tiếng Anh" ]; const sampleTags = [ "Python", "Kinh tế", "Giải tích", "IELTS", "Thuyết trình", "Web",  "Thống kê", "Tiếng Nhật", "Khoa học", "Java", "Tài chính", "Đại số", "Tiếng Pháp", "App Mobile", "Data Science",  "Vật lý", "Tiếng Trung",  "Đồ án", "Thuật toán", "Kế toán", "Hình học", "Ngữ pháp", "UI/UX", "Seminar",  "Điện tử",  "Lịch sử",  "Viết Email", "Dự án",  "Blockchain", "Network", "Triết học" ]; const today = new Date(); const currentDayOfWeek = (today.getDay() + 6) % 7; for (let index = 0; index < 7; index++) { const cell = document.createElement('td'); let activityLevel = Math.floor(Math.random() * 5); if (index >= 5 && Math.random() < 0.4) { activityLevel = 0; } cell.className = 'activity-' + activityLevel; const dayNumberSpan = document.createElement('span'); dayNumberSpan.className = 'day-number'; const activityContentDiv = document.createElement('div'); activityContentDiv.className = 'activity-content'; let contentHTML = ''; let dayNumber = '??'; const dayDiff = index - currentDayOfWeek; const cellDate = new Date(today); cellDate.setDate(today.getDate() + dayDiff); dayNumber = cellDate.getDate(); dayNumberSpan.textContent = dayNumber; if (activityLevel === 0) { contentHTML = '(Nghỉ)'; activityContentDiv.classList.add('text-muted'); } else { activityContentDiv.classList.remove('text-muted'); let activity1 = sampleActivities[Math.floor(Math.random() * sampleActivities.length)]; while (activity1 === '(Nghỉ ngơi)' || activity1 === '(Giải lao ngắn)') { activity1 = sampleActivities[Math.floor(Math.random() * sampleActivities.length)]; } contentHTML = activity1; let hasTag = false; if (activityLevel >= 2 && Math.random() < 0.6) { contentHTML = `<span class="badge bg-primary-subtle text-primary-emphasis rounded-pill">${sampleTags[Math.floor(Math.random() * sampleTags.length)]}</span><br>` + contentHTML; hasTag = true; } if (activityLevel >= 3 && Math.random() < (hasTag ? 0.3 : 0.6)) { let activity2 = sampleActivities[Math.floor(Math.random() * sampleActivities.length)]; while (activity2 === activity1 || activity2 === '(Nghỉ ngơi)' || activity2 === '(Giải lao ngắn)') { activity2 = sampleActivities[Math.floor(Math.random() * sampleActivities.length)]; } contentHTML += `<br>${activity2}`; } } activityContentDiv.innerHTML = contentHTML; cell.appendChild(dayNumberSpan); cell.appendChild(activityContentDiv); row.appendChild(cell); } }
+            function updateMascot() { /* Code hàm updateMascot */ const selectedPersonalityInput = document.querySelector('input[name="aiPersonality"]:checked'); if (!selectedPersonalityInput || !mascotIconEl || !mascotMessageEl) return; const personalityId = selectedPersonalityInput.value; const personalityData = mascotPersonalities[personalityId]; if (!personalityData) return; let trigger = 'generic_greeting'; const rand = Math.random(); if (currentStreak > 0 && currentStreak % 7 === 0 && rand < 0.4) { trigger = 'milestone_streak'; } else if (currentStreak === 0 && rand < 0.3) { trigger = 'streak_lost'; } else if (docsSummarized > 0 && docsSummarized % 5 === 0 && rand < 0.4) { trigger = 'milestone_docs'; } else if (rand < 0.2) { trigger = 'reminder'; } console.log("Selected Personality:", personalityId, "Simulated Trigger:", trigger); let message = "Hmm..."; const dialoguesForTrigger = personalityData.dialogues[trigger]; if (dialoguesForTrigger && dialoguesForTrigger.length > 0) { message = dialoguesForTrigger[Math.floor(Math.random() * dialoguesForTrigger.length)]; message = message.replace('{N}', trigger === 'milestone_docs' ? docsSummarized : currentStreak); } else { const genericDialogues = personalityData.dialogues['generic_greeting']; if (genericDialogues && genericDialogues.length > 0) { message = genericDialogues[Math.floor(Math.random() * genericDialogues.length)]; } } mascotIconEl.textContent = personalityData.icon; mascotMessageEl.textContent = message; let alertClass = 'alert-secondary'; if (trigger === 'milestone_streak' || trigger === 'milestone_docs') { alertClass = 'alert-success'; } else if (trigger === 'streak_lost' || personalityId === 'angry_mom' || personalityId === 'patriarchal_lover') { alertClass = 'alert-danger'; } else if (trigger === 'reminder') { alertClass = 'alert-warning'; } else if (personalityId === 'cute_lover') { alertClass = 'alert-info'; } else if (personalityId === 'kind_grandparents') { alertClass = 'alert-primary'; } mascotMessageEl.className = 'alert ' + alertClass; mascotMessageEl.id = 'mascotMessage'; mascotIconEl.style.transform = 'rotate(0deg) scale(1)'; setTimeout(() => { if(trigger === 'milestone_streak' || trigger === 'milestone_docs') { mascotIconEl.style.transform = 'scale(1.2) rotate(10deg)'; } else if (trigger === 'streak_lost' || personalityId === 'angry_mom') { mascotIconEl.style.transform = 'translateX(-5px) rotate(-5deg)'; setTimeout(()=> mascotIconEl.style.transform = 'translateX(5px) rotate(5deg)', 150); setTimeout(()=> mascotIconEl.style.transform = 'translateX(0px) rotate(0deg)', 300); } }, 50); }
+
+            if (personalitySelectors.length > 0) {
+                personalitySelectors.forEach(radio => { radio.addEventListener('change', updateMascot); });
+                updateMascot(); // Gọi lần đầu
+            }
+
+            // Gọi các hàm khởi tạo khác
             randomizeWeeklyTimeline();
+            if (document.getElementById('monthlyActivitySection')) { generateMonthlyHeatmaps('monthlyActivitySection', 4); }
+            currentPathwayIndex = Math.floor(Math.random() * pathwayExamples.length);
+             // Kiểm tra pathwayExamples có phần tử không trước khi truy cập
+            if(pathwayExamples.length > 0 && pathwayExamples[currentPathwayIndex] && pathwayExamples[currentPathwayIndex][0]) {
+                 displayPathway(pathwayExamples[currentPathwayIndex], pathwayExamples[currentPathwayIndex][0].title);
+             } else {
+                 // Xử lý trường hợp không có pathway nào (ví dụ: hiển thị thông báo)
+                 const listElement = document.getElementById('suggested-pathway-list');
+                 if(listElement) listElement.innerHTML = '<li class="list-group-item text-muted">Chưa có lộ trình mẫu.</li>';
+                 const descriptionElement = document.getElementById('pathway-description');
+                 if(descriptionElement) descriptionElement.textContent = 'Chưa có lộ trình học tập đề xuất.';
+             }
+            updateRandomRecallRate();
+            const changePathwayBtn = document.getElementById('change-pathway-btn');
+            if(changePathwayBtn) { changePathwayBtn.addEventListener('click', function() { let newIndex = Math.floor(Math.random() * pathwayExamples.length); if (pathwayExamples.length > 1) { while (newIndex === currentPathwayIndex) { newIndex = Math.floor(Math.random() * pathwayExamples.length); } } currentPathwayIndex = newIndex; if(pathwayExamples[currentPathwayIndex] && pathwayExamples[currentPathwayIndex][0]) { displayPathway(pathwayExamples[currentPathwayIndex], pathwayExamples[currentPathwayIndex][0].title); } }); }
 
-            // Script Tạo Lịch Tháng (Liên tiếp - Đã sửa CSS và kiểm tra JS)
-            function generateMonthlyHeatmaps(containerId, numMonthsToShow) {
-                const container = document.getElementById(containerId);
-                if (!container) { console.error("Monthly heatmap container not found!", containerId); return; }
-                container.innerHTML = ''; // Clear previous content
-                console.log("Attempting to generate monthly heatmaps..."); // Log start
-
-                const today = new Date();
-                const monthNames = ["Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6", "Tháng 7", "Tháng 8", "Tháng 9", "Tháng 10", "Tháng 11", "Tháng 12"];
-                const dayShortNames = ["T2", "T3", "T4", "T5", "T6", "T7", "CN"];
-                const totalLookbackRange = 12;
-                const randomStartOffset = Math.floor(Math.random() * (totalLookbackRange - numMonthsToShow + 1)) - (totalLookbackRange - 1);
-                let selectedMonths = [];
-
-                for (let i = 0; i < numMonthsToShow; i++) {
-                    const targetDate = new Date(today.getFullYear(), today.getMonth() + randomStartOffset + i, 1);
-                    selectedMonths.push({ year: targetDate.getFullYear(), month: targetDate.getMonth() });
-                }
-                console.log("Selected months:", selectedMonths); // Log tháng đã chọn
-
-                selectedMonths.forEach(monthInfo => {
-                    const year = monthInfo.year;
-                    const month = monthInfo.month; // 0-11
-                    const firstDayOfMonth = new Date(year, month, 1);
-                    const daysInMonth = new Date(year, month + 1, 0).getDate();
-                    let startingDay = (firstDayOfMonth.getDay() + 6) % 7; // 0=Mon, 6=Sun
-
-                    const monthDiv = document.createElement('div');
-                    monthDiv.className = 'month-grid'; // Class cho style card của tháng
-
-                    const monthHeader = document.createElement('div');
-                    monthHeader.className = 'month-header'; // Class cho tiêu đề tháng
-                    monthHeader.textContent = `${monthNames[month]} ${year}`;
-                    monthDiv.appendChild(monthHeader);
-
-                    const daysHeaderDiv = document.createElement('div');
-                    daysHeaderDiv.className = 'month-days-header'; // Class cho header ngày (T2,T3..)
-                    dayShortNames.forEach(dayName => {
-                         const dayHeader = document.createElement('div');
-                         dayHeader.textContent = dayName;
-                         daysHeaderDiv.appendChild(dayHeader);
-                    });
-                    monthDiv.appendChild(daysHeaderDiv);
-
-                    const daysGridDiv = document.createElement('div');
-                    daysGridDiv.className = 'month-days-grid'; // Class cho lưới chứa các ô ngày
-                    console.log(`Generating grid for ${monthNames[month]} ${year}. Days: ${daysInMonth}, Start Day Index: ${startingDay}`); // Log thông tin tháng
-
-                    // Thêm ô trống đầu tháng
-                    for (let j = 0; j < startingDay; j++) {
-                        const emptyCell = document.createElement('div');
-                        emptyCell.className = 'month-day';
-                        daysGridDiv.appendChild(emptyCell);
-                    }
-
-                    // Thêm ô ngày có màu
-                    for (let day = 1; day <= daysInMonth; day++) {
-                        const dayCell = document.createElement('div');
-                        const activityLevel = Math.floor(Math.random() * 5); // Random 0-4
-                        dayCell.className = `month-day activity-${activityLevel}`; // <<< GÁN LỚP activity-*
-                        dayCell.title = `${day}/${month + 1}/${year} - Mức ${activityLevel}`;
-                        // console.log(`Day ${day}: Level ${activityLevel}, Class: ${dayCell.className}`); // Log chi tiết từng ô (có thể bật nếu cần debug sâu)
-                        daysGridDiv.appendChild(dayCell);
-                    }
-
-                    monthDiv.appendChild(daysGridDiv); // Thêm lưới ngày vào div tháng
-                    container.appendChild(monthDiv); // Thêm div tháng vào container chính
-                });
-                console.log("Monthly heatmaps generation complete."); // Log kết thúc
-            }
-            // Đảm bảo container tồn tại trước khi gọi hàm
-            if (document.getElementById('monthlyActivitySection')) {
-                 generateMonthlyHeatmaps('monthlyActivitySection', 4);
-            } else {
-                 console.error("Container #monthlyActivitySection not found! Cannot generate monthly heatmaps.");
-            }
-
-
-            // Gắn sự kiện cho nút Share Achievements bằng ID
+            // Gắn sự kiện nút Share Achievements
             const shareBtn = document.getElementById('shareAchievementsBtn');
-            if (shareBtn) {
-                shareBtn.addEventListener('click', shareAchievements);
-                console.log("Event listener added to shareAchievementsBtn");
-            } else {
-                console.error("Could not find shareAchievementsBtn!");
-            }
+            if (shareBtn) { shareBtn.addEventListener('click', shareAchievements); }
+            else { console.error("Could not find shareAchievementsBtn!"); }
 
         });
     </script>

@@ -31,7 +31,11 @@
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-white mb-4 sticky-top">
-        <div class="container"> <a class="navbar-brand fw-bold" href="{{ url_for('index') }}"><i class="bi bi-book-half text-primary"></i> StudyVault</a> <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"><span class="navbar-toggler-icon"></span></button> <div class="collapse navbar-collapse" id="navbarNav"> <ul class="navbar-nav ms-auto"> <li class="nav-item"><a class="nav-link" href="{{ url_for('index') }}">Dashboard</a></li> <li class="nav-item"><a class="nav-link active" aria-current="page" href="{{ url_for('upload_file') }}">Tải lên</a></li> <li class="nav-item"><a class="nav-link" href="{{ url_for('study_timeline') }}">Timeline</a></li> <li class="nav-item"><a class="nav-link" href="{{ url_for('lazy_market') }}">LazyMarket & Cộng đồng</a></li> </ul> </div> </div>
+        <div class="container"> <a class="navbar-brand fw-bold d-flex align-items-center" href="{{ url_for('index') }}">
+            <img src="{{ url_for('static', filename='img/logo.png') }}" alt="StudyVault Logo" height="30" class="d-inline-block align-text-top me-2">
+            StudyVault
+        </a>
+         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"><span class="navbar-toggler-icon"></span></button> <div class="collapse navbar-collapse" id="navbarNav"> <ul class="navbar-nav ms-auto"> <li class="nav-item"><a class="nav-link" href="{{ url_for('index') }}">Dashboard</a></li> <li class="nav-item"><a class="nav-link active" aria-current="page" href="{{ url_for('upload_file') }}">Tải lên</a></li> <li class="nav-item"><a class="nav-link" href="{{ url_for('study_timeline') }}">Timeline</a></li> <li class="nav-item"><a class="nav-link" href="{{ url_for('lazy_market') }}">Chia sẻ tài liệu & BXH</a></li> </ul> </div> </div>
     </nav>
 
     <div class="container mt-4">
@@ -69,11 +73,23 @@
                     <div class="mb-3" id="gdrive_link_input_div" style="display: none;"> <label for="document_gdrive_link" class="form-label">Nhập URL chia sẻ Google Drive:</label> <input type="url" class="form-control" id="document_gdrive_link" name="document_gdrive_link" placeholder="https://drive.google.com/..."> </div>
                     <div class="mb-3" id="link_input_div" style="display: none;"> <label for="document_url" class="form-label">Nhập URL Web (Khác Google Drive):</label> <input type="url" class="form-control" id="document_url" name="document_url" placeholder="https://example.com"> </div>
 
+                    <hr class="my-4">
+
+                    <h5 class="mb-3 text-muted">Thiết lập Lộ trình (Tùy chọn)</h5>
+
+                    <div class="row">
+                         <div class="col-md-6 mb-3">
+                            <label for="learning_goal" class="form-label">Mục tiêu học tập:</label>
+                            <input type="text" class="form-control" id="learning_goal" name="learning_goal" placeholder="Ví dụ: Qua môn, Hiểu chương 1...">
+                            </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="deadline" class="form-label">Thời hạn hoàn thành:</label>
+                            <input type="date" class="form-control" id="deadline" name="deadline">
+                             </div>
+                    </div>
                     <button type="submit" class="btn btn-primary btn-lg w-100 mt-4"><i class="bi bi-cloud-arrow-up-fill"></i> Tải lên & Lưu trữ</button>
                 </form>
-            </div>
-        </div>
-         <div class="mt-4 text-center">
+            </div> </div> <div class="mt-4 text-center">
              <a href="{{ url_for('index') }}" class="btn btn-link text-secondary"><i class="bi bi-arrow-left-circle"></i> Quay lại Dashboard</a>
         </div>
     </div>
@@ -84,15 +100,30 @@
             const uploadType = document.querySelector('input[name="upload_type"]:checked').value;
             const fileInputDiv = document.getElementById('file_input_div'); const linkInputDiv = document.getElementById('link_input_div'); const imageInputDiv = document.getElementById('image_input_div'); const videoInputDiv = document.getElementById('video_input_div'); const gdriveLinkInputDiv = document.getElementById('gdrive_link_input_div');
             const fileInput = document.getElementById('document_file'); const linkInput = document.getElementById('document_url'); const imageInput = document.getElementById('document_image'); const videoInput = document.getElementById('document_video'); const gdriveLinkInput = document.getElementById('document_gdrive_link');
-            fileInputDiv.style.display = 'none'; fileInput.required = false; fileInput.value = ''; linkInputDiv.style.display = 'none'; linkInput.required = false; linkInput.value = ''; imageInputDiv.style.display = 'none'; imageInput.required = false; imageInput.value = ''; videoInputDiv.style.display = 'none'; videoInput.required = false; videoInput.value = ''; gdriveLinkInputDiv.style.display = 'none'; gdriveLinkInput.required = false; gdriveLinkInput.value = '';
+            // Ẩn tất cả và reset trạng thái required/value trước khi hiển thị cái cần thiết
+            fileInputDiv.style.display = 'none'; fileInput.required = false; fileInput.value = '';
+            linkInputDiv.style.display = 'none'; linkInput.required = false; linkInput.value = '';
+            imageInputDiv.style.display = 'none'; imageInput.required = false; imageInput.value = '';
+            videoInputDiv.style.display = 'none'; videoInput.required = false; videoInput.value = '';
+            gdriveLinkInputDiv.style.display = 'none'; gdriveLinkInput.required = false; gdriveLinkInput.value = '';
+
+            // Hiển thị và đặt required cho loại được chọn
             if (uploadType === 'file') { fileInputDiv.style.display = 'block'; fileInput.required = true; }
             else if (uploadType === 'link') { linkInputDiv.style.display = 'block'; linkInput.required = true; }
             else if (uploadType === 'image') { imageInputDiv.style.display = 'block'; imageInput.required = true; }
             else if (uploadType === 'video') { videoInputDiv.style.display = 'block'; videoInput.required = true; }
             else if (uploadType === 'googledrive_link') { gdriveLinkInputDiv.style.display = 'block'; gdriveLinkInput.required = true; }
         }
+        // Chạy lần đầu khi tải trang
         document.addEventListener('DOMContentLoaded', toggleUploadFields);
-        window.addEventListener('pageshow', function(event) { if (event.persisted) { const form = document.getElementById('uploadForm'); if (form) form.reset(); toggleUploadFields(); } });
+        // Chạy lại khi quay lại trang (ví dụ: nhấn nút back của trình duyệt) để đảm bảo form đúng trạng thái
+        window.addEventListener('pageshow', function(event) {
+             if (event.persisted) { // Kiểm tra xem trang có được load từ cache không (bfcache)
+                const form = document.getElementById('uploadForm');
+                if (form) form.reset(); // Reset form để loại bỏ giá trị cũ
+                toggleUploadFields(); // Chạy lại logic ẩn/hiện
+             }
+        });
     </script>
 </body>
 </html>

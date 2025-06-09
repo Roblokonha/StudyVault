@@ -14,7 +14,6 @@
         .navbar-brand { color: var(--text-dark) !important; font-weight: 600; }
         .navbar-brand i { color: var(--primary-blue); }
         .nav-link { color: #495057 !important; font-weight: 500; }
-        /* Đảm bảo link Timeline được active đúng */
         .nav-link.active { color: var(--primary-blue) !important; font-weight: 600;}
         .card { border-radius: var(--card-border-radius); border: none; box-shadow: var(--card-shadow); margin-bottom: 1.5rem; background-color: var(--white-bg); border-top: 4px solid var(--primary-blue); }
         .card-header { background-color: transparent; border-bottom: 1px solid #f1f3f5; font-weight: 600; padding: 1rem 1.25rem; color: var(--primary-blue); }
@@ -56,6 +55,7 @@
         .timeline-table td.activity-4 .day-number, .timeline-table td.activity-4 .activity-content { color: white !important; }
         .timeline-table td.activity-4 .badge { color: #196127 !important; background-color: rgba(255, 255, 255, 0.9) !important; border: none !important; }
 
+
         /* --- CSS Phần còn lại --- */
         .stat-card .card-body { display: flex; align-items: center; justify-content: space-around; flex-wrap: wrap; gap: 1rem;}
         .stat-icon { font-size: 2rem; margin-bottom: 0.25rem;}
@@ -80,6 +80,14 @@
         .month-day.activity-2 { background-color: var(--green-act-2) !important; }
         .month-day.activity-3 { background-color: var(--green-act-3) !important; }
         .month-day.activity-4 { background-color: var(--green-act-4) !important; }
+
+        /* --- CSS CHO AI CHAT MODAL --- */
+        #aiChatModal .modal-body { display: flex; flex-direction: column; height: 70vh; }
+        #chatMessagesArea { flex-grow: 1; overflow-y: auto; padding: 10px; border: 1px solid #eee; border-radius: var(--element-border-radius); margin-bottom: 1rem; background-color: #f8f9fa; }
+        .chat-bubble { padding: 0.5rem 0.8rem; border-radius: 1rem; margin-bottom: 0.5rem; max-width: 75%; word-wrap: break-word; line-height: 1.4; }
+        .chat-bubble.user { background-color: var(--primary-blue); color: white; margin-left: auto; border-bottom-right-radius: 0.25rem; }
+        .chat-bubble.ai { background-color: #e9ecef; color: var(--text-dark); margin-right: auto; border-bottom-left-radius: 0.25rem; }
+        .chat-bubble .sender-name { font-size: 0.75em; font-weight: 600; display: block; margin-bottom: 0.2rem; }
     </style>
 </head>
 <body>
@@ -123,11 +131,16 @@
                              <label class="form-check-label" for="p_patriarchal_lover">🙎‍♂️ Người yêu gia trưởng</label>
                          </div>
                      </div>
+                     <div class="mt-3 pt-3 border-top">
+                         <button type="button" class="btn btn-outline-primary w-100" data-bs-toggle="modal" data-bs-target="#aiChatModal">
+                             <i class="bi bi-chat-dots-fill me-2"></i>Trò chuyện Ôn tập với AI
+                         </button>
+                     </div>
                  </div>
 
                  <div class="card mb-4">
                     <div class="card-header">
-                        <i class="bi bi-calendar3-range me-2"></i>Lộ trình học tập đề xuất (Demo)
+                        <i class="bi bi-calendar3-range me-2"></i>Lộ trình học tập đề xuất 
                     </div>
                     <div class="card-body small">
                         <p class="text-muted" id="pathway-description">Đang tải lộ trình...</p>
@@ -143,7 +156,7 @@
                  </div>
 
                  <div class="card stat-card">
-                     <div class="card-header"><i class="bi bi-bar-chart-line-fill"></i> Hiệu suất Tuần Này (Demo)</div>
+                     <div class="card-header"><i class="bi bi-bar-chart-line-fill"></i> Hiệu suất Tuần Này </div>
                      <div class="card-body">
                          <div class="text-center">
                             <i class="bi bi-fire stat-icon text-danger"></i>
@@ -163,14 +176,14 @@
                          <div class="text-center">
                             <i class="bi bi-brain stat-icon text-warning"></i>
                             <div class="stat-value" id="recall-rate-value">--<small>%</small></div>
-                            <div class="stat-label">Tỉ lệ Ghi nhớ (Demo)</div>
+                            <div class="stat-label">Tỉ lệ Ghi nhớ </div>
                         </div>
                      </div>
                      <div class="card-footer text-muted small"> Tổng tài liệu đã tóm tắt: {{ total_docs_summarized }} </div>
                  </div>
 
                  <div class="card">
-                     <div class="card-header"><i class="bi bi-calendar-check-fill"></i> Hàng đợi Ôn tập (Demo)</div>
+                     <div class="card-header"><i class="bi bi-calendar-check-fill"></i> Hàng đợi Ôn tập </div>
                      <ul class="list-group list-group-flush">
                          {% if review_items %}
                              {% for item in review_items %}
@@ -188,7 +201,7 @@
                  </div>
 
                  <div class="card">
-                     <div class="card-header"><i class="bi bi-award-fill"></i> Thành Tựu Đạt Được (Demo)</div>
+                     <div class="card-header"><i class="bi bi-award-fill"></i> Thành Tựu Đạt Được </div>
                      <div class="card-body">
                          <div id="achievementsList">
                              {% if earned_achievements %}
@@ -231,7 +244,7 @@
                  </div>
 
                  <div class="card">
-                     <div class="card-header"><i class="bi bi-calendar-month"></i> Hoạt động theo Tháng (Demo Ngẫu nhiên)</div>
+                     <div class="card-header"><i class="bi bi-calendar-month"></i> Hoạt động theo Tháng </div>
                      <div class="card-body">
                          <p class="text-muted small">Hiển thị mức độ hoạt động giả lập trong các tháng qua. Màu ô vuông thể hiện mức độ.</p>
                          <div class="d-flex align-items-center mb-3 justify-content-center small text-muted">
@@ -250,24 +263,196 @@
 
             </div> </div> <div class="mt-4 mb-5 text-center"> <a href="{{ url_for('index') }}" class="btn btn-secondary"><i class="bi bi-arrow-left-circle"></i> Quay lại Dashboard</a> </div>
 
-    </div> <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    </div> <div class="modal fade" id="aiChatModal" tabindex="-1" aria-labelledby="aiChatModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg modal-dialog-scrollable">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="aiChatModalLabel"><i class="bi bi-robot me-2"></i>Trò chuyện ôn tập với AI</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <div id="chatMessagesArea">
+                <div class="chat-bubble ai">
+                    <span class="sender-name">StudyVault AI</span>
+                    Xin chào! Hôm nay chúng ta cùng ôn tập về chủ đề gì nhỉ? Bạn có thể bắt đầu bằng cách hỏi tôi một câu hoặc kể về một tài liệu bạn vừa học.
+                </div>
+            </div>
+            <div class="input-group mt-auto">
+              <input type="text" class="form-control" id="chatInput" placeholder="Nhập tin nhắn của bạn...">
+              <button class="btn btn-primary" type="button" id="sendChatMessageBtn">
+                <i class="bi bi-send-fill"></i> Gửi
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-         // --- Dữ liệu và Hàm cũ ---
          const earnedAchievementsData = {{ earned_achievements | tojson | safe }};
-         function shareAchievements() { /* Code hàm shareAchievements */ console.log("shareAchievements called!"); const achievementsContainer = document.getElementById('achievementsList'); const achievementsCount = achievementsContainer ? achievementsContainer.querySelectorAll('.achievement-badge').length : (Array.isArray(earnedAchievementsData) ? earnedAchievementsData.length : 0); console.log("Achievements count:", achievementsCount); const baseScore = achievementsCount * 4000; const bonusScore = Math.floor(Math.random() * 151) + 50; const totalScore = baseScore + bonusScore; console.log(`Calculated score: ${totalScore} (Base: ${baseScore}, Bonus: ${bonusScore})`); if (typeof(Storage) !== "undefined") { localStorage.setItem('myTimelineScore', totalScore); console.log(`Timeline score saved to localStorage: ${totalScore}`); window.location.href = "/lazymarket#ranking-tab"; } else { console.error("LocalStorage is not supported!"); alert("Trình duyệt của bạn không hỗ trợ lưu trữ cục bộ, không thể cập nhật điểm."); } }
-         const pathwayExamples = [ /* Dữ liệu pathwayExamples */ [{ icon: 'bi-book', text: 'Đọc Chương 1: Tổng quan', time: 'Thứ 2 - 60 phút', title: 'Giới thiệu Machine Learning' }, { icon: 'bi-check2-square', text: 'Quiz Chương 1', time: 'Thứ 3 - 15 phút', title: 'Giới thiệu Machine Learning' }, { icon: 'bi-book', text: 'Đọc Chương 2: Supervised Learning', time: 'Thứ 4 - 90 phút', title: 'Giới thiệu Machine Learning' }, { icon: 'bi-pencil-square', text: 'Ghi chú & Tóm tắt Chương 2', time: 'Thứ 5 - 30 phút', title: 'Giới thiệu Machine Learning' }, { icon: 'bi-arrow-clockwise', text: 'Ôn tập Chương 1 & 2', time: 'Thứ 7 - 45 phút', title: 'Giới thiệu Machine Learning' }], [{ icon: 'bi-filetype-py', text: 'Setup môi trường Python & Flask', time: 'Tối Thứ 2 - 45 phút', title: 'Dự án Web Flask' }, { icon: 'bi-journal-code', text: 'Tìm hiểu về Routing & Templates', time: 'Tối Thứ 3 - 60 phút', title: 'Dự án Web Flask' }, { icon: 'bi-database', text: 'Kết nối Database (SQLAlchemy)', time: 'Tối Thứ 5 - 75 phút', title: 'Dự án Web Flask' }, { icon: 'bi-card-checklist', text: 'Tạo Form Đăng nhập/Đăng ký', time: 'Chiều Thứ 7 - 90 phút', title: 'Dự án Web Flask' }, { icon: 'bi-bug', text: 'Debug và Refactor code', time: 'Sáng Chủ Nhật - 45 phút', title: 'Dự án Web Flask' }], [{ icon: 'bi-earbuds', text: 'Nghe Podcast Tiếng Anh chủ đề Kinh tế', time: 'Sáng T2,4,6 - 20 phút', title: 'Cải thiện Tiếng Anh' }, { icon: 'bi-blockquote-right', text: 'Học 10 từ vựng mới (Quizlet)', time: 'Mỗi ngày - 15 phút', title: 'Cải thiện Tiếng Anh' }, { icon: 'bi-chat-dots', text: 'Thực hành nói với bạn bè/AI', time: 'Tối Thứ 3, 5 - 30 phút', title: 'Cải thiện Tiếng Anh' }, { icon: 'bi-book-half', text: 'Đọc 1 bài báo ngắn (BBC/CNN)', time: 'Trưa T2-T6 - 25 phút', title: 'Cải thiện Tiếng Anh' }, { icon: 'bi-pencil', text: 'Viết 1 đoạn email/nhật ký ngắn', time: 'Tối Chủ Nhật - 30 phút', title: 'Cải thiện Tiếng Anh' }] ];
+         const pathwayExamples = [
+             [{ icon: 'bi-book', text: 'Đọc Chương 1: Tổng quan', time: 'Thứ 2 - 60 phút', title: 'Giới thiệu Machine Learning' }, { icon: 'bi-check2-square', text: 'Quiz Chương 1', time: 'Thứ 3 - 15 phút', title: 'Giới thiệu Machine Learning' }, { icon: 'bi-book', text: 'Đọc Chương 2: Supervised Learning', time: 'Thứ 4 - 90 phút', title: 'Giới thiệu Machine Learning' }, { icon: 'bi-pencil-square', text: 'Ghi chú & Tóm tắt Chương 2', time: 'Thứ 5 - 30 phút', title: 'Giới thiệu Machine Learning' }, { icon: 'bi-arrow-clockwise', text: 'Ôn tập Chương 1 & 2', time: 'Thứ 7 - 45 phút', title: 'Giới thiệu Machine Learning' }],
+             [{ icon: 'bi-filetype-py', text: 'Setup môi trường Python & Flask', time: 'Tối Thứ 2 - 45 phút', title: 'Dự án Web Flask' }, { icon: 'bi-journal-code', text: 'Tìm hiểu về Routing & Templates', time: 'Tối Thứ 3 - 60 phút', title: 'Dự án Web Flask' }, { icon: 'bi-database', text: 'Kết nối Database (SQLAlchemy)', time: 'Tối Thứ 5 - 75 phút', title: 'Dự án Web Flask' }, { icon: 'bi-card-checklist', text: 'Tạo Form Đăng nhập/Đăng ký', time: 'Chiều Thứ 7 - 90 phút', title: 'Dự án Web Flask' }, { icon: 'bi-bug', text: 'Debug và Refactor code', time: 'Sáng Chủ Nhật - 45 phút', title: 'Dự án Web Flask' }],
+             [{ icon: 'bi-earbuds', text: 'Nghe Podcast Tiếng Anh chủ đề Kinh tế', time: 'Sáng T2,4,6 - 20 phút', title: 'Cải thiện Tiếng Anh' }, { icon: 'bi-blockquote-right', text: 'Học 10 từ vựng mới (Quizlet)', time: 'Mỗi ngày - 15 phút', title: 'Cải thiện Tiếng Anh' }, { icon: 'bi-chat-dots', text: 'Thực hành nói với bạn bè/AI', time: 'Tối Thứ 3, 5 - 30 phút', title: 'Cải thiện Tiếng Anh' }, { icon: 'bi-book-half', text: 'Đọc 1 bài báo ngắn (BBC/CNN)', time: 'Trưa T2-T6 - 25 phút', title: 'Cải thiện Tiếng Anh' }, { icon: 'bi-pencil', text: 'Viết 1 đoạn email/nhật ký ngắn', time: 'Tối Chủ Nhật - 30 phút', title: 'Cải thiện Tiếng Anh' }]
+         ];
          let currentPathwayIndex = 0;
-         function displayPathway(pathwayData, pathwayTitle) { /* Code hàm displayPathway */ const listElement = document.getElementById('suggested-pathway-list'); const descriptionElement = document.getElementById('pathway-description'); if (!listElement || !descriptionElement) return; descriptionElement.textContent = `Dựa trên mục tiêu và thời hạn của bạn cho tài liệu "${pathwayTitle}", AI đề xuất lịch trình sau:`; listElement.innerHTML = ''; pathwayData.forEach(item => { const li = document.createElement('li'); li.className = 'list-group-item d-flex justify-content-between align-items-center'; li.innerHTML = `<span><i class="bi ${item.icon} me-1"></i> ${item.text}</span><span class="badge bg-light text-dark rounded-pill">${item.time}</span>`; const iconElement = li.querySelector('i'); if (item.icon.includes('book') || item.icon.includes('journal')) iconElement.classList.add('text-primary'); else if (item.icon.includes('check') || item.icon.includes('database')) iconElement.classList.add('text-success'); else if (item.icon.includes('pencil') || item.icon.includes('card')) iconElement.classList.add('text-info'); else if (item.icon.includes('arrow') || item.icon.includes('earbuds') || item.icon.includes('bug')) iconElement.classList.add('text-warning'); else if (item.icon.includes('chat') || item.icon.includes('filetype')) iconElement.classList.add('text-primary'); listElement.appendChild(li); }); }
-         function updateRandomRecallRate() { /* Code hàm updateRandomRecallRate */ const recallRateElement = document.getElementById('recall-rate-value'); if (recallRateElement) { const randomRate = Math.floor(Math.random() * (98 - 65 + 1)) + 65; recallRateElement.innerHTML = `${randomRate}<small>%</small>`; } }
-         function randomizeWeeklyTimeline() { /* Code hàm randomizeWeeklyTimeline */ const weeklyTableBody = document.querySelector("#weeklyTimelineTable tbody"); if (!weeklyTableBody) return; const row = weeklyTableBody.querySelector('tr'); if (!row) return; row.innerHTML = ''; const sampleActivities = [ "Đọc tài liệu", "Xem video bài giảng", "Tóm tắt chương", "Làm Quiz ôn tập", "Tìm hiểu Link tham khảo", "Ôn tập Flashcards", "(Nghỉ ngơi)", "Giải bài tập", "Viết Code Demo", "Thực hành Lab", "Nghiên cứu Case Study", "Thảo luận nhóm", "Chuẩn bị thuyết trình", "Ghi chú ý chính", "Nghe Podcast học thuật", "Đọc báo cáo", "Phân tích dữ liệu", "Viết luận", "Sửa bài viết", "Brainstorm ý tưởng", "Lập dàn ý", "Học từ vựng mới", "Luyện nghe hội thoại", "Tập viết đoạn văn", "Luyện phát âm", "Dịch tài liệu", "Tìm kiếm thông tin", "Soạn slide", "Xem lại ghi chú cũ", "Thử giải thích lại khái niệm", "Tham gia Webinar", "Đọc sách chuyên khảo", "Học công thức", "Chứng minh định lý", "Vẽ sơ đồ tư duy", "Lập kế hoạch học tập", "Xem phim tài liệu", "Thực hành kỹ năng mềm", "Tìm lỗi code", "Review code bạn", "(Giải lao ngắn)", "Code LeetCode", "Đọc sách tiếng Anh" ]; const sampleTags = [ "Python", "Kinh tế", "Giải tích", "IELTS", "Thuyết trình", "Web",  "Thống kê", "Tiếng Nhật", "Khoa học", "Java", "Tài chính", "Đại số", "Tiếng Pháp", "App Mobile", "Data Science",  "Vật lý", "Tiếng Trung",  "Đồ án", "Thuật toán", "Kế toán", "Hình học", "Ngữ pháp", "UI/UX", "Seminar",  "Điện tử",  "Lịch sử",  "Viết Email", "Dự án",  "Blockchain", "Network", "Triết học" ]; const today = new Date(); const currentDayOfWeek = (today.getDay() + 6) % 7; for (let index = 0; index < 7; index++) { const cell = document.createElement('td'); let activityLevel = Math.floor(Math.random() * 5); if (index >= 5 && Math.random() < 0.4) { activityLevel = 0; } cell.className = 'activity-' + activityLevel; const dayNumberSpan = document.createElement('span'); dayNumberSpan.className = 'day-number'; const activityContentDiv = document.createElement('div'); activityContentDiv.className = 'activity-content'; let contentHTML = ''; let dayNumber = '??'; const dayDiff = index - currentDayOfWeek; const cellDate = new Date(today); cellDate.setDate(today.getDate() + dayDiff); dayNumber = cellDate.getDate(); dayNumberSpan.textContent = dayNumber; if (activityLevel === 0) { contentHTML = '(Nghỉ)'; activityContentDiv.classList.add('text-muted'); } else { activityContentDiv.classList.remove('text-muted'); let activity1 = sampleActivities[Math.floor(Math.random() * sampleActivities.length)]; while (activity1 === '(Nghỉ ngơi)' || activity1 === '(Giải lao ngắn)') { activity1 = sampleActivities[Math.floor(Math.random() * sampleActivities.length)]; } contentHTML = activity1; let hasTag = false; if (activityLevel >= 2 && Math.random() < 0.6) { contentHTML = `<span class="badge bg-primary-subtle text-primary-emphasis rounded-pill">${sampleTags[Math.floor(Math.random() * sampleTags.length)]}</span><br>` + contentHTML; hasTag = true; } if (activityLevel >= 3 && Math.random() < (hasTag ? 0.3 : 0.6)) { let activity2 = sampleActivities[Math.floor(Math.random() * sampleActivities.length)]; while (activity2 === activity1 || activity2 === '(Nghỉ ngơi)' || activity2 === '(Giải lao ngắn)') { activity2 = sampleActivities[Math.floor(Math.random() * sampleActivities.length)]; } contentHTML += `<br>${activity2}`; } } activityContentDiv.innerHTML = contentHTML; cell.appendChild(dayNumberSpan); cell.appendChild(activityContentDiv); row.appendChild(cell); } }
-         function generateMonthlyHeatmaps(containerId, numMonthsToShow) { /* Code hàm generateMonthlyHeatmaps */ const container = document.getElementById(containerId); if (!container) return; container.innerHTML = ''; const today = new Date(); const monthNames = ["Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6", "Tháng 7", "Tháng 8", "Tháng 9", "Tháng 10", "Tháng 11", "Tháng 12"]; const dayShortNames = ["T2", "T3", "T4", "T5", "T6", "T7", "CN"]; const totalLookbackRange = 12; const randomStartOffset = Math.floor(Math.random() * (totalLookbackRange - numMonthsToShow + 1)) - (totalLookbackRange - 1); let selectedMonths = []; for (let i = 0; i < numMonthsToShow; i++) { const targetDate = new Date(today.getFullYear(), today.getMonth() + randomStartOffset + i, 1); selectedMonths.push({ year: targetDate.getFullYear(), month: targetDate.getMonth() }); } selectedMonths.forEach(monthInfo => { const year = monthInfo.year; const month = monthInfo.month; const firstDayOfMonth = new Date(year, month, 1); const daysInMonth = new Date(year, month + 1, 0).getDate(); let startingDay = (firstDayOfMonth.getDay() + 6) % 7; const monthDiv = document.createElement('div'); monthDiv.className = 'month-grid'; const monthHeader = document.createElement('div'); monthHeader.className = 'month-header'; monthHeader.textContent = `${monthNames[month]} ${year}`; monthDiv.appendChild(monthHeader); const daysHeaderDiv = document.createElement('div'); daysHeaderDiv.className = 'month-days-header'; dayShortNames.forEach(dayName => { const dayHeader = document.createElement('div'); dayHeader.textContent = dayName; daysHeaderDiv.appendChild(dayHeader); }); monthDiv.appendChild(daysHeaderDiv); const daysGridDiv = document.createElement('div'); daysGridDiv.className = 'month-days-grid'; for (let j = 0; j < startingDay; j++) { const emptyCell = document.createElement('div'); emptyCell.className = 'month-day'; daysGridDiv.appendChild(emptyCell); } for (let day = 1; day <= daysInMonth; day++) { const dayCell = document.createElement('div'); const activityLevel = Math.floor(Math.random() * 5); dayCell.className = `month-day activity-${activityLevel}`; dayCell.title = `${day}/${month + 1}/${year} - Mức ${activityLevel}`; daysGridDiv.appendChild(dayCell); } monthDiv.appendChild(daysGridDiv); container.appendChild(monthDiv); }); }
 
-         // --- Code Mascot mới ---
-         const mascotPersonalities = { cute_lover: { icon: '👧', dialogues: { reminder: ["Nhớ ôn bài nha tình yêu ❤️", "Anh/em ơi, tới giờ học rồi nè!", "Học xíu rồi mình đi chơi nha? 😉", "Đừng quên mục tiêu của tụi mình nha!"], streak_lost: ["Opps, mình mất streak rồi... không sao, làm lại từ đầu nhé 💪", "Buồn á... Hôm qua anh/em hứa học cùng em mà?", "Thôi không dỗi đâu, nay học bù nha! 😘"], milestone_streak: ["Wow, {N} ngày streak rồi! Giỏi quá đi mất! 😍", "Chúc mừng tụi mình đạt {N} ngày học liên tục!", "Yêu anh/em nhất vì sự kiên trì này!"], milestone_docs: ["Học được {N} tài liệu rồi nè, đỉnh quá! ✨", "Cày ghê vậy, {N} tài liệu rồi đó!", "Kiến thức đầy mình rồi nha!"], generic_greeting: ["Hôm nay học gì nè tình yêu?", "Có em ở đây học cùng anh/em nè!", "Cố lên nha người thương!", "Một ngày học tập vui vẻ nhé!"] } }, kind_grandparents: { icon: '👵', dialogues: { reminder: ["Đến giờ học rồi đó cháu", "Cháu ơi, ông/bà biết hơi mệt... nhưng 10 phút thôi nhé?", "Ráng học cho nên người nha con.", "Học chút rồi nghỉ ngơi nha cháu."], streak_lost: ["Không sao đâu, lỡ bữa thôi mà. Mai học lại nhé.", "Ông/bà thấy hơi tiếc, nhưng cố gắng là được.", "Ai cũng có lúc quên mà, đừng buồn nha cháu."], milestone_streak: ["Cháu giỏi quá, {N} ngày rồi!", "Ông/bà mừng cho cháu.", "Cứ đà này là tốt rồi con."], milestone_docs: ["Học được {N} tài liệu rồi, ông/bà tự hào về cháu!", "Chà, nhiều kiến thức quá ha.", "Vậy là sắp thành tài rồi!"], generic_greeting: ["Hôm nay cháu học tốt không?", "Có cần ông/bà giúp gì không?", "Cháu cứ từ từ mà học.", "Ông/bà tin ở cháu."] } }, angry_mom: { icon: '🙎‍♀️', dialogues: { reminder: ["Học bài ngay! Không nói nhiều!", "Lại định trốn học nữa đấy à?", "Có biết mấy giờ rồi không? Ngồi vào bàn!", "Học đi chứ, không học thì làm gì?"], streak_lost: ["Mất streak rồi! Thấy chưa! Lười nó thế đấy!", "Hôm qua làm gì mà không học?!", "Cấm được lặp lại nghe chưa!", "Liệu hồn đấy!"], milestone_streak: ["Được {N} ngày rồi đấy à? Tạm được! Đừng có mà lơ là!", "Cũng biết cố gắng đấy.", "Giữ cho chắc vào!", "{N} ngày thôi, chưa là gì đâu!"], milestone_docs: ["Học được {N} cái rồi à? Còn ít lắm!", "Chừng này đã nhằm nhò gì?", "Phải học nhiều hơn nữa!", "Còn bao nhiêu cái chưa học kìa!"], generic_greeting: ["Học hành nghiêm túc vào!", "Đừng có làm mẹ tức!", "Tập trung!", "Lo mà học đi!"] } }, quiet_dad: { icon: '🧔‍♂️', dialogues: { reminder: ["Học bài đi con.", "Đến giờ rồi.", "Tập trung.", "..."], streak_lost: ["Hôm qua không học à?", "Cần cố gắng hơn.", "...", "Ừm."], milestone_streak: ["{N} ngày. Tốt.", "Được.", "Tiếp tục.", "Ừm."], milestone_docs: ["{N}.", "Được.", "Xem tiếp đi.", "..."], generic_greeting: ["...", "Học đi.", "Ừm.", "Cố lên."] } }, patriarchal_lover: { icon: '🙎‍♂️', dialogues: { reminder: ["Học bài! Nghe lời anh/em!", "Em/anh phải học, biết chưa?", "Đừng để anh/em nhắc!", "Lo mà học cho giỏi vào!"], streak_lost: ["Mất streak rồi! Anh/em đã bảo mà!", "Thấy tác hại của việc không nghe lời chưa?", "Lần sau phải cố hơn, rõ chưa?", "Thật là làm anh/em thất vọng!"], milestone_streak: ["Được {N} ngày rồi, cũng được. Nhưng phải hơn nữa!", "Tạm chấp nhận.", "Đừng tự mãn!", "Phải giữ vững phong độ!"], milestone_docs: ["{N} tài liệu. Cần học nhiều hơn!", "Phải phấn đấu nữa!", "Kiến thức là phải hơn người!", "Chưa đủ đâu!"], generic_greeting: ["Học hành cho cẩn thận!", "Nghe lời anh/em!", "Phải chăm chỉ!", "Đừng làm anh/em phiền lòng!"] } } };
+         const mascotPersonalities = {
+             cute_lover: { icon: '👧', dialogues: { reminder: ["Nhớ ôn bài nha tình yêu ❤️", "Anh/em ơi, tới giờ học rồi nè!", "Học xíu rồi mình đi chơi nha? 😉", "Đừng quên mục tiêu của tụi mình nha!"], streak_lost: ["Opps, mình mất streak rồi... không sao, làm lại từ đầu nhé 💪", "Buồn á... Hôm qua anh/em hứa học cùng em mà?", "Thôi không dỗi đâu, nay học bù nha! 😘"], milestone_streak: ["Wow, {N} ngày streak rồi! Giỏi quá đi mất! 😍", "Chúc mừng tụi mình đạt {N} ngày học liên tục!", "Yêu anh/em nhất vì sự kiên trì này!"], milestone_docs: ["Học được {N} tài liệu rồi nè, đỉnh quá! ✨", "Cày ghê vậy, {N} tài liệu rồi đó!", "Kiến thức đầy mình rồi nha!"], generic_greeting: ["Hôm nay học gì nè tình yêu?", "Có em ở đây học cùng anh/em nè!", "Cố lên nha người thương!", "Một ngày học tập vui vẻ nhé!"] } },
+             kind_grandparents: { icon: '👵', dialogues: { reminder: ["Đến giờ học rồi đó cháu", "Cháu ơi, ông/bà biết hơi mệt... nhưng 10 phút thôi nhé?", "Ráng học cho nên người nha con.", "Học chút rồi nghỉ ngơi nha cháu."], streak_lost: ["Không sao đâu, lỡ bữa thôi mà. Mai học lại nhé.", "Ông/bà thấy hơi tiếc, nhưng cố gắng là được.", "Ai cũng có lúc quên mà, đừng buồn nha cháu."], milestone_streak: ["Cháu giỏi quá, {N} ngày rồi!", "Ông/bà mừng cho cháu.", "Cứ đà này là tốt rồi con."], milestone_docs: ["Học được {N} tài liệu rồi, ông/bà tự hào về cháu!", "Chà, nhiều kiến thức quá ha.", "Vậy là sắp thành tài rồi!"], generic_greeting: ["Hôm nay cháu học tốt không?", "Có cần ông/bà giúp gì không?", "Cháu cứ từ từ mà học.", "Ông/bà tin ở cháu."] } },
+             angry_mom: { icon: '🙎‍♀️', dialogues: { reminder: ["Học bài ngay! Không nói nhiều!", "Lại định trốn học nữa đấy à?", "Có biết mấy giờ rồi không? Ngồi vào bàn!", "Học đi chứ, không học thì làm gì?"], streak_lost: ["Mất streak rồi! Thấy chưa! Lười nó thế đấy!", "Hôm qua làm gì mà không học?!", "Cấm được lặp lại nghe chưa!", "Liệu hồn đấy!"], milestone_streak: ["Được {N} ngày rồi đấy à? Tạm được! Đừng có mà lơ là!", "Cũng biết cố gắng đấy.", "Giữ cho chắc vào!", "{N} ngày thôi, chưa là gì đâu!"], milestone_docs: ["Học được {N} cái rồi à? Còn ít lắm!", "Chừng này đã nhằm nhò gì?", "Phải học nhiều hơn nữa!", "Còn bao nhiêu cái chưa học kìa!"], generic_greeting: ["Học hành nghiêm túc vào!", "Đừng có làm mẹ tức!", "Tập trung!", "Lo mà học đi!"] } },
+             quiet_dad: { icon: '🧔‍♂️', dialogues: { reminder: ["Học bài đi con.", "Đến giờ rồi.", "Tập trung.", "..."], streak_lost: ["Hôm qua không học à?", "Cần cố gắng hơn.", "...", "Ừm."], milestone_streak: ["{N} ngày. Tốt.", "Được.", "Tiếp tục.", "Ừm."], milestone_docs: ["{N}.", "Được.", "Xem tiếp đi.", "..."], generic_greeting: ["...", "Học đi.", "Ừm.", "Cố lên."] } },
+             patriarchal_lover: { icon: '🙎‍♂️', dialogues: { reminder: ["Học bài! Nghe lời anh/em!", "Em/anh phải học, biết chưa?", "Đừng để anh/em nhắc!", "Lo mà học cho giỏi vào!"], streak_lost: ["Mất streak rồi! Anh/em đã bảo mà!", "Thấy tác hại của việc không nghe lời chưa?", "Lần sau phải cố hơn, rõ chưa?", "Thật là làm anh/em thất vọng!"], milestone_streak: ["Được {N} ngày rồi, cũng được. Nhưng phải hơn nữa!", "Tạm chấp nhận.", "Đừng tự mãn!", "Phải giữ vững phong độ!"], milestone_docs: ["{N} tài liệu. Cần học nhiều hơn!", "Phải phấn đấu nữa!", "Kiến thức là phải hơn người!", "Chưa đủ đâu!"], generic_greeting: ["Học hành cho cẩn thận!", "Nghe lời anh/em!", "Phải chăm chỉ!", "Đừng làm anh/em phiền lòng!"] } }
+         };
 
-        // --- Code chạy khi DOM tải xong ---
-        document.addEventListener('DOMContentLoaded', function() {
-            // Các biến và hàm cho Mascot
+         function shareAchievements() {
+             console.log("shareAchievements called!");
+             const achievementsContainer = document.getElementById('achievementsList');
+             const achievementsCount = achievementsContainer ? achievementsContainer.querySelectorAll('.achievement-badge').length : (Array.isArray(earnedAchievementsData) ? earnedAchievementsData.length : 0);
+             console.log("Achievements count:", achievementsCount);
+             const baseScore = achievementsCount * 4000;
+             const bonusScore = Math.floor(Math.random() * 151) + 50;
+             const totalScore = baseScore + bonusScore;
+             console.log(`Calculated score: ${totalScore} (Base: ${baseScore}, Bonus: ${bonusScore})`);
+             if (typeof(Storage) !== "undefined") {
+                 localStorage.setItem('myTimelineScore', totalScore);
+                 console.log(`Timeline score saved to localStorage: ${totalScore}`);
+                 window.location.href = "{{ url_for('lazy_market') }}#ranking-tab";
+             } else {
+                 console.error("LocalStorage is not supported!");
+                 alert("Trình duyệt của bạn không hỗ trợ lưu trữ cục bộ, không thể cập nhật điểm.");
+             }
+         }
+         
+         function displayPathway(pathwayData, pathwayTitle) {
+             const listElement = document.getElementById('suggested-pathway-list');
+             const descriptionElement = document.getElementById('pathway-description');
+             if (!listElement || !descriptionElement) return;
+             descriptionElement.textContent = `Dựa trên mục tiêu và thời hạn của bạn cho tài liệu "${pathwayTitle}", AI đề xuất lịch trình sau:`;
+             listElement.innerHTML = '';
+             pathwayData.forEach(item => {
+                 const li = document.createElement('li');
+                 li.className = 'list-group-item d-flex justify-content-between align-items-center';
+                 li.innerHTML = `<span><i class="bi ${item.icon} me-1"></i> ${item.text}</span><span class="badge bg-light text-dark rounded-pill">${item.time}</span>`;
+                 const iconElement = li.querySelector('i');
+                 if (item.icon.includes('book') || item.icon.includes('journal')) iconElement.classList.add('text-primary');
+                 else if (item.icon.includes('check') || item.icon.includes('database')) iconElement.classList.add('text-success');
+                 else if (item.icon.includes('pencil') || item.icon.includes('card')) iconElement.classList.add('text-info');
+                 else if (item.icon.includes('arrow') || item.icon.includes('earbuds') || item.icon.includes('bug')) iconElement.classList.add('text-warning');
+                 else if (item.icon.includes('chat') || item.icon.includes('filetype')) iconElement.classList.add('text-primary');
+                 listElement.appendChild(li);
+             });
+         }
+
+         function updateRandomRecallRate() {
+             const recallRateElement = document.getElementById('recall-rate-value');
+             if (recallRateElement) {
+                 const randomRate = Math.floor(Math.random() * (98 - 65 + 1)) + 65;
+                 recallRateElement.innerHTML = `${randomRate}<small>%</small>`;
+             }
+         }
+
+         function randomizeWeeklyTimeline() {
+             const weeklyTableBody = document.querySelector("#weeklyTimelineTable tbody");
+             if (!weeklyTableBody) return;
+             const row = weeklyTableBody.querySelector('tr');
+             if (!row) return;
+             row.innerHTML = ''; // Clear existing cells
+             const sampleActivities = ["Đọc tài liệu", "Xem video", "Tóm tắt", "Quiz", "Nghiên cứu", "Ôn tập", "(Nghỉ)", "Bài tập", "Code", "Lab"];
+             const sampleTags = ["Python", "Kinh tế", "Toán", "IELTS", "Web", "Data", "Luật", "Sử", "Văn"];
+             const today = new Date();
+             const currentDayOfWeek = (today.getDay() + 6) % 7; // 0 for Monday, 6 for Sunday
+
+             for (let index = 0; index < 7; index++) {
+                 const cell = document.createElement('td');
+                 let activityLevel = Math.floor(Math.random() * 5); // 0 to 4
+                 if (index >= 5 && Math.random() < 0.4) { activityLevel = 0; } // Higher chance of rest on weekends
+                 cell.className = 'activity-' + activityLevel;
+
+                 const dayNumberSpan = document.createElement('span');
+                 dayNumberSpan.className = 'day-number';
+                 
+                 const activityContentDiv = document.createElement('div');
+                 activityContentDiv.className = 'activity-content';
+
+                 let contentHTML = '';
+                 const dayDiff = index - currentDayOfWeek;
+                 const cellDate = new Date(today);
+                 cellDate.setDate(today.getDate() + dayDiff);
+                 dayNumberSpan.textContent = cellDate.getDate();
+
+                 if (activityLevel === 0) {
+                     contentHTML = '(Nghỉ)';
+                     activityContentDiv.classList.add('text-muted');
+                 } else {
+                     activityContentDiv.classList.remove('text-muted');
+                     let activity1 = sampleActivities[Math.floor(Math.random() * sampleActivities.length)];
+                     while (activity1 === '(Nghỉ)') { activity1 = sampleActivities[Math.floor(Math.random() * sampleActivities.length)];}
+                     contentHTML = activity1;
+                     if (activityLevel >= 2 && Math.random() < 0.6) {
+                         contentHTML = `<span class="badge bg-primary-subtle text-primary-emphasis rounded-pill">${sampleTags[Math.floor(Math.random() * sampleTags.length)]}</span><br>` + contentHTML;
+                     }
+                 }
+                 activityContentDiv.innerHTML = contentHTML;
+                 cell.appendChild(dayNumberSpan);
+                 cell.appendChild(activityContentDiv);
+                 row.appendChild(cell);
+             }
+         }
+
+         function generateMonthlyHeatmaps(containerId, numMonthsToShow) {
+             const container = document.getElementById(containerId);
+             if (!container) return;
+             container.innerHTML = '';
+             const today = new Date();
+             const monthNames = ["Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6", "Tháng 7", "Tháng 8", "Tháng 9", "Tháng 10", "Tháng 11", "Tháng 12"];
+             const dayShortNames = ["T2", "T3", "T4", "T5", "T6", "T7", "CN"];
+
+             for (let i = 0; i < numMonthsToShow; i++) {
+                 const targetDate = new Date(today.getFullYear(), today.getMonth() - (numMonthsToShow - 1 - i), 1);
+                 const year = targetDate.getFullYear();
+                 const month = targetDate.getMonth();
+
+                 const monthDiv = document.createElement('div');
+                 monthDiv.className = 'month-grid';
+                 const monthHeader = document.createElement('div');
+                 monthHeader.className = 'month-header';
+                 monthHeader.textContent = `${monthNames[month]} ${year}`;
+                 monthDiv.appendChild(monthHeader);
+
+                 const daysHeaderDiv = document.createElement('div');
+                 daysHeaderDiv.className = 'month-days-header';
+                 dayShortNames.forEach(dayName => {
+                     const dayHeader = document.createElement('div');
+                     dayHeader.textContent = dayName;
+                     daysHeaderDiv.appendChild(dayHeader);
+                 });
+                 monthDiv.appendChild(daysHeaderDiv);
+
+                 const daysGridDiv = document.createElement('div');
+                 daysGridDiv.className = 'month-days-grid';
+                 const firstDayOfMonth = new Date(year, month, 1);
+                 const daysInMonth = new Date(year, month + 1, 0).getDate();
+                 let startingDay = (firstDayOfMonth.getDay() + 6) % 7; 
+
+                 for (let j = 0; j < startingDay; j++) {
+                     const emptyCell = document.createElement('div');
+                     emptyCell.style.visibility = 'hidden'; // Keep grid structure
+                     daysGridDiv.appendChild(emptyCell);
+                 }
+                 for (let day = 1; day <= daysInMonth; day++) {
+                     const dayCell = document.createElement('div');
+                     const activityLevel = Math.floor(Math.random() * 5);
+                     dayCell.className = `month-day activity-${activityLevel}`;
+                     dayCell.title = `${day}/${month + 1}/${year} - Mức ${activityLevel}`;
+                     daysGridDiv.appendChild(dayCell);
+                 }
+                 monthDiv.appendChild(daysGridDiv);
+                 container.appendChild(monthDiv);
+             }
+         }
+         
+         document.addEventListener('DOMContentLoaded', function() {
             const personalitySelectors = document.querySelectorAll('input[name="aiPersonality"]');
             const mascotIconEl = document.getElementById('mascotIcon');
             const mascotMessageEl = document.getElementById('mascotMessage');
@@ -275,22 +460,63 @@
             const docsToday = typeof {{ docs_viewed_today | default(0) }} !== 'undefined' ? {{ docs_viewed_today | default(0) }} : 0;
             const docsSummarized = typeof {{ total_docs_summarized | default(0) }} !== 'undefined' ? {{ total_docs_summarized | default(0) }} : 0;
 
-            function updateMascot() { /* Code hàm updateMascot */ const selectedPersonalityInput = document.querySelector('input[name="aiPersonality"]:checked'); if (!selectedPersonalityInput || !mascotIconEl || !mascotMessageEl) return; const personalityId = selectedPersonalityInput.value; const personalityData = mascotPersonalities[personalityId]; if (!personalityData) return; let trigger = 'generic_greeting'; const rand = Math.random(); if (currentStreak > 0 && currentStreak % 7 === 0 && rand < 0.4) { trigger = 'milestone_streak'; } else if (currentStreak === 0 && rand < 0.3) { trigger = 'streak_lost'; } else if (docsSummarized > 0 && docsSummarized % 5 === 0 && rand < 0.4) { trigger = 'milestone_docs'; } else if (rand < 0.2) { trigger = 'reminder'; } console.log("Selected Personality:", personalityId, "Simulated Trigger:", trigger); let message = "Hmm..."; const dialoguesForTrigger = personalityData.dialogues[trigger]; if (dialoguesForTrigger && dialoguesForTrigger.length > 0) { message = dialoguesForTrigger[Math.floor(Math.random() * dialoguesForTrigger.length)]; message = message.replace('{N}', trigger === 'milestone_docs' ? docsSummarized : currentStreak); } else { const genericDialogues = personalityData.dialogues['generic_greeting']; if (genericDialogues && genericDialogues.length > 0) { message = genericDialogues[Math.floor(Math.random() * genericDialogues.length)]; } } mascotIconEl.textContent = personalityData.icon; mascotMessageEl.textContent = message; let alertClass = 'alert-secondary'; if (trigger === 'milestone_streak' || trigger === 'milestone_docs') { alertClass = 'alert-success'; } else if (trigger === 'streak_lost' || personalityId === 'angry_mom' || personalityId === 'patriarchal_lover') { alertClass = 'alert-danger'; } else if (trigger === 'reminder') { alertClass = 'alert-warning'; } else if (personalityId === 'cute_lover') { alertClass = 'alert-info'; } else if (personalityId === 'kind_grandparents') { alertClass = 'alert-primary'; } mascotMessageEl.className = 'alert ' + alertClass; mascotMessageEl.id = 'mascotMessage'; mascotIconEl.style.transform = 'rotate(0deg) scale(1)'; setTimeout(() => { if(trigger === 'milestone_streak' || trigger === 'milestone_docs') { mascotIconEl.style.transform = 'scale(1.2) rotate(10deg)'; } else if (trigger === 'streak_lost' || personalityId === 'angry_mom') { mascotIconEl.style.transform = 'translateX(-5px) rotate(-5deg)'; setTimeout(()=> mascotIconEl.style.transform = 'translateX(5px) rotate(5deg)', 150); setTimeout(()=> mascotIconEl.style.transform = 'translateX(0px) rotate(0deg)', 300); } }, 50); }
+            function updateMascot() {
+                const selectedPersonalityInput = document.querySelector('input[name="aiPersonality"]:checked');
+                if (!selectedPersonalityInput || !mascotIconEl || !mascotMessageEl) return;
+                const personalityId = selectedPersonalityInput.value;
+                const personalityData = mascotPersonalities[personalityId];
+                if (!personalityData) return;
+                let trigger = 'generic_greeting';
+                const rand = Math.random();
+                if (currentStreak > 0 && currentStreak % 7 === 0 && rand < 0.4) { trigger = 'milestone_streak'; }
+                else if (currentStreak === 0 && rand < 0.3) { trigger = 'streak_lost'; }
+                else if (docsSummarized > 0 && docsSummarized % 5 === 0 && rand < 0.4) { trigger = 'milestone_docs'; }
+                else if (rand < 0.2) { trigger = 'reminder'; }
+                
+                let message = "Hmm...";
+                const dialoguesForTrigger = personalityData.dialogues[trigger];
+                if (dialoguesForTrigger && dialoguesForTrigger.length > 0) {
+                    message = dialoguesForTrigger[Math.floor(Math.random() * dialoguesForTrigger.length)];
+                    message = message.replace('{N}', trigger === 'milestone_docs' ? docsSummarized : currentStreak);
+                } else {
+                    const genericDialogues = personalityData.dialogues['generic_greeting'];
+                    if (genericDialogues && genericDialogues.length > 0) {
+                        message = genericDialogues[Math.floor(Math.random() * genericDialogues.length)];
+                    }
+                }
+                mascotIconEl.textContent = personalityData.icon;
+                mascotMessageEl.textContent = message;
+                let alertClass = 'alert-secondary';
+                if (trigger === 'milestone_streak' || trigger === 'milestone_docs') { alertClass = 'alert-success'; }
+                else if (trigger === 'streak_lost' || personalityId === 'angry_mom' || personalityId === 'patriarchal_lover') { alertClass = 'alert-danger'; }
+                else if (trigger === 'reminder') { alertClass = 'alert-warning'; }
+                else if (personalityId === 'cute_lover') { alertClass = 'alert-info'; }
+                else if (personalityId === 'kind_grandparents') { alertClass = 'alert-primary'; }
+                mascotMessageEl.className = 'alert ' + alertClass + ' mt-2'; // Đảm bảo id không bị ghi đè
+                mascotMessageEl.id = 'mascotMessage'; // Giữ id cho các truy vấn khác nếu có
+
+                mascotIconEl.style.transform = 'rotate(0deg) scale(1)';
+                setTimeout(() => {
+                    if(trigger === 'milestone_streak' || trigger === 'milestone_docs') { mascotIconEl.style.transform = 'scale(1.2) rotate(10deg)'; }
+                    else if (trigger === 'streak_lost' || personalityId === 'angry_mom') { 
+                        mascotIconEl.style.transform = 'translateX(-5px) rotate(-5deg)'; 
+                        setTimeout(()=> mascotIconEl.style.transform = 'translateX(5px) rotate(5deg)', 150); 
+                        setTimeout(()=> mascotIconEl.style.transform = 'translateX(0px) rotate(0deg)', 300);
+                    }
+                }, 50);
+            }
 
             if (personalitySelectors.length > 0) {
                 personalitySelectors.forEach(radio => { radio.addEventListener('change', updateMascot); });
-                updateMascot(); // Gọi lần đầu
+                updateMascot(); 
             }
 
-            // Gọi các hàm khởi tạo khác
             randomizeWeeklyTimeline();
             if (document.getElementById('monthlyActivitySection')) { generateMonthlyHeatmaps('monthlyActivitySection', 4); }
             currentPathwayIndex = Math.floor(Math.random() * pathwayExamples.length);
-             // Kiểm tra pathwayExamples có phần tử không trước khi truy cập
             if(pathwayExamples.length > 0 && pathwayExamples[currentPathwayIndex] && pathwayExamples[currentPathwayIndex][0]) {
                  displayPathway(pathwayExamples[currentPathwayIndex], pathwayExamples[currentPathwayIndex][0].title);
              } else {
-                 // Xử lý trường hợp không có pathway nào (ví dụ: hiển thị thông báo)
                  const listElement = document.getElementById('suggested-pathway-list');
                  if(listElement) listElement.innerHTML = '<li class="list-group-item text-muted">Chưa có lộ trình mẫu.</li>';
                  const descriptionElement = document.getElementById('pathway-description');
@@ -300,12 +526,107 @@
             const changePathwayBtn = document.getElementById('change-pathway-btn');
             if(changePathwayBtn) { changePathwayBtn.addEventListener('click', function() { let newIndex = Math.floor(Math.random() * pathwayExamples.length); if (pathwayExamples.length > 1) { while (newIndex === currentPathwayIndex) { newIndex = Math.floor(Math.random() * pathwayExamples.length); } } currentPathwayIndex = newIndex; if(pathwayExamples[currentPathwayIndex] && pathwayExamples[currentPathwayIndex][0]) { displayPathway(pathwayExamples[currentPathwayIndex], pathwayExamples[currentPathwayIndex][0].title); } }); }
 
-            // Gắn sự kiện nút Share Achievements
             const shareBtn = document.getElementById('shareAchievementsBtn');
             if (shareBtn) { shareBtn.addEventListener('click', shareAchievements); }
             else { console.error("Could not find shareAchievementsBtn!"); }
 
-        });
+            // --- JAVASCRIPT CHO AI CHAT MODAL (Kết nối Backend) ---
+            const chatInput = document.getElementById('chatInput');
+            const sendChatMessageBtn = document.getElementById('sendChatMessageBtn');
+            const chatMessagesArea = document.getElementById('chatMessagesArea');
+            const aiChatModalEl = document.getElementById('aiChatModal');
+            let aiChatModalInstance = null;
+            if (aiChatModalEl) {
+                aiChatModalInstance = new bootstrap.Modal(aiChatModalEl);
+            }
+
+            function appendMessage(message, sender, senderName = 'Bạn') {
+                if (!chatMessagesArea) return;
+                const bubble = document.createElement('div');
+                bubble.classList.add('chat-bubble', sender);
+                
+                const nameSpan = document.createElement('span');
+                nameSpan.classList.add('sender-name');
+                const selectedPersonalityLabel = document.querySelector('input[name="aiPersonality"]:checked + label');
+                let aiDisplayName = 'StudyVault AI'; 
+                if (selectedPersonalityLabel) {
+                    aiDisplayName = selectedPersonalityLabel.textContent.trim(); 
+                }
+                nameSpan.textContent = (sender === 'ai') ? aiDisplayName : senderName;
+                
+                bubble.appendChild(nameSpan);
+                const messageContent = document.createElement('span'); 
+                messageContent.textContent = message; 
+                bubble.appendChild(messageContent);
+
+                chatMessagesArea.appendChild(bubble);
+                chatMessagesArea.scrollTop = chatMessagesArea.scrollHeight; 
+            }
+
+            async function handleUserChatMessage() {
+                if (!chatInput || !chatMessagesArea) return;
+                const messageText = chatInput.value.trim();
+                if (messageText === "") return;
+
+                appendMessage(messageText, 'user');
+                chatInput.value = "";
+                chatInput.disabled = true; 
+                sendChatMessageBtn.disabled = true;
+
+                const currentPersonality = document.querySelector('input[name="aiPersonality"]:checked')?.value || 'cute_lover';
+
+                try {
+                    const response = await fetch("{{ url_for('ai_chat_converse') }}", {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ 
+                            message: messageText,
+                            personality: currentPersonality 
+                        }),
+                    });
+
+                    if (!response.ok) {
+                        const errorData = await response.json().catch(() => ({ error: "Lỗi không xác định từ server." }));
+                        throw new Error(errorData.error || `Lỗi HTTP: ${response.status}`);
+                    }
+
+                    const data = await response.json();
+                    if (data.reply) {
+                        appendMessage(data.reply, 'ai');
+                    } else if (data.error) {
+                        appendMessage(`Lỗi từ AI: ${data.error}`, 'ai');
+                    } else {
+                         appendMessage("AI không có phản hồi.", 'ai');
+                    }
+                } catch (error) {
+                    console.error('Lỗi khi gửi tin nhắn đến AI:', error);
+                    appendMessage(`Không thể kết nối với AI: ${error.message}`, 'ai');
+                } finally {
+                    chatInput.disabled = false; 
+                    sendChatMessageBtn.disabled = false;
+                    chatInput.focus(); 
+                }
+            }
+
+            if (sendChatMessageBtn) {
+                sendChatMessageBtn.addEventListener('click', handleUserChatMessage);
+            }
+            if (chatInput) {
+                chatInput.addEventListener('keypress', function(event) {
+                    if (event.key === 'Enter') {
+                        event.preventDefault(); 
+                        handleUserChatMessage();
+                    }
+                });
+            }
+            if (aiChatModalEl) {
+                aiChatModalEl.addEventListener('show.bs.modal', function () {
+                    if (chatInput) chatInput.focus();
+                });
+            }
+         });
     </script>
 </body>
 </html>

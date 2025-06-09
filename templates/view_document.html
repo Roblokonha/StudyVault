@@ -5,57 +5,74 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
-    <title>Chi tiết: {{ doc.filename | truncate(50)}} - StudyVault</title>
-     <style>
-        /* --- Phong cách chung --- */
-        :root { --primary-blue: #0d6efd; --light-bg: #f8f9fa; --white-bg: #ffffff; --card-border-radius: 0.75rem; --element-border-radius: 0.5rem; --card-shadow: 0 4px 15px rgba(0, 0, 0, 0.07); --text-dark: #212529; --text-muted: #6c757d; --info-border: #0dcaf0;}
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; background-color: var(--light-bg); color: var(--text-dark); }
+    <title>{{ doc.filename }} - Chi tiết Tài liệu</title>
+    <style>
+        :root { --primary-blue: #0d6efd; --light-bg: #f8f9fa; --white-bg: #ffffff; --card-border-radius: 0.75rem; --element-border-radius: 0.5rem; --card-shadow: 0 4px 15px rgba(0, 0, 0, 0.07); --text-dark: #212529; --text-muted: #6c757d; --accent-red: #dc3545; --bs-success: #198754;}
+        body { background-color: var(--light-bg); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; }
         .navbar { background-color: var(--white-bg) !important; box-shadow: var(--card-shadow); }
-        .navbar-brand { color: var(--text-dark) !important; font-weight: 600; }
-        .navbar-brand i { color: var(--primary-blue); }
-        .nav-link { color: #495057 !important; font-weight: 500; }
-        .nav-link.active { color: var(--primary-blue) !important; font-weight: 600;}
-        .card { border-radius: var(--card-border-radius); border: none; box-shadow: var(--card-shadow); margin-bottom: 1.5rem; background-color: var(--white-bg); border-top: 4px solid var(--primary-blue); }
+        .card { border-radius: var(--card-border-radius); border: none; box-shadow: var(--card-shadow); margin-bottom: 1.5rem; }
         .card-header { background-color: transparent; border-bottom: 1px solid #f1f3f5; font-weight: 600; padding: 1rem 1.25rem; color: var(--primary-blue); }
-         .card-header i { color: var(--primary-blue) !important; }
-        .btn { border-radius: var(--element-border-radius); padding: 0.5rem 1rem; font-weight: 500; }
-        .btn-primary { background-color: var(--primary-blue); border-color: var(--primary-blue); }
-        .btn-primary:hover { background-color: #0b5ed7; border-color: #0a58ca; }
-        .btn-secondary { background-color: #6c757d; border-color: #6c757d; color: white;}
-        .btn-secondary:hover { background-color: #5a6268; border-color: #545b62;}
-        .btn-success { background-color: #198754; border-color: #198754;}
-        .btn-success:hover { background-color: #157347; border-color: #146c43;}
-        .btn-outline-success { border-color: #198754; color: #198754;}
-        .btn-outline-success:hover { background-color: #198754; color: white;}
-        .btn-outline-info { border-color: #0dcaf0; color: #0dcaf0;}
-        .btn-outline-info:hover { background-color: #0dcaf0; color: white;}
-        .btn-outline-secondary { border-color: #ced4da; color: #495057;}
-        .btn-outline-secondary:hover { background-color: #e9ecef; color: #343a40;}
-        .form-control, .form-select { border-radius: var(--element-border-radius); border-color: #dee2e6; }
-        .form-control:focus, .form-select:focus { border-color: var(--primary-blue); box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25); }
-        .badge { border-radius: 50px; font-weight: 500; padding: 0.35em 0.65em; }
-        h1 { margin-bottom: 1.5rem !important; font-weight: 600; }
-        .list-group-item { border-color: #f1f3f5; padding: 0.8rem 1.25rem; }
-        .list-group-item strong { min-width: 120px; display: inline-block; font-weight: 500; color: var(--text-muted); }
-        .content-preview { background-color: #f8f9fa; border: 1px solid #e9ecef; padding: 1.5rem; border-radius: var(--element-border-radius); max-height: 60vh; overflow-y: auto; white-space: pre-wrap; word-wrap: break-word; font-family: Consolas, 'Courier New', monospace; font-size: 0.9em; line-height: 1.6; margin-top: 1rem;}
-        #quizSection { display: none; padding: 1.5rem; background-color: #e9ecef; border-radius: var(--element-border-radius); margin: 1rem;}
-        .related-doc-link { display: block; padding: 0.5rem 0.75rem; text-decoration: none; color: var(--primary-blue); border-radius: var(--element-border-radius); margin-bottom: 0.25rem;}
-        .related-doc-link:hover { background-color: #eef2f7; }
-        .summary-preview { background-color: #eef2f7; border-left: 4px solid var(--info-border); padding: 1rem; font-style: italic; color: #555; border-radius: var(--element-border-radius); }
-        .alert { border-radius: var(--element-border-radius); }
-        blockquote { background-color: #e9ecef; padding: 0.5rem 1rem; border-left: 3px solid #adb5bd; border-radius: var(--element-border-radius); }
-     </style>
+        .btn { border-radius: var(--element-border-radius); }
+        .info-label { font-weight: 500; }
+        .nav-tabs .nav-link.active { color: var(--primary-blue); font-weight: 500; border-color: #dee2e6 #dee2e6 var(--white-bg); }
+        #extractedContent { white-space: pre-wrap; background-color: #f8f9fa; padding: 1.5rem; border-radius: var(--element-border-radius); max-height: 70vh; overflow-y: auto; }
+        .sub-item-title, .objective-item .d-flex span { word-break: break-word; }
+        .user-content-area { margin-top: 1rem; padding-top: 1rem; border-top: 1px dashed #ced4da; }
+        .goal-section { padding: 1rem; border-radius: var(--element-border-radius); background-color: #f8f9fa; }
+        .progress-container { background: #e9ecef; border-radius: 50px; }
+        .progress-bar-custom { background: linear-gradient(90deg, #198754, #28a745); border-radius: 50px; text-align: center; color: white; font-weight: bold; }
+        .no-score { color: #adb5bd; }
+
+        /* CSS cho hiệu ứng */
+        .pulsating-circle {
+            width: 100px;
+            height: 100px;
+            background-color: var(--primary-blue);
+            border-radius: 50%;
+            margin: 0 auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            box-shadow: 0 0 0 0 rgba(13, 110, 253, 0.7);
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(0.95);
+                box-shadow: 0 0 0 0 rgba(13, 110, 253, 0.7);
+            }
+            70% {
+                transform: scale(1);
+                box-shadow: 0 0 0 20px rgba(13, 110, 253, 0);
+            }
+            100% {
+                transform: scale(0.95);
+                box-shadow: 0 0 0 0 rgba(13, 110, 253, 0);
+            }
+        }
+    </style>
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-white mb-4 sticky-top">
-         <div class="container"> <a class="navbar-brand fw-bold d-flex align-items-center" href="{{ url_for('index') }}">
-            <img src="{{ url_for('static', filename='img/logo.png') }}" alt="StudyVault Logo" height="30" class="d-inline-block align-text-top me-2">
-            StudyVault
-        </a>
-         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"><span class="navbar-toggler-icon"></span></button> <div class="collapse navbar-collapse" id="navbarNav"> <ul class="navbar-nav ms-auto"> <li class="nav-item"><a class="nav-link" href="{{ url_for('index') }}">Dashboard</a></li> <li class="nav-item"><a class="nav-link" href="{{ url_for('upload_file') }}">Tải lên</a></li> <li class="nav-item"><a class="nav-link" href="{{ url_for('study_timeline') }}">Timeline</a></li>
-                     <li class="nav-item"><a class="nav-link" href="{{ url_for('lazy_market') }}">Chia sẻ tài liệu & BXH</a></li>
-                 </ul> </div> </div>
+        <div class="container">
+             <a class="navbar-brand fw-bold d-flex align-items-center" href="{{ url_for('index') }}">
+                <img src="{{ url_for('static', filename='img/logo.png') }}" alt="StudyVault Logo" height="30" class="d-inline-block align-text-top me-2">
+                StudyVault
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"><span class="navbar-toggler-icon"></span></button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('index') }}">Dashboard</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('upload_file') }}">Tải lên</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('study_timeline') }}">Timeline</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('lazy_market') }}">Chia sẻ tài liệu & BXH</a></li>
+                </ul>
+            </div>
+        </div>
     </nav>
+
     <div class="container mt-4">
         {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
@@ -66,241 +83,468 @@
                 {% endfor %}
             {% endif %}
         {% endwith %}
-        <h1 class="mb-3 d-flex align-items-center">
-            {% set icon_class = 'bi-file-earmark' %}
-            {% if doc.doc_type == 'pdf' %}{% set icon_class = 'bi-file-earmark-pdf text-danger' %}
-            {% elif doc.doc_type == 'link' %}{% set icon_class = 'bi-link-45deg text-primary' %}
-            {% elif doc.doc_type == 'image' %}{% set icon_class = 'bi-image text-success' %}
-            {% elif doc.doc_type == 'video' %}{% set icon_class = 'bi-film text-warning' %}
-            {% elif doc.doc_type == 'googledrive_link' %}{% set icon_class = 'bi-google text-info' %}
-            {% elif doc.doc_type == 'docx' %}{% set icon_class = 'bi-file-earmark-word text-primary' %}
-            {% elif doc.doc_type == 'txt' %}{% set icon_class = 'bi-file-earmark-text text-secondary' %}
-            {% endif %}
-            <i class="bi {{ icon_class }} me-2 fs-2"></i>
-            <span style="word-break: break-all;">
-                {% if doc.doc_type in ['link', 'googledrive_link'] %}
-                    <a href="{{ doc.filepath }}" target="_blank" rel="noopener noreferrer" class="text-decoration-none" title="Mở link trong tab mới">{{ doc.filepath | truncate(80)}}</a>
-                {% else %}
-                    {{ doc.filename | truncate(80) }}
-                {% endif %}
-            </span>
-        </h1>
+
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="mb-0 text-break"><i class="bi bi-file-earmark-word text-primary me-2"></i><span class="align-middle">{{ doc.filename | truncate(70) }}</span></h1>
+            <a href="{{ url_for('index') }}" class="btn btn-outline-secondary"><i class="bi bi-arrow-left"></i> Quay lại</a>
+        </div>
+
         <div class="row">
-            <div class="col-lg-8">
+            <div class="col-lg-4">
+                <div class="card">
+                    <div class="card-header"><i class="bi bi-info-circle-fill me-2"></i>Thông tin chung</div>
+                    <div class="card-body">
+                        <p><span class="info-label">Danh mục:</span> <span class="badge bg-info-subtle text-info-emphasis border border-info-subtle rounded-pill">{{ doc.category }}</span></p>
+                        <p><span class="info-label">Ngày tải lên:</span> <span>{{ doc.uploaded_date.strftime('%d/%m/%Y %H:%M') }}</span></p>
+                        <p><span class="info-label">Xem lần cuối:</span> <span>{{ doc.last_viewed_date.strftime('%d/%m/%Y %H:%M') if doc.last_viewed_date else 'Chưa xem' }}</span></p>
+                        <a href="{{ url_for('download_file', document_id=doc.id) }}" class="btn btn-sm btn-outline-primary"><i class="bi bi-download"></i> Tải về</a>
+                        <form method="POST" action="{{ url_for('delete_document', document_id=doc.id) }}" style="display: inline;" onsubmit="return confirm('Bạn chắc chắn muốn xóa vĩnh viễn tài liệu này?');">
+                           <button type="submit" class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i> Xóa</button>
+                        </form>
+                        <button type="button" class="btn btn-sm btn-outline-success mt-2 w-100" data-bs-toggle="modal" data-bs-target="#aiVideoCallModal">
+                            <i class="bi bi-camera-video-fill"></i> Video Call với AI
+                        </button>
+                    </div>
+                </div>
 
                 <div class="card">
-                     <div class="card-header d-flex justify-content-between align-items-center">
-                        <span><i class="bi bi-info-circle-fill me-2"></i>Thông tin chi tiết</span>
-                        {% if doc.user_summary %}
-                        <button id="quizMeBtn" class="btn btn-sm btn-outline-success rounded-pill"><i class="bi bi-question-circle"></i> Quiz Me (Demo)</button>
-                        {% endif %}
-                     </div>
-                     <div id="quizSection" class="m-3" style="display: none;"> <h6 class="mb-3">Ôn tập nhanh (Demo)</h6>
-                         <p>Dựa trên tóm tắt bạn đã viết:</p>
-                         <blockquote class="blockquote"> <p class="mb-0 small" id="quizSummary"></p> </blockquote>
-                         <div class="mb-3 mt-3"> <label for="quizAnswerInput" class="form-label" id="quizQuestionLabel"></label> <input type="text" class="form-control form-control-sm" id="quizAnswerInput" placeholder="Nhập câu trả lời..."> </div>
-                         <button id="checkQuizAnswerBtn" class="btn btn-sm btn-primary">Kiểm tra</button>
-                         <button id="closeQuizBtn" class="btn btn-sm btn-secondary ms-1">Đóng Quiz</button>
-                         <div id="quizFeedback" class="mt-2 small"></div>
-                     </div>
-                     <ul class="list-group list-group-flush">
-                        <li class="list-group-item"><strong>Danh mục:</strong> <span class="badge bg-info-subtle text-info-emphasis border border-info-subtle rounded-pill">{{ doc.category | default('N/A', true) }}</span></li>
-                        <li class="list-group-item"><strong>Keywords:</strong> {{ doc.keywords if doc.keywords else 'N/A' }}</li>
-                        <li class="list-group-item"><strong>Ngày tải lên:</strong> {{ doc.uploaded_date.strftime('%d/%m/%Y %H:%M:%S') }}</li>
-                        <li class="list-group-item"><strong>Xem lần cuối:</strong> {{ doc.last_viewed_date.strftime('%d/%m/%Y %H:%M:%S') if doc.last_viewed_date else 'Chưa xem bao giờ' }}</li>
-                        {% if doc.doc_type not in ['link', 'googledrive_link'] %}
-                        <li class="list-group-item"> <strong>Tải xuống:</strong> <a href="{{ url_for('download_file', document_id=doc.id) }}" class="btn btn-sm btn-success"><i class="bi bi-download"></i> Tải file gốc</a> </li>
-                        {% endif %}
-                        <li class="list-group-item">
-                            <strong>Chia sẻ:</strong>
-                            <button type="button"
-                                    class="btn btn-sm btn-outline-success share-doc-btn"
-                                    title="Chia sẻ lên BXH (Demo)"
-                                    data-doc-id="{{ doc.id }}"
-                                    data-doc-filename="{{ doc.filename }}"
-                                    data-doc-category="{{ doc.category | default('N/A', true) }}"
-                                    data-doc-type="{{ doc.doc_type }}">
-                                <i class="bi bi-share-fill"></i> Chia sẻ lên Cộng đồng (Demo)
-                            </button>
-                        </li>
-                         <li class="list-group-item">
-                            <strong>Gợi ý Job (Demo):</strong>
-                            <a href="{{ url_for('lazy_market', suggest_job='infographic', doc_id=doc.id) }}" class="btn btn-sm btn-outline-info" title="Mô phỏng gửi job làm infographic"><i class="bi bi-send-check-fill"></i> Infographic?</a>
-                            <a href="{{ url_for('lazy_market', suggest_job='summary', doc_id=doc.id) }}" class="btn btn-sm btn-outline-secondary ms-1" title="Mô phỏng gửi job tóm tắt"><i class="bi bi-send-check-fill"></i> Tóm tắt?</a>
-                            {% if doc.doc_type == 'video' %} <a href="{{ url_for('lazy_market', suggest_job='full_analysis', doc_id=doc.id) }}" class="btn btn-sm btn-outline-danger ms-1" title="Mô phỏng yêu cầu phân tích video đầy đủ (trả phí)"><i class="bi bi-currency-dollar"></i> Phân tích Full Video?</a> {% endif %}
-                         </li>
-                    </ul>
-                </div>
-                <div class="card">
-                    <div class="card-header"><i class="bi bi-pencil-square me-2"></i>Bổ sung thông tin & Ngữ cảnh</div>
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <span><i class="bi bi-bullseye me-2"></i>Mục tiêu & Kết quả</span>
+                        <button class="btn btn-sm btn-outline-primary" type="button" data-bs-toggle="collapse" data-bs-target="#updateGoalCollapse" aria-expanded="false" aria-controls="updateGoalCollapse">
+                            <i class="bi bi-pencil-square"></i> Cập nhật
+                        </button>
+                    </div>
                     <div class="card-body">
-                        <form id="contextForm" method="POST" action="{{ url_for('view_document', document_id=doc.id) }}">
+                        <div id="goalDisplay">
+                            <strong>Mô tả mục tiêu:</strong>
+                            <p id="winCriteriaText" class="text-muted fst-italic mb-2">{{ doc.win_criteria_description or 'Chưa có mô tả mục tiêu.' }}</p>
+                            <strong>Tiến độ:</strong>
+                            <div class="goal-section mt-1">
+                                <div class="d-flex justify-content-between">
+                                    <span id="actualScoreDisplay" class="fw-bold fs-5 {{ 'text-success' if doc.actual_score is not none else 'no-score' }}">{{ doc.actual_score if doc.actual_score is not none else 'N/A' }}</span>
+                                    <span id="targetScoreDisplay" class="fw-bold fs-5 text-primary">{{ doc.target_score or 'N/A' }}</span>
+                                </div>
+                                <div class="progress-container mt-1">
+                                    {% set progress = (doc.actual_score or 0) / (doc.target_score or 100) * 100 %}
+                                    <div id="progressBar" class="progress-bar-custom" style="width: {{ progress }}%;">{{ '%.0f' % progress }}%</div>
+                                </div>
+                                <div class="d-flex justify-content-between small text-muted mt-1">
+                                    <span>Điểm thực tế</span>
+                                    <span>Điểm mục tiêu</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="collapse mt-3" id="updateGoalCollapse">
+                            <hr>
+                            <div class="mb-3">
+                                <label for="win_criteria_description" class="form-label small fw-bold">Thiết lập mục tiêu</label>
+                                <textarea class="form-control form-control-sm" id="win_criteria_description" rows="2" placeholder="Ví dụ: Đạt 8/10 điểm trong bài kiểm tra">{{ doc.win_criteria_description or '' }}</textarea>
+                                <input type="number" class="form-control form-control-sm mt-2" id="target_score" placeholder="Điểm mục tiêu (ví dụ: 10)" value="{{ doc.target_score or '' }}">
+                                <button type="button" class="btn btn-primary btn-sm w-100 mt-2" id="saveWinCriteriaBtn">Lưu mục tiêu</button>
+                            </div>
+                            <div class="mb-2">
+                                 <label for="actual_score" class="form-label small fw-bold">Ghi nhận kết quả</label>
+                                <div class="input-group">
+                                    <input type="number" class="form-control form-control-sm" id="actual_score" placeholder="Nhập điểm thực tế" value="{{ doc.actual_score or '' }}">
+                                    <button class="btn btn-success btn-sm" type="button" id="logResultBtn">Ghi nhận</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header"><i class="bi bi-journal-text me-2"></i>Bối cảnh & Ghi chú</div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Mục tiêu học tập:</label>
+                            <div id="objectives-container" class="border rounded p-2" style="min-height: 100px; max-height: 250px; overflow-y: auto;">
+                                <p class="text-muted small">Đang tải mục tiêu...</p>
+                            </div>
+                            <div class="input-group mt-2">
+                                <input type="text" id="new-main-objective-input" class="form-control" placeholder="Thêm mục tiêu chính mới...">
+                                <button class="btn btn-primary" type="button" id="add-main-objective-btn">Thêm</button>
+                            </div>
+                        </div>
+                        <hr>
+                        <form id="updateContextForm" method="POST" action="{{ url_for('view_document', document_id=doc.id) }}">
                             <input type="hidden" name="form_marker" value="update_context">
-                            <div class="mb-3">
-                                <label for="engagement_level" class="form-label">Mức độ bạn muốn tìm hiểu?</label>
-                                <select class="form-select" id="engagement_level" name="engagement_level">...</select>
-                            </div>
-                            <div class="mb-3">
-                                <label for="context_event" class="form-label">Gắn với sự kiện/mục tiêu?</label>
-                                <input type="text" class="form-control" id="context_event" name="context_event" value="{{ doc.context_event | default('', true) }}" placeholder="...">
-                            </div>
-                            <div class="mb-3">
-                                <label for="learning_goal" class="form-label">Mục tiêu học tập:</label>
-                                <input type="text" class="form-control" id="learning_goal" name="learning_goal" value="{{ doc.learning_goal or '' }}" placeholder="...">
-                            </div>
-                            <div class="mb-3">
-                                <label for="deadline" class="form-label">Thời hạn hoàn thành:</label>
-                                <input type="date" class="form-control" id="deadline" name="deadline" value="{{ doc.deadline.strftime('%Y-%m-%d') if doc.deadline else '' }}">
-                            </div>
-                            <div class="mb-3">
-                                <label for="custom_note" class="form-label">Ghi chú thêm:</label>
-                                <textarea class="form-control" id="custom_note" name="custom_note" rows="3" placeholder="...">{{ doc.custom_note | default('', true) }}</textarea>
-                            </div>
-                            <button type="submit" class="btn btn-secondary"><i class="bi bi-save"></i> Lưu thông tin</button>
+                             <div class="mb-3"><label for="deadline" class="form-label">Thời hạn hoàn thành:</label><input type="date" class="form-control" id="deadline" name="deadline" value="{{ doc.deadline.strftime('%Y-%m-%d') if doc.deadline else '' }}"></div>
+                            <div class="mb-3"><label for="engagement_level" class="form-label">Mức độ chuyên sâu:</label><select class="form-select" id="engagement_level" name="engagement_level"><option value="">-- Chọn mức độ --</option><option value="Học lướt" {% if doc.engagement_level == 'Học lướt' %}selected{% endif %}>Học lướt</option><option value="Học hiểu" {% if doc.engagement_level == 'Học hiểu' %}selected{% endif %}>Học hiểu</option><option value="Học sâu" {% if doc.engagement_level == 'Học sâu' %}selected{% endif %}>Học sâu</option></select></div>
+                            <div class="mb-3"><label for="context_event" class="form-label">Dùng cho việc gì?</label><input type="text" class="form-control" id="context_event" name="context_event" placeholder="Ví dụ: Thi cuối kỳ, Làm dự án cá nhân..." value="{{ doc.context_event or '' }}"></div>
+                            <div class="mb-3"><label for="custom_note" class="form-label">Ghi chú cá nhân:</label><textarea class="form-control" id="custom_note" name="custom_note" rows="3" placeholder="Ghi chú thêm về tài liệu này...">{{ doc.custom_note or '' }}</textarea></div>
+                             <div class="text-end"><button type="submit" class="btn btn-primary">Lưu Ghi Chú</button></div>
                         </form>
                     </div>
                 </div>
+            </div>
+
+            <div class="col-lg-8">
                 <div class="card">
-                    <div class="card-header"><i class="bi bi-lightbulb me-2"></i>Tóm tắt & Phân loại AI (Demo)</div>
+                    <div class="card-header">
+                        <ul class="nav nav-tabs card-header-tabs" id="docContentTab" role="tablist">
+                            <li class="nav-item" role="presentation"><button class="nav-link {% if not extracted_content %}active{% endif %}" id="workspace-tab" data-bs-toggle="tab" data-bs-target="#workspace-pane" type="button">Không gian làm việc</button></li>
+                            {% if extracted_content %}<li class="nav-item" role="presentation"><button class="nav-link {% if extracted_content %}active{% endif %}" id="content-tab" data-bs-toggle="tab" data-bs-target="#content-pane" type="button">Nội dung trích xuất</button></li>{% endif %}
+                        </ul>
+                    </div>
                     <div class="card-body">
-                         <p class="card-text small text-muted">Hãy tóm tắt kiến thức chính trong một dòng. AI (mô phỏng) sẽ cố gắng đoán lĩnh vực.</p>
-                         <form id="summaryForm" method="POST" action="{{ url_for('view_document', document_id=doc.id) }}">
-                             <input type="hidden" name="form_marker" value="submit_summary">
-                             <div class="input-group">
-                                 <input type="text" class="form-control" name="user_summary" placeholder="Nhập tóm tắt của bạn..." required value="{{ doc.user_summary | default('', true) }}">
-                                 <button class="btn btn-primary" type="submit" {% if doc.user_summary %}disabled{% endif %}>
-                                     <i class="bi bi-magic"></i> {{ 'Đã gửi' if doc.user_summary else 'Gửi (Demo)' }}
-                                 </button>
-                             </div>
-                         </form>
-                         <p class="mt-2 small"><em>AI gợi ý chủ đề: {{ doc.ai_topic_label | default('Chưa có', true) }}</em></p>
-                     </div>
-                 </div>
-                 {% if doc.doc_type == 'link' %}
-                     <div class="alert alert-primary d-flex align-items-center rounded-3" role="alert"> <i class="bi bi-link-45deg fs-4 me-3"></i> <div> Đây là một liên kết web. Nhấn vào đây để mở: <a href="{{ doc.filepath }}" target="_blank" rel="noopener noreferrer" class="alert-link">{{ doc.filepath }}</a> </div> </div>
-                 {% elif doc.doc_type == 'googledrive_link' %}
-                     <div class="alert alert-info d-flex align-items-center rounded-3" role="alert"> <i class="bi bi-google fs-4 me-3"></i> <div> Đây là Link Google Drive. Nhấn vào đây để mở: <a href="{{ doc.filepath }}" target="_blank" rel="noopener noreferrer" class="alert-link">{{ doc.filepath }}</a> </div> </div>
-                 {% elif doc.doc_type == 'image' %}
-                     <div class="card border-0"><div class="card-header bg-light"><i class="bi bi-image me-2"></i>Xem trước Ảnh</div><div class="card-body text-center"><img src="{{ url_for('download_file', document_id=doc.id) }}" class="img-fluid rounded" alt="{{ doc.filename }}" style="max-height: 70vh; border-radius: var(--element-border-radius);"></div></div>
-                 {% elif doc.doc_type == 'video' %}
-                     <div class="card border-0"><div class="card-header bg-light"><i class="bi bi-film me-2"></i>Thông tin Video</div><div class="card-body"><div class="alert alert-warning rounded-3"><i class="bi bi-exclamation-triangle-fill"></i> [Đây là file Video]<br><strong>Mô phỏng:</strong> Chỉ lưu trữ file, chưa hỗ trợ xem trực tiếp hoặc phân tích.</div></div></div>
-                 {% else %}
-                     <div class="card">
-                         <div class="card-header"><i class="bi bi-file-text me-2"></i>Nội dung xem trước (Trích xuất)</div>
-                         <div class="card-body">
-                             {% if extracted_content and '[Lỗi' not in extracted_content and '[Không trích xuất được' not in extracted_content %}
-                                 <pre class="content-preview"><code>{{ extracted_content }}</code></pre>
-                             {% elif extracted_content %}
-                                 <div class="alert alert-warning rounded-3">{{ extracted_content }}</div>
-                             {% else %}
-                                 <p class="text-center text-muted p-4">Không có nội dung văn bản để xem trước.</p>
-                             {% endif %}
-                         </div>
-                     </div>
-                     {% endif %}
-                 </div> <div class="col-lg-4">
-                 <div class="card">
-                     <div class="card-header"><i class="bi bi-card-text me-2"></i>Tóm tắt Nhanh (Demo)</div>
-                     <div class="card-body">
-                         {% if doc.user_summary %}
-                            <p class="fst-italic">"{{ doc.user_summary }}"</p>
-                            <p class="small text-muted">- Tóm tắt của bạn -</p>
-                            <hr>
-                         {% endif %}
-                         {% if extracted_content and '[Lỗi' not in extracted_content and '[Không trích xuất được' not in extracted_content %}
-                            <div class="summary-preview small"> {{ extracted_content | truncate(300, true) }} </div>
-                             <small class="text-muted d-block text-end mt-1">(Trích đoạn đầu)</small>
-                         {% elif doc.doc_type in ['link', 'googledrive_link', 'image', 'video'] %}
-                            <p class="text-muted small">Tóm tắt nhanh không áp dụng cho loại tài liệu này.</p>
-                         {% else %}
-                             <p class="text-muted small">Không có nội dung để tạo tóm tắt nhanh.</p>
-                         {% endif %}
-                     </div>
-                 </div>
-                 <div class="card">
-                     <div class="card-header"><i class="bi bi-diagram-3-fill me-2"></i>Tài liệu liên quan (Cùng danh mục)</div>
-                     <div class="card-body">
-                        {% if related_docs %}
-                            <ul class="list-unstyled mb-0">
-                            {% for rel_doc in related_docs %}
-                                <li>
-                                    <a href="{{ url_for('view_document', document_id=rel_doc.id) }}" class="related-doc-link d-flex align-items-center" title="{{ rel_doc.filename }}">
-                                     {% set rel_icon_class = 'bi-file-earmark' %} {% if rel_doc.doc_type == 'pdf' %}{% set rel_icon_class = 'bi-file-earmark-pdf text-danger' %} {% elif rel_doc.doc_type == 'link' %}{% set rel_icon_class = 'bi-link-45deg text-primary' %} {% elif rel_doc.doc_type == 'image' %}{% set rel_icon_class = 'bi-image text-success' %} {% elif rel_doc.doc_type == 'video' %}{% set rel_icon_class = 'bi-film text-warning' %} {% elif rel_doc.doc_type == 'googledrive_link' %}{% set rel_icon_class = 'bi-google text-info' %} {% elif rel_doc.doc_type == 'docx' %}{% set rel_icon_class = 'bi-file-earmark-word text-primary' %} {% elif rel_doc.doc_type == 'txt' %}{% set rel_icon_class = 'bi-file-earmark-text text-secondary' %} {% endif %}
-                                     <i class="bi {{ rel_icon_class }} me-2"></i>
-                                     <span class="flex-grow-1 text-truncate">{{ rel_doc.filename }}</span>
-                                    </a>
-                                </li>
-                            {% endfor %}
-                            </ul>
-                        {% else %}
-                            <p class="text-muted small mb-0">Chưa tìm thấy tài liệu nào liên quan cùng danh mục.</p>
-                        {% endif %}
-                     </div>
-                 </div>
-                 </div> </div> <div class="mt-4 mb-5 text-center">
-             <a href="{{ url_for('index') }}" class="btn btn-secondary">
-                 <i class="bi bi-arrow-left-circle"></i> Quay lại Dashboard
-             </a>
+                        <div class="tab-content" id="docContentTabContent">
+                            <div class="tab-pane fade {% if not extracted_content %}show active{% endif %}" id="workspace-pane" role="tabpanel">
+                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                    <h5 class="mb-0">Cấu trúc tài liệu</h5>
+                                    <button class="btn btn-sm btn-primary" id="addNewHeadingBtn"><i class="bi bi-plus-circle-fill me-1"></i>Thêm mục</button>
+                                </div><div id="workspace"><p class="text-center text-muted">Đang tải...</p></div>
+                            </div>
+                            {% if extracted_content %}<div class="tab-pane fade {% if extracted_content %}show active{% endif %}" id="content-pane" role="tabpanel"><div class="alert alert-info small"><i class="bi bi-lightbulb-fill me-2"></i><b>Mẹo:</b> Bạn có thể bôi đen bất kỳ đoạn văn bản nào tại đây để tạo nhanh một "Mục con" mới.</div><pre id="extractedContent">{{ extracted_content }}</pre></div>{% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
+    </div>
 
-    </div> <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <div id="selection-popover" class="shadow-lg" style="display: none; position: absolute; z-index: 1050;"><button id="add-as-subitem-btn" class="btn btn-sm btn-primary"><i class="bi bi-plus-circle-fill me-1"></i> Tạo mục từ văn bản</button></div>
+    
+    <div class="modal fade" id="addItemModal" tabindex="-1">
+        <div class="modal-dialog"><div class="modal-content"><div class="modal-header"><h5 class="modal-title">Tạo mục mới</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="mb-3"><label for="itemTitleInput" class="form-label">Tiêu đề:</label><input type="text" class="form-control" id="itemTitleInput" required placeholder="Nhập tiêu đề..."></div><div class="mb-3"><label for="parentItemSelect" class="form-label">Chọn mục cha:</label><select class="form-select" id="parentItemSelect"></select></div><div class="mb-3"><label for="itemContentInput" class="form-label">Nội dung (từ văn bản đã chọn):</label><textarea class="form-control" id="itemContentInput" rows="5" readonly style="background-color: #e9ecef;"></textarea></div></div><div class="modal-footer"><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button><button type="button" class="btn btn-primary" id="saveNewItemBtn">Lưu mục</button></div></div></div>
+    </div>
+
+    <div class="modal fade" id="aiVideoCallModal" tabindex="-1" aria-labelledby="aiVideoCallModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="aiVideoCallModalLabel"><i class="bi bi-robot me-2"></i>Mô phỏng cuộc gọi Video với AI</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body text-center">
+            <div class="mb-3">
+              <label class="form-label fw-bold">Chọn chế độ:</label>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="callMode" id="modeNormal" value="normal" checked>
+                <label class="form-check-label" for="modeNormal">Bình thường</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="callMode" id="modeRandom" value="random">
+                <label class="form-check-label" for="modeRandom">Ngẫu nhiên</label>
+              </div>
+            </div>
+            <hr>
+
+            <div id="normalModeContent">
+              <p class="text-muted">Chọn người bạn muốn nói chuyện cùng:</p>
+              <div class="d-grid gap-2 col-8 mx-auto">
+                 <button class="btn btn-primary"><i class="bi bi-person-video3 me-2"></i>Giáo viên </button>
+                 <button class="btn btn-secondary"><i class="bi bi-people-fill me-2"></i>Bạn bè</button>
+              </div>
+            </div>
+
+            <div id="randomModeContent" style="display: none;">
+                <p class="text-muted">Thiết lập thời gian cho cuộc gọi ngẫu nhiên:</p>
+                <div class="row g-2 align-items-center justify-content-center">
+                    <div class="col-sm-5">
+                        <label for="startTimeInput" class="form-label">Bắt đầu</label>
+                        <input type="time" class="form-control" id="startTimeInput">
+                    </div>
+                    <div class="col-sm-5">
+                        <label for="endTimeInput" class="form-label">Kết thúc</label>
+                        <input type="time" class="form-control" id="endTimeInput">
+                    </div>
+                </div>
+            </div>
+
+            <div class="my-4">
+              <div class="pulsating-circle">
+                <i class="bi bi-person-fill" style="font-size: 2.5rem; color: white;"></i>
+              </div>
+            </div>
+
+          </div>
+          <div class="modal-footer justify-content-center border-0">
+            <button type="button" class="btn btn-light border rounded-circle" style="width: 50px; height: 50px;" title="Tắt/Bật loa">
+                <i class="bi bi-volume-up-fill fs-5"></i>
+            </button>
+            <button type="button" class="btn btn-danger rounded-circle" style="width: 60px; height: 60px;" data-bs-dismiss="modal" title="Kết thúc cuộc gọi">
+                <i class="bi bi-telephone-x-fill fs-4"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // --- Script cho Quiz Me ---
-        const quizMeBtn = document.getElementById('quizMeBtn'); const quizSection = document.getElementById('quizSection'); const quizSummaryEl = document.getElementById('quizSummary'); const quizQuestionLabel = document.getElementById('quizQuestionLabel'); const quizAnswerInput = document.getElementById('quizAnswerInput'); const checkQuizAnswerBtn = document.getElementById('checkQuizAnswerBtn'); const closeQuizBtn = document.getElementById('closeQuizBtn'); const quizFeedbackEl = document.getElementById('quizFeedback');
-        // Truyền dữ liệu từ Flask vào JS một cách an toàn
-        const docUserSummary = {{ doc.user_summary | tojson | safe }};
-        const docFilename = {{ doc.filename | tojson | safe }};
-        const docCategory = {{ doc.category | tojson | safe }};
-        const docType = {{ doc.doc_type | tojson | safe }};
-        let quizCorrectAnswer = '';
-        let quizQuestionType = '';
+    document.addEventListener('DOMContentLoaded', function() {
+        // KHỞI TẠO BIẾN
+        const docId = {{ doc.id }};
+        const workspaceContainer = document.getElementById('workspace');
+        const contentPane = document.getElementById('content-pane');
+        const objectivesContainer = document.getElementById('objectives-container');
+        const addItemModal = new bootstrap.Modal(document.getElementById('addItemModal'));
 
-        if (quizMeBtn && quizSection && docUserSummary) {
-            quizMeBtn.addEventListener('click', function() {
-                quizSection.style.display = 'block';
-                quizMeBtn.style.display = 'none';
-                quizSummaryEl.textContent = `"${docUserSummary}"`;
-                quizAnswerInput.value = '';
-                quizFeedbackEl.textContent = '';
-                quizFeedbackEl.className = '';
-                if (Math.random() < 0.5 && docType !== 'link' && docType !== 'googledrive_link') {
-                    quizQuestionLabel.textContent = 'Tài liệu này tên là gì?';
-                    quizCorrectAnswer = docFilename.toLowerCase();
-                    quizQuestionType = 'filename';
-                    quizAnswerInput.placeholder = 'Nhập tên file...';
-                } else {
-                    quizQuestionLabel.textContent = 'Tài liệu này thuộc danh mục nào?';
-                    quizCorrectAnswer = docCategory ? docCategory.toLowerCase() : '';
-                    quizQuestionType = 'category';
-                    quizAnswerInput.placeholder = 'Nhập tên danh mục...';
+        // ==========================================================
+        // LOGIC CHO WORKSPACE (Cấu trúc cây đa cấp)
+        // ==========================================================
+        const renderItemAndChildren = (item, level) => {
+            if (item.children && item.children.length > 0) { item.children.sort((a, b) => a.order - b.order); }
+            const childrenHTML = (item.children || []).map(child => renderItemAndChildren(child, level + 1)).join('');
+            const indentation = level * 25;
+            const hasChildren = item.children && item.children.length > 0;
+            const toggleBtn = hasChildren ? `<button class="btn btn-sm btn-outline-secondary p-0 me-2 toggle-children-btn" style="width:24px;height:24px;" type="button" data-bs-toggle="collapse" data-bs-target="#children-of-${item.id}"><i class="bi bi-chevron-down"></i></button>` : `<span class="me-2" style="display:inline-block;width:24px;"></span>`;
+            return `<div class="workspace-item-container" style="margin-left:${indentation}px;margin-top:10px;" data-id="${item.id}" data-title="${item.title.replace(/"/g, '&quot;')}"><div class="sub-item"><div class="sub-item-title mb-1 d-flex align-items-center">${toggleBtn}<span>${item.title.replace(/</g,"&lt;")}</span></div>${item.content?`<p class="sub-item-content fst-italic text-muted small ps-4">${item.content.replace(/</g,"&lt;")}</p>`:''}<div class="user-content-area"><label for="user-content-${item.id}" class="form-label small fw-bold">Nội dung của bạn:</label><textarea class="form-control form-control-sm user-content-textarea" id="user-content-${item.id}" rows="3" placeholder="Nhập tóm tắt, phân tích...">${item.user_content||''}</textarea><button class="btn btn-sm btn-success mt-2 save-user-content-btn" data-item-id="${item.id}"><i class="bi bi-robot"></i> Lưu & AI Phân tích</button><button class="btn btn-sm btn-info mt-2 ms-2 ai-suggestion-btn" data-item-id="${item.id}"><i class="bi bi-lightbulb"></i> Góp ý từ AI</button><div class="ai-questions-area mt-2"></div></div></div><div class="children-container collapse show" id="children-of-${item.id}">${childrenHTML}</div></div>`;
+        };
+        const loadWorkspace = async () => {
+            if (!workspaceContainer) return;
+            try {
+                const response = await fetch(`/document/${docId}/workspace`);
+                const workspaceTree = await response.json();
+                workspaceContainer.innerHTML = workspaceTree.length > 0 ? workspaceTree.map(item => renderItemAndChildren(item, 0)).join('') : '<p class="text-center text-muted">Chưa có mục nào được tạo. Hãy nhấn "Thêm mục" để bắt đầu.</p>';
+            } catch (e) { console.error("Lỗi tải workspace:", e); }
+        };
+        const populateParentSelect = (items, select, level = 0) => {
+            const prefix = '— '.repeat(level);
+            items.forEach(item => { select.add(new Option(prefix + item.title, item.id)); if (item.children?.length > 0) { populateParentSelect(item.children, select, level + 1); } });
+        };
+        const openAddItemModal = (content = '') => {
+            document.getElementById('itemTitleInput').value = '';
+            document.getElementById('itemContentInput').value = content;
+            const parentSelect = document.getElementById('parentItemSelect');
+            parentSelect.innerHTML = '<option value="">-- Cấp cao nhất --</option>';
+            fetch(`/document/${docId}/workspace`).then(res => res.json()).then(tree => { populateParentSelect(tree, parentSelect); addItemModal.show(); setTimeout(() => document.getElementById('itemTitleInput').focus(), 500); });
+        };
+        document.getElementById('addNewHeadingBtn').addEventListener('click', () => openAddItemModal());
+        document.getElementById('saveNewItemBtn').addEventListener('click', async () => {
+            const title = document.getElementById('itemTitleInput').value.trim();
+            if (!title) return alert('Vui lòng nhập tiêu đề.');
+            const body = { title, content: document.getElementById('itemContentInput').value, parent_id: document.getElementById('parentItemSelect').value || null };
+            const response = await fetch(`/document/${docId}/workspace_items`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+            if (response.ok) { addItemModal.hide(); await loadWorkspace(); } else { alert('Tạo mục thất bại.'); }
+        });
+
+        // ==========================================================
+        // LOGIC CHO MỤC TIÊU HỌC TẬP (đa cấp, thu gọn)
+        // ==========================================================
+        const renderObjective = (obj, level) => {
+            const childrenHTML = (obj.sub_objectives || []).map(sub => renderObjective(sub, level + 1)).join('');
+            const indentation = level * 20;
+            const hasChildren = obj.sub_objectives && obj.sub_objectives.length > 0;
+            const toggleBtn = hasChildren ? `<button class="btn btn-sm p-0 me-2 toggle-objective-btn" type="button" data-bs-toggle="collapse" data-bs-target="#obj-children-${obj.id}"><i class="bi bi-chevron-down"></i></button>` : `<span class="me-2" style="display:inline-block; width:18px;"></span>`;
+            return `<div class="objective-item" style="margin-left:${indentation}px; margin-top:5px;" data-id="${obj.id}"><div class="d-flex align-items-center">${toggleBtn}<input class="form-check-input me-2 objective-checkbox" type="checkbox" ${obj.is_completed?'checked':''}><span class="flex-grow-1 ${obj.is_completed?'text-muted text-decoration-line-through':''}">${obj.description}</span><button class="btn btn-sm btn-outline-secondary p-0 ms-1 add-sub-objective-btn" style="width:20px;height:20px;">+</button><button class="btn btn-sm btn-outline-danger p-0 ms-1 delete-objective-btn" style="width:20px;height:20px;">&times;</button></div><div class="collapse show" id="obj-children-${obj.id}">${childrenHTML}</div></div>`;
+        };
+        const loadObjectives = async () => {
+            if (!objectivesContainer) return;
+            try {
+                const response = await fetch(`/document/${docId}/objectives_tree`);
+                const tree = await response.json();
+                objectivesContainer.innerHTML = tree.length > 0 ? tree.map(obj => renderObjective(obj, 0)).join('') : '<p class="text-muted small">Chưa có mục tiêu nào được thiết lập.</p>';
+            } catch (e) { console.error("Lỗi tải mục tiêu:", e); }
+        };
+        document.getElementById('add-main-objective-btn')?.addEventListener('click', async () => {
+            const input = document.getElementById('new-main-objective-input');
+            const description = input.value.trim();
+            if (!description) return;
+            const response = await fetch(`/document/${docId}/objectives`, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ description, parent_id: null }) });
+            if (response.ok) { await loadObjectives(); input.value = ''; } else { alert('Thêm mục tiêu thất bại.'); }
+        });
+        objectivesContainer?.addEventListener('click', async (e) => {
+            const target = e.target;
+            const item = target.closest('.objective-item');
+            if (!item) return;
+            const id = item.dataset.id;
+            if (target.classList.contains('delete-objective-btn')) {
+                if (confirm('Xóa mục tiêu này và các mục tiêu con?')) {
+                    const res = await fetch(`/objective/${id}`, { method: 'DELETE' });
+                    if (res.ok) await loadObjectives(); else alert('Xóa thất bại');
                 }
-            });
-         }
-        if (closeQuizBtn && quizSection && quizMeBtn) { closeQuizBtn.addEventListener('click', function() { quizSection.style.display = 'none'; quizMeBtn.style.display = 'inline-block'; }); }
-        if (checkQuizAnswerBtn) { checkQuizAnswerBtn.addEventListener('click', function() { const userAnswer = quizAnswerInput.value.trim().toLowerCase(); if (!userAnswer) return; let isCorrect = false; if (quizCorrectAnswer && userAnswer === quizCorrectAnswer) { isCorrect = true; } if (isCorrect) { quizFeedbackEl.textContent = 'Chính xác! Bạn nhớ tốt đấy!'; quizFeedbackEl.className = 'alert alert-success p-2 small'; } else { quizFeedbackEl.textContent = `Sai rồi. Đáp án đúng là: ${quizCorrectAnswer}`; quizFeedbackEl.className = 'alert alert-danger p-2 small'; } }); }
+            } else if (target.classList.contains('add-sub-objective-btn')) {
+                const desc = prompt("Nhập nội dung cho mục tiêu con:");
+                if (desc && desc.trim()) {
+                    const res = await fetch(`/document/${docId}/objectives`, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ description: desc.trim(), parent_id: id }) });
+                    if (res.ok) await loadObjectives(); else alert('Thêm thất bại.');
+                }
+            } else if (target.classList.contains('objective-checkbox')) {
+                const res = await fetch(`/objective/${id}/toggle`, { method: 'PUT' });
+                if (!res.ok) { alert('Cập nhật thất bại'); target.checked = !target.checked; } else { await loadObjectives(); }
+            }
+        });
 
-        // --- Script cho Nút Share (dùng localStorage) ---
-        document.addEventListener('click', function(event) {
-            const shareButton = event.target.closest('.share-doc-btn');
-            if (shareButton) {
-                event.preventDefault();
-                const docData = {
-                    id: shareButton.dataset.docId,
-                    name: shareButton.dataset.docFilename,
-                    category: shareButton.dataset.docCategory,
-                    doc_type: shareButton.dataset.docType
-                };
-                console.log("Sharing doc:", docData);
+        // ==========================================================
+        // CÁC LOGIC KHÁC
+        // ==========================================================
+        // 1. Gắn sự kiện chung cho toàn bộ trang (dùng event delegation)
+        document.body.addEventListener('click', async (event) => {
+            const target = event.target;
+            
+            // Xử lý sự kiện nhấn nút "Lưu & AI Phân tích" trong Workspace
+            if (target.closest('.save-user-content-btn')) {
+                const button = target.closest('.save-user-content-btn');
+                const itemId = button.dataset.itemId;
+                const itemDiv = button.closest('.user-content-area');
+                const userContent = itemDiv.querySelector('.user-content-textarea').value;
+                const questionsArea = itemDiv.querySelector('.ai-questions-area');
+                
+                button.disabled = true;
+                button.innerHTML = `<span class="spinner-border spinner-border-sm"></span> Đang xử lý...`;
+                questionsArea.innerHTML = `<p class="text-muted small">AI đang phân tích...</p>`;
                 try {
-                    localStorage.setItem('sharedDocForRanking', JSON.stringify(docData));
-                    // Chuyển hướng - sử dụng url tuyệt đối nếu url_for không hoạt động trong JS thuần
-                    window.location.href = "/lazymarket#ranking-tab"; // Đã sửa thành URL tuyệt đối
+                    const response = await fetch(`/workspace_item/${itemId}/user_content`, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ user_content: userContent }) });
+                    const data = await response.json();
+                    if (response.ok && data.questions) {
+                        let questionsHtml = '<ul class="list-group list-group-flush">';
+                        data.questions.forEach(q => { questionsHtml += `<li class="list-group-item"><strong class="badge bg-secondary me-2">${q.type}</strong> ${q.q}</li>`; });
+                        questionsArea.innerHTML = questionsHtml + '</ul>';
+                    } else { 
+                        questionsArea.innerHTML = `<p class="text-danger small">${data.error || 'Lỗi không xác định'}</p>`; 
+                    }
+                } catch (e) { 
+                    questionsArea.innerHTML = `<p class="text-danger small">Lỗi kết nối mạng.</p>`; 
+                } finally { 
+                    button.disabled = false; 
+                    button.innerHTML = '<i class="bi bi-robot"></i> Lưu & AI Phân tích'; 
+                }
+            }
+            
+            // Xử lý sự kiện nhấn nút "Góp ý từ AI"
+            if (target.closest('.ai-suggestion-btn')) {
+                const button = target.closest('.ai-suggestion-btn');
+                const itemId = button.dataset.itemId;
+                const itemDiv = button.closest('.user-content-area');
+                const questionsArea = itemDiv.querySelector('.ai-questions-area');
+                const userContent = itemDiv.querySelector('.user-content-textarea').value;
+
+                button.disabled = true;
+                button.innerHTML = `<span class="spinner-border spinner-border-sm"></span>`;
+                questionsArea.innerHTML = '';
+
+                try {
+                    const response = await fetch(`/workspace_item/${itemId}/ai_suggestion`, {
+                        method: 'POST',
+                        headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify({ user_content: userContent })
+                    });
+                    const data = await response.json();
+
+                    if (response.ok && data.suggestion) {
+                        questionsArea.innerHTML = `<div class="alert alert-info p-2 small"><i class="bi bi-lightbulb-fill me-2"></i><strong>Góp ý:</strong> ${data.suggestion}</div>`;
+                    } else {
+                        questionsArea.innerHTML = `<p class="text-danger small">${data.error || 'Lỗi không xác định từ AI.'}</p>`;
+                    }
                 } catch (e) {
-                    console.error("Lỗi khi lưu vào localStorage hoặc chuyển hướng:", e);
-                    alert("Đã có lỗi xảy ra khi thực hiện chia sẻ (demo).");
+                    questionsArea.innerHTML = `<p class="text-danger small">Lỗi kết nối mạng.</p>`;
+                } finally {
+                    button.disabled = false;
+                    button.innerHTML = '<i class="bi bi-lightbulb"></i> Góp ý từ AI';
+                }
+            }
+
+            // Xử lý nút "Lưu mục tiêu"
+            if (target.id === 'saveWinCriteriaBtn') {
+                event.preventDefault();
+                const description = document.getElementById('win_criteria_description').value;
+                const target_score = document.getElementById('target_score').value;
+                const response = await fetch(`/document/${docId}/win_criteria`, { method: 'PUT', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ description, target_score }) });
+                const data = await response.json();
+                if(response.ok) {
+                    document.getElementById('winCriteriaText').textContent = data.win_criteria_description || 'Chưa có mô tả mục tiêu.';
+                    document.getElementById('targetScoreDisplay').textContent = data.target_score || 'N/A';
+                    // Sau khi lưu mục tiêu, cũng cần cập nhật lại thanh progress
+                    const actual = parseFloat(document.getElementById('actualScoreDisplay').textContent) || 0;
+                    const newTarget = parseFloat(data.target_score) || 100;
+                    const progress = (actual / newTarget) * 100;
+                    const progressBar = document.getElementById('progressBar');
+                    progressBar.style.width = `${progress}%`;
+                    progressBar.textContent = `${Math.round(progress)}%`;
+                    alert('Đã lưu mục tiêu thành công!');
+                } else { 
+                    alert(data.error || 'Lỗi khi cập nhật mục tiêu.'); 
+                }
+            }
+
+            // Xử lý nút "Ghi nhận Kết quả"
+            if (target.id === 'logResultBtn') {
+                event.preventDefault();
+                const actual_score = document.getElementById('actual_score').value;
+                const response = await fetch(`/document/${docId}/result`, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ actual_score }) });
+                const data = await response.json();
+                if(response.ok) {
+                    const actualScoreDisplay = document.getElementById('actualScoreDisplay');
+                    actualScoreDisplay.textContent = data.actual_score !== null ? data.actual_score : 'N/A';
+                    actualScoreDisplay.classList.toggle('text-success', data.actual_score !== null);
+                    actualScoreDisplay.classList.toggle('no-score', data.actual_score === null);
+                    const target = parseFloat(document.getElementById('targetScoreDisplay').textContent) || 100;
+                    const actual = parseFloat(data.actual_score) || 0;
+                    const progress = (actual / target) * 100;
+                    const progressBar = document.getElementById('progressBar');
+                    progressBar.style.width = `${progress}%`;
+                    progressBar.textContent = `${Math.round(progress)}%`;
+                    alert('Đã ghi nhận kết quả!');
+                } else { 
+                    alert(data.error || 'Lỗi khi ghi nhận kết quả.'); 
                 }
             }
         });
+
+        // 2. Logic cho Popover khi bôi đen văn bản
+        if (contentPane) {
+            const popover = document.getElementById('selection-popover');
+            contentPane.addEventListener('mouseup', (e) => {
+                setTimeout(() => {
+                    const selectedText = window.getSelection().toString().trim();
+                    if (selectedText.length > 5 && popover) {
+                        const rect = window.getSelection().getRangeAt(0).getBoundingClientRect();
+                        popover.style.left = `${window.scrollX + rect.left + rect.width / 2 - popover.offsetWidth / 2}px`;
+                        popover.style.top = `${window.scrollY + rect.top - popover.offsetHeight - 8}px`;
+                        popover.style.display = 'block';
+                    } else if (popover) {
+                        popover.style.display = 'none';
+                    }
+                }, 10);
+            });
+            document.addEventListener('mousedown', (e) => {
+                if (popover && !popover.contains(e.target) && !e.target.closest('#selection-popover')) {
+                    popover.style.display = 'none';
+                }
+            });
+            document.getElementById('add-as-subitem-btn').addEventListener('click', () => {
+                if (popover) popover.style.display = 'none';
+                openAddItemModal(window.getSelection().toString().trim());
+            });
+        }
+
+        // 3. Logic cho Collapse (thay đổi icon mũi tên)
+        if (workspaceContainer) {
+            workspaceContainer.addEventListener('show.bs.collapse', event => {
+                const button = document.querySelector(`[data-bs-target="#${event.target.id}"]`);
+                if (button) button.querySelector('.bi')?.classList.replace('bi-chevron-right', 'bi-chevron-down');
+            });
+            workspaceContainer.addEventListener('hide.bs.collapse', event => {
+                const button = document.querySelector(`[data-bs-target="#${event.target.id}"]`);
+                if (button) button.querySelector('.bi')?.classList.replace('bi-chevron-down', 'bi-chevron-right');
+            });
+        }
+        
+        // 4. Logic cho Modal Video Call
+        const callModeRadios = document.querySelectorAll('input[name="callMode"]');
+        const normalModeContent = document.getElementById('normalModeContent');
+        const randomModeContent = document.getElementById('randomModeContent');
+
+        if (callModeRadios.length > 0) {
+            callModeRadios.forEach(radio => {
+                radio.addEventListener('change', function() {
+                    if (this.value === 'normal') {
+                        normalModeContent.style.display = 'block';
+                        randomModeContent.style.display = 'none';
+                    } else {
+                        normalModeContent.style.display = 'none';
+                        randomModeContent.style.display = 'block';
+                    }
+                });
+            });
+        }
+
+        // --- KHỞI ĐỘNG ---
+        loadWorkspace();
+        loadObjectives();
+    });
     </script>
 </body>
 </html>

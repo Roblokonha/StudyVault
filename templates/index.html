@@ -302,7 +302,7 @@
                 <i class="bi bi-cloud-arrow-up-fill"></i> Tải lên tài liệu mới
             </a>
         </div>
-        </div> <div class="modal fade" id="editCategoryModal" tabindex="-1" aria-labelledby="editCategoryModalLabel" aria-hidden="true">
+    </div> <div class="modal fade" id="editCategoryModal" tabindex="-1" aria-labelledby="editCategoryModalLabel" aria-hidden="true">
       <div class="modal-dialog">
         <div class="modal-content">
           <form id="editCategoryForm" method="POST" action="">
@@ -313,18 +313,42 @@
         </div>
       </div>
     </div>
-    <button type="button" class="btn btn-primary" id="focusLockBtn" title="Kích hoạt Chế độ Tập trung (Demo)">
-        <i class="bi bi-lock-fill"></i>
+
+    <button type="button" class="btn btn-primary" id="focusLockBtn" title="Kích hoạt Chế độ Tập trung (Thủ công)">
+        <i class="bi bi-joystick"></i>
     </button>
+
     <div class="modal fade" id="focusLockModal" tabindex="-1" aria-labelledby="focusLockModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
       <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
-          <div class="modal-header"> <h5 class="modal-title" id="focusLockModalLabel"><i class="bi bi-unlock-fill text-primary"></i> Mở khóa Ứng dụng (Mô phỏng)</h5> </div>
-          <div class="modal-body"> <p class="text-muted small">Để tiếp tục sử dụng ứng dụng khác (ví dụ: Facebook, Youtube - Mô phỏng), bạn cần trả lời đúng câu hỏi ôn tập kiến thức đã học:</p> <div class="mb-3"> <label for="focusQuestion" class="form-label">Câu hỏi:</label> <p id="focusQuestion" class="fw-bold fs-4"></p> <small class="text-muted" id="focusQuestionCategory"></small> </div> <div class="mb-3"> <label for="focusAnswerInput" class="form-label">Câu trả lời của bạn:</label> <input type="text" class="form-control" id="focusAnswerInput" placeholder="Nhập câu trả lời..."> </div> <div id="focusFeedback"></div> </div>
-          <div class="modal-footer"> <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button> <button type="button" class="btn btn-primary" id="checkFocusAnswerBtn">Kiểm tra</button> </div>
+          <div class="modal-header">
+            <h5 class="modal-title" id="focusLockModalLabel"><i class="bi bi-unlock-fill text-primary"></i> Mở khóa Ứng dụng (Mô phỏng)</h5>
+          </div>
+          <div class="modal-body">
+            <p class="text-muted small" id="focusLockIntroText">Để tiếp tục sử dụng ứng dụng khác (ví dụ: Facebook, Youtube - Mô phỏng), bạn cần trả lời đúng các câu hỏi ôn tập kiến thức đã học:</p>
+            <div id="focusLockMascot" class="text-center my-3" style="display: none;">
+                <span id="mascotIcon" style="font-size: 2rem;">😼</span>
+                <p id="mascotMessage" class="small text-muted fst-italic mt-1"></p>
+            </div>
+            <div class="mb-3">
+                <label for="focusQuestion" class="form-label">Câu hỏi:</label>
+                <p id="focusQuestion" class="fw-bold fs-5"></p>
+                <small class="text-muted" id="focusQuestionCategory"></small>
+            </div>
+            <div class="mb-3">
+                <label for="focusAnswerInput" class="form-label">Câu trả lời của bạn:</label>
+                <textarea class="form-control" id="focusAnswerInput" placeholder="Nhập câu trả lời..." rows="3"></textarea>
+            </div>
+            <div id="focusFeedback" class="mt-2"></div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+            <button type="button" class="btn btn-primary" id="checkFocusAnswerBtn">Kiểm tra</button>
+          </div>
         </div>
       </div>
     </div>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         // --- Script Modal Sửa Danh mục ---
@@ -343,8 +367,7 @@
                     let categoryExists = false;
                     for(let i=0; i < categorySelectEl.options.length; i++) {
                         if (categorySelectEl.options[i].value === currentCategory) {
-                            categoryExists = true;
-                            break;
+                            categoryExists = true; break;
                         }
                     }
                     categorySelectEl.value = categoryExists ? currentCategory : (categorySelectEl.options[0] ? categorySelectEl.options[0].value : '');
@@ -354,26 +377,251 @@
         }
 
         // --- Script cho Focus Lock ---
-        const focusLockBtn = document.getElementById('focusLockBtn'); const focusLockModalEl = document.getElementById('focusLockModal'); const focusQuestionEl = document.getElementById('focusQuestion'); const focusQuestionCategoryEl = document.getElementById('focusQuestionCategory'); const focusAnswerInput = document.getElementById('focusAnswerInput'); const checkFocusAnswerBtn = document.getElementById('checkFocusAnswerBtn'); const focusFeedbackEl = document.getElementById('focusFeedback'); const focusQuestions = [ { q: "Trong Python, sự khác biệt chính giữa `list` và `tuple` là gì?", a: "Tuple không thể thay đổi (immutable), list có thể thay đổi (mutable)", cat: "Lập trình" }, { q: "Nêu định nghĩa về 'Lạm phát' trong kinh tế học.", a: "Sự tăng mức giá chung của hàng hóa và dịch vụ theo thời gian, làm mất giá trị của một đơn vị tiền tệ.", cat: "Kinh tế học" }, { q: "Công thức tính diện tích hình tròn là gì? (Pi*R^2)", a: "pi nhân với bình phương bán kính", cat: "Toán học" }, { q: "Thì 'Present Perfect' dùng để diễn tả điều gì?", a: "Hành động xảy ra trong quá khứ nhưng có liên quan đến hiện tại hoặc kết quả còn ở hiện tại.", cat: "Ngoại ngữ" }, { q: "Biến `let` và `const` trong JavaScript khác nhau như thế nào?", a: "const khai báo hằng số không thể gán lại giá trị, let khai báo biến có thể gán lại.", cat: "Lập trình" }, { q: "'Chi phí cơ hội' (Opportunity Cost) là gì?", a: "Giá trị của lựa chọn tốt nhất bị bỏ lỡ khi đưa ra một quyết định kinh tế.", cat: "Kinh tế học" }, { q: "Định lý Pythagoras áp dụng cho loại tam giác nào?", a: "Tam giác vuông", cat: "Toán học" }, { q: "Thủ đô của nước Pháp là gì?", a: "Paris", cat: "Kiến thức chung" }, { q: "Câu lệnh SQL nào dùng để chọn TẤT CẢ các cột từ bảng 'Users'?", a: "SELECT * FROM Users", cat: "Lập trình" }, { q: "GDP là viết tắt của cụm từ tiếng Anh nào?", a: "Gross Domestic Product", cat: "Kinh tế học" } ]; let currentFocusQuestion = null; let focusModal = null;
-        if (focusLockModalEl) { focusModal = new bootstrap.Modal(focusLockModalEl); } function getRandomQuestion() { const randomIndex = Math.floor(Math.random() * focusQuestions.length); return focusQuestions[randomIndex]; } if (focusLockBtn && focusModal) { focusLockBtn.addEventListener('click', function() { currentFocusQuestion = getRandomQuestion(); if (focusQuestionEl) focusQuestionEl.textContent = currentFocusQuestion.q; if (focusQuestionCategoryEl) focusQuestionCategoryEl.textContent = `(Lĩnh vực: ${currentFocusQuestion.cat})`; if (focusAnswerInput) focusAnswerInput.value = ''; if (focusFeedbackEl) focusFeedbackEl.textContent = ''; if (focusFeedbackEl) focusFeedbackEl.className = ''; if (checkFocusAnswerBtn) checkFocusAnswerBtn.disabled = false; focusModal.show(); }); } if (checkFocusAnswerBtn) { checkFocusAnswerBtn.addEventListener('click', function() { if (!currentFocusQuestion || !focusAnswerInput || !focusFeedbackEl) return; const userAnswer = focusAnswerInput.value.trim().toLowerCase(); const correctAnswer = currentFocusQuestion.a.toLowerCase(); let isCorrect = false; if (correctAnswer.includes(userAnswer) && userAnswer.length > 3) { isCorrect = true; } else if (userAnswer.includes(correctAnswer) && correctAnswer.length > 3) { isCorrect = true; } else if (userAnswer === correctAnswer) { isCorrect = true; } else if (currentFocusQuestion.cat === "Toán học" && userAnswer.replace(/\s/g, '') === 'pi*r^2') { isCorrect = true; } if (isCorrect) { focusFeedbackEl.textContent = 'Chính xác! Bạn đã mở khóa thành công! (Mô phỏng)'; focusFeedbackEl.className = 'alert alert-success'; checkFocusAnswerBtn.disabled = true; } else { focusFeedbackEl.textContent = 'Chưa đúng. Hãy thử suy nghĩ lại hoặc chọn Hủy.'; focusFeedbackEl.className = 'alert alert-danger'; } }); } if (focusLockModalEl) { focusLockModalEl.addEventListener('hidden.bs.modal', function () { if (focusAnswerInput) focusAnswerInput.value = ''; if (focusFeedbackEl) focusFeedbackEl.textContent = ''; if (focusFeedbackEl) focusFeedbackEl.className = ''; if (checkFocusAnswerBtn) checkFocusAnswerBtn.disabled = false; currentFocusQuestion = null; }) }
+        const focusLockBtn = document.getElementById('focusLockBtn');
+        const focusLockModalEl = document.getElementById('focusLockModal');
+        const focusQuestionEl = document.getElementById('focusQuestion');
+        const focusQuestionCategoryEl = document.getElementById('focusQuestionCategory');
+        const focusAnswerInput = document.getElementById('focusAnswerInput');
+        const checkFocusAnswerBtn = document.getElementById('checkFocusAnswerBtn');
+        const focusFeedbackEl = document.getElementById('focusFeedback');
+        const focusLockMascotEl = document.getElementById('focusLockMascot');
+        const mascotIconEl = document.getElementById('mascotIcon');
+        const mascotMessageEl = document.getElementById('mascotMessage');
+        const focusLockModalLabel = document.getElementById('focusLockModalLabel');
+        const focusLockIntroTextEl = document.getElementById('focusLockIntroText');
+
+        let questionsBatch = [];
+        let currentQuestionIndex = 0;
+        let questionsCorrect = 0;
+        let failedAttemptsInSession = 0;
+        const MIN_CORRECT_TO_UNLOCK = 2; 
+
+        let focusModal = null;
+        if (focusLockModalEl) {
+            focusModal = new bootstrap.Modal(focusLockModalEl);
+        }
+
+        // --- Logic cho Idle Timer ---
+        let idleTimer = null;
+        const IDLE_TIMEOUT = 3 * 60 * 1000;
+
+        function resetIdleTimer() {
+            clearTimeout(idleTimer);
+            if (focusLockModalEl && !focusLockModalEl.classList.contains('show')) {
+                 idleTimer = setTimeout(triggerFocusLockOnIdle, IDLE_TIMEOUT);
+            }
+        }
+
+        function triggerFocusLockOnIdle() {
+            const anyOtherModalOpen = document.querySelector('.modal.show:not(#focusLockModal)');
+            if (focusLockModalEl && !focusLockModalEl.classList.contains('show') && !anyOtherModalOpen) {
+                if(focusLockIntroTextEl) focusLockIntroTextEl.textContent = "Có vẻ bạn đang nghỉ ngơi? Hãy trả lời vài câu hỏi để củng cố kiến thức nhé!";
+                displayMascotMessage('🤔', 'Lâu rồi không thấy bạn hoạt động. Làm vài câu hỏi ôn tập cho vui nhé!', 'info');
+                startFocusLockSession(true); 
+                focusModal.show();
+            } else {
+                resetIdleTimer();
+            }
+        }
+        
+        function checkAnswerSimilarity(userAnswer, correctAnswer) {
+            if (!userAnswer || !correctAnswer) return false;
+            const normalize = (str) => str.toLowerCase().replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g,"").replace(/\s{2,}/g," ");
+            const ua = normalize(userAnswer);
+            const ca = normalize(correctAnswer);
+            const correctWords = new Set(ca.split(' ').filter(w => w.length > 1));
+            const userWords = new Set(ua.split(' '));
+            if (correctWords.size === 0) return ua === ca;
+            let matchCount = 0;
+            for (const word of userWords) {
+                if (correctWords.has(word)) {
+                    matchCount++;
+                }
+            }
+            const similarity = matchCount / correctWords.size;
+            console.log(`Answer similarity: ${similarity.toFixed(2)}`);
+            return similarity > 0.7;
+        }
+
+        function updateModalTitle() {
+            if (questionsBatch.length > 0 && currentQuestionIndex < questionsBatch.length) {
+                focusLockModalLabel.innerHTML = `<i class="bi bi-unlock-fill text-primary"></i> Mở khóa (Câu ${currentQuestionIndex + 1}/${questionsBatch.length})`;
+            } else if (questionsBatch.length > 0 && currentQuestionIndex >= questionsBatch.length) {
+                focusLockModalLabel.innerHTML = `<i class="bi bi-unlock-fill text-primary"></i> Kết quả Mở khóa`;
+            } else {
+                focusLockModalLabel.innerHTML = `<i class="bi bi-unlock-fill text-primary"></i> Mở khóa Ứng dụng (Mô phỏng)`;
+            }
+        }
+
+        function displayCurrentQuestion() {
+            if (currentQuestionIndex < questionsBatch.length) {
+                const questionData = questionsBatch[currentQuestionIndex];
+                focusQuestionEl.textContent = questionData.q || "Lỗi: Không có nội dung câu hỏi.";
+                focusQuestionCategoryEl.textContent = `(Lĩnh vực: ${questionData.cat || 'Chung'})`;
+                focusAnswerInput.value = '';
+                focusFeedbackEl.innerHTML = '';
+                focusFeedbackEl.className = 'mt-2';
+                focusAnswerInput.disabled = false;
+                checkFocusAnswerBtn.disabled = false;
+                checkFocusAnswerBtn.textContent = 'Kiểm tra';
+                updateModalTitle();
+            } else {
+                handleSessionEnd();
+            }
+        }
+
+        async function startFocusLockSession(isAutoTriggered = false) {
+            focusQuestionEl.textContent = 'Đang tải bộ câu hỏi...';
+            focusQuestionCategoryEl.textContent = '';
+            focusAnswerInput.value = '';
+            focusAnswerInput.disabled = true;
+            checkFocusAnswerBtn.disabled = true;
+            focusFeedbackEl.innerHTML = '';
+            focusFeedbackEl.className = 'mt-2';
+            
+            if (!isAutoTriggered) {
+                if (focusLockMascotEl) focusLockMascotEl.style.display = 'none';
+                if(focusLockIntroTextEl) focusLockIntroTextEl.textContent = "Để tiếp tục sử dụng ứng dụng khác, bạn cần trả lời đúng các câu hỏi ôn tập kiến thức đã học:";
+            }
+            
+            questionsBatch = [];
+            currentQuestionIndex = 0;
+            questionsCorrect = 0;
+            failedAttemptsInSession = 0;
+            updateModalTitle();
+
+            try {
+                const response = await fetch('/get_recall_data');
+                const data = await response.json();
+
+                if (!response.ok || !Array.isArray(data) || data.length === 0) {
+                     throw new Error(data.error || "Không thể tải bộ câu hỏi.");
+                }
+
+                if (data[0].type === 'error') {
+                     focusQuestionEl.textContent = data[0].q;
+                     focusQuestionCategoryEl.textContent = `(Lĩnh vực: ${data[0].cat || 'Hệ thống'})`;
+                     displayMascotMessage('😿', 'Hmm, hiện tại không có câu hỏi nào cả. Bạn thử tải thêm tài liệu hoặc tóm tắt nhé!', 'info');
+                     questionsBatch = [];
+                     return; 
+                }
+                questionsBatch = data;
+                displayCurrentQuestion(); 
+                displayMascotMessage('😼', `Bắt đầu thử thách với ${questionsBatch.length} câu hỏi nào!`);
+                
+            } catch (error) {
+                console.error("Lỗi khi lấy bộ câu hỏi ôn tập:", error);
+                focusQuestionEl.textContent = error.message;
+                displayMascotMessage('🙀', 'Hệ thống gặp trục trặc khi tải câu hỏi!');
+            }
+        }
+
+        function displayMascotMessage(icon, message, type = 'info') {
+            if (!focusLockMascotEl || !mascotIconEl || !mascotMessageEl) return;
+            mascotIconEl.textContent = icon;
+            mascotMessageEl.textContent = message;
+            focusLockMascotEl.style.display = 'block';
+
+            mascotMessageEl.className = 'small fst-italic mt-1 ';
+            if (type === 'warning') mascotMessageEl.classList.add('text-danger');
+            else if (type === 'success') mascotMessageEl.classList.add('text-success');
+            else mascotMessageEl.classList.add('text-muted');
+        }
+
+        function handleSessionEnd() {
+            focusAnswerInput.disabled = true;
+            checkFocusAnswerBtn.disabled = true;
+            checkFocusAnswerBtn.textContent = 'Hoàn thành';
+            updateModalTitle(); 
+            const totalAttempted = questionsBatch.length;
+
+            if (totalAttempted === 0) {
+                 focusFeedbackEl.innerHTML = `<div class="alert alert-info">Không có câu hỏi nào để hoàn thành phiên này.</div>`;
+                 displayMascotMessage('🤔', 'Không có thử thách nào lúc này cả!', 'info');
+                 setTimeout(() => { if (focusModal) focusModal.hide(); }, 3000);
+                 return;
+            }
+
+            if (questionsCorrect >= MIN_CORRECT_TO_UNLOCK) {
+                focusFeedbackEl.innerHTML = `<div class="alert alert-success">Tuyệt vời! Bạn đã trả lời đúng ${questionsCorrect}/${totalAttempted} câu. Mở khóa thành công!</div>`;
+                displayMascotMessage('🎉', `Xuất sắc! Bạn đã chinh phục được thử thách! Mở khóa thôi!`, 'success');
+                setTimeout(() => { if (focusModal) focusModal.hide(); }, 2500);
+            } else {
+                focusFeedbackEl.innerHTML = `<div class="alert alert-warning">Bạn đã trả lời đúng ${questionsCorrect}/${totalAttempted} câu. Cần ít nhất ${MIN_CORRECT_TO_UNLOCK} câu đúng để mở khóa. Hãy cố gắng hơn!</div>`;
+                displayMascotMessage('😿', `Chưa đủ số câu đúng rồi. Đừng nản, lần sau sẽ tốt hơn nhé!`, 'warning');
+                setTimeout(() => { if (focusModal) focusModal.hide(); }, 4000);
+            }
+        }
+
+        if (focusLockBtn && focusModal) {
+            focusLockBtn.addEventListener('click', function() {
+                startFocusLockSession(false); 
+                focusModal.show();
+            });
+        }
+
+        if (checkFocusAnswerBtn) {
+            checkFocusAnswerBtn.addEventListener('click', function() {
+                if (currentQuestionIndex >= questionsBatch.length) return;
+                const questionData = questionsBatch[currentQuestionIndex];
+                const userAnswer = focusAnswerInput.value;
+                const correctAnswer = questionData.a || "";
+                
+                let isCorrect = checkAnswerSimilarity(userAnswer, correctAnswer);
+
+                if (isCorrect) {
+                    questionsCorrect++;
+                    focusFeedbackEl.innerHTML = '<div class="alert alert-success p-1 small">Chính xác!</div>';
+                    displayMascotMessage('😻', 'Đúng rồi! Giỏi quá đi!', 'success');
+                } else {
+                    failedAttemptsInSession++;
+                    focusFeedbackEl.innerHTML = `<div class="alert alert-danger p-1 small">Sai rồi. Đáp án đúng là: "<strong>${correctAnswer}</strong>"</div>`;
+                    displayMascotMessage('😿', 'Hmm, có vẻ bạn cần xem lại bài này một chút rồi!', 'warning');
+                }
+                
+                currentQuestionIndex++;
+                focusAnswerInput.disabled = true;
+                checkFocusAnswerBtn.disabled = true;
+                
+                setTimeout(() => {
+                    displayCurrentQuestion();
+                }, 2500);
+            });
+        }
+
+        if (focusLockModalEl) {
+            focusLockModalEl.addEventListener('hide.bs.modal', function (event) {
+                resetIdleTimer();
+            });
+            focusLockModalEl.addEventListener('hidden.bs.modal', function () {
+                questionsBatch = [];
+                currentQuestionIndex = 0;
+                questionsCorrect = 0;
+                failedAttemptsInSession = 0;
+                if(focusLockIntroTextEl) focusLockIntroTextEl.textContent = "Để tiếp tục sử dụng ứng dụng khác, bạn cần trả lời đúng các câu hỏi ôn tập kiến thức đã học:";
+                updateModalTitle();
+                resetIdleTimer(); 
+            });
+        }
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            ['mousemove', 'mousedown', 'keydown', 'scroll', 'touchstart'].forEach(function(eventName) {
+                document.addEventListener(eventName, resetIdleTimer, false);
+            });
+            resetIdleTimer(); 
+        });
 
         // --- Script cho Nút Share (dùng localStorage) ---
         document.addEventListener('click', function(event) {
             const shareButton = event.target.closest('.share-doc-btn');
             if (shareButton) {
                 event.preventDefault();
-                const docData = {
-                    id: shareButton.dataset.docId,
-                    name: shareButton.dataset.docFilename,
-                    category: shareButton.dataset.docCategory,
-                    doc_type: shareButton.dataset.docType
-                };
-                console.log("Sharing doc from index.html:", docData); // Thêm log
+                const docData = { id: shareButton.dataset.docId, name: shareButton.dataset.docFilename, category: shareButton.dataset.docCategory, doc_type: shareButton.dataset.docType };
                 try {
                     localStorage.setItem('sharedDocForRanking', JSON.stringify(docData));
-                    window.location.href = "/lazymarket#ranking-tab"; // Dùng URL tuyệt đối
+                    window.location.href = "{{ url_for('lazy_market') }}#ranking-tab";
                 } catch (e) {
-                    console.error("Lỗi khi lưu vào localStorage hoặc chuyển hướng từ index.html:", e);
+                    console.error("Lỗi khi lưu vào localStorage:", e);
                 }
             }
         });

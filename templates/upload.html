@@ -1,129 +1,148 @@
-<!doctype html>
-<html lang="vi">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
-    <title>StudyVault - Tải lên Tài liệu</title>
-     <style>
-        /* --- Phong cách chung --- */
-        :root { --primary-blue: #0d6efd; --light-bg: #f8f9fa; --white-bg: #ffffff; --card-border-radius: 0.75rem; --element-border-radius: 0.5rem; --card-shadow: 0 4px 15px rgba(0, 0, 0, 0.07); --text-dark: #212529; --text-muted: #6c757d;}
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; background-color: var(--light-bg); color: var(--text-dark); }
-        .navbar { background-color: var(--white-bg) !important; box-shadow: var(--card-shadow); }
-        .navbar-brand { color: var(--text-dark) !important; font-weight: 600; }
-        .navbar-brand i { color: var(--primary-blue); }
-        .nav-link { color: #495057 !important; font-weight: 500; }
-        .nav-link.active { color: var(--primary-blue) !important; font-weight: 600;}
-        .card { border-radius: var(--card-border-radius); border: none; box-shadow: var(--card-shadow); margin-bottom: 1.5rem; background-color: var(--white-bg); border-top: 4px solid var(--primary-blue); /* <<< Thêm border top màu xanh */}
-        .card-header { background-color: transparent; border-bottom: 1px solid #f1f3f5; font-weight: 600; padding: 1rem 1.25rem; color: var(--primary-blue);}
-        .btn { border-radius: var(--element-border-radius); padding: 0.5rem 1rem; font-weight: 500; }
-        .btn-primary { background-color: var(--primary-blue); border-color: var(--primary-blue); }
-        .btn-primary:hover { background-color: #0b5ed7; border-color: #0a58ca; }
-        .form-control, .form-select, .form-check-input { border-radius: var(--element-border-radius); border-color: #dee2e6; }
-        .form-control:focus, .form-select:focus { border-color: var(--primary-blue); box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25); }
-        .form-check-input:checked { background-color: var(--primary-blue); border-color: var(--primary-blue); }
-        .form-check-label i { margin-right: 6px; vertical-align: text-bottom; color: var(--primary-blue); /* <<< Icon trong label màu xanh */ }
-        h1 { margin-bottom: 1.5rem !important; font-weight: 600; color: var(--primary-blue); /* <<< Tiêu đề màu xanh */ }
-        h1 i { color: var(--primary-blue) !important; } /* Icon tiêu đề màu xanh */
-        .form-label.fw-bold { color: var(--text-dark); } /* Label đậm rõ hơn */
+{% extends "layout.html" %}
+
+{% block title %}Tải lên Tài liệu - StudyVault{% endblock %}
+
+{% block head_styles %}
+    <style>
+        /* CSS dành riêng cho trang upload */
+        h1 i { color: var(--primary-blue) !important; }
+        .upload-section {
+            border-left: 3px solid #dee2e6;
+            padding-left: 1.5rem;
+            margin-top: 1rem;
+            display: none; /* Mặc định ẩn đi */
+        }
+        .upload-options-container {
+            background-color: #f8f9fa;
+            border-radius: var(--element-border-radius);
+            padding: 1rem;
+        }
+        .form-check-label {
+            cursor: pointer;
+        }
     </style>
-</head>
-<body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-white mb-4 sticky-top">
-        <div class="container"> <a class="navbar-brand fw-bold d-flex align-items-center" href="{{ url_for('index') }}">
-            <img src="{{ url_for('static', filename='img/logo.png') }}" alt="StudyVault Logo" height="30" class="d-inline-block align-text-top me-2">
-            StudyVault
-        </a>
-         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"><span class="navbar-toggler-icon"></span></button> <div class="collapse navbar-collapse" id="navbarNav"> <ul class="navbar-nav ms-auto"> <li class="nav-item"><a class="nav-link" href="{{ url_for('index') }}">Dashboard</a></li> <li class="nav-item"><a class="nav-link active" aria-current="page" href="{{ url_for('upload_file') }}">Tải lên</a></li> <li class="nav-item"><a class="nav-link" href="{{ url_for('study_timeline') }}">Timeline</a></li> <li class="nav-item"><a class="nav-link" href="{{ url_for('lazy_market') }}">Chia sẻ tài liệu & BXH</a></li> </ul> </div> </div>
-    </nav>
+{% endblock %}
 
-    <div class="container mt-4">
-        <h1 class="mb-4 fw-bold"><i class="bi bi-cloud-arrow-up-fill"></i> Tải lên Tài liệu Mới</h1>
+{% block content %}
+    <h1 class="mb-4 fw-bold"><i class="bi bi-cloud-arrow-up-fill"></i> Tải lên Tài liệu Mới</h1>
 
-        {% with messages = get_flashed_messages(with_categories=true) %}
-          {% if messages %}
-            {% for category, message in messages %}
-              <div class="alert alert-{{ category if category in ['success', 'danger', 'warning', 'info'] else 'info' }} alert-dismissible fade show rounded-pill" role="alert">
-                {{ message }} <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-              </div>
-            {% endfor %}
-          {% endif %}
-        {% endwith %}
+    <div class="card">
+        <div class="card-body p-4">
+            <form id="uploadForm" method="POST" action="{{ url_for('upload_file') }}" enctype="multipart/form-data">
 
-        <div class="card"> <div class="card-body p-4">
-                <form id="uploadForm" method="POST" action="{{ url_for('upload_file') }}" enctype="multipart/form-data">
-
-                    <div class="mb-4">
-                        <label class="form-label fw-bold d-block mb-3">Loại tài liệu:</label>
-                        <div class="d-flex flex-wrap" style="gap: 1rem;">
-                            <div class="form-check"> <input class="form-check-input" type="radio" name="upload_type" id="type_file" value="file" checked onchange="toggleUploadFields()"> <label class="form-check-label" for="type_file"><i class="bi bi-file-earmark-text"></i> File (PDF, DOCX, TXT)</label> </div>
-                            <div class="form-check"> <input class="form-check-input" type="radio" name="upload_type" id="type_image" value="image" onchange="toggleUploadFields()"> <label class="form-check-label" for="type_image"><i class="bi bi-image"></i> Ảnh</label> </div>
-                            <div class="form-check"> <input class="form-check-input" type="radio" name="upload_type" id="type_video" value="video" onchange="toggleUploadFields()"> <label class="form-check-label" for="type_video"><i class="bi bi-film"></i> Video</label> </div>
-                            <div class="form-check"> <input class="form-check-input" type="radio" name="upload_type" id="type_gdrive" value="googledrive_link" onchange="toggleUploadFields()"> <label class="form-check-label" for="type_gdrive"><i class="bi bi-google"></i> Link Google Drive</label> </div>
-                            <div class="form-check"> <input class="form-check-input" type="radio" name="upload_type" id="type_link" value="link" onchange="toggleUploadFields()"> <label class="form-check-label" for="type_link"><i class="bi bi-link-45deg"></i> Link Web (Khác)</label> </div>
+                <div class="mb-4">
+                    <label class="form-label fw-bold">Bạn muốn tải lên loại tài liệu nào?</label>
+                    <div class="upload-options-container">
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="upload_type" id="type_file" value="file" checked onchange="toggleUploadFields()">
+                            <label class="form-check-label" for="type_file"><i class="bi bi-file-earmark-text"></i> File (PDF, DOCX)</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="upload_type" id="type_image" value="image" onchange="toggleUploadFields()">
+                            <label class="form-check-label" for="type_image"><i class="bi bi-card-image"></i> Ảnh</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="upload_type" id="type_video" value="video" onchange="toggleUploadFields()">
+                            <label class="form-check-label" for="type_video"><i class="bi bi-camera-reels"></i> Video</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="upload_type" id="type_link" value="link" onchange="toggleUploadFields()">
+                            <label class="form-check-label" for="type_link"><i class="bi bi-link-45deg"></i> Link Web</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="upload_type" id="type_gdrive" value="googledrive_link" onchange="toggleUploadFields()">
+                            <label class="form-check-label" for="type_gdrive"><i class="bi bi-google"></i> Link Google Drive</label>
                         </div>
                     </div>
+                </div>
 
-                    <hr class="my-4">
+                <div id="section_file" class="upload-section">
+                    <label for="document_file" class="form-label fw-bold">Chọn File tài liệu</label>
+                    <input class="form-control" type="file" id="document_file" name="document_file" accept=".pdf,.docx,.txt">
+                    <div class="form-text">Chỉ chấp nhận file .pdf, .docx, .txt</div>
+                </div>
 
-                    <div class="mb-3" id="file_input_div"> <label for="document_file" class="form-label">Chọn file (PDF, DOCX, TXT):</label> <input class="form-control" type="file" id="document_file" name="document_file" accept=".pdf,.docx,.txt"> </div>
-                    <div class="mb-3" id="image_input_div" style="display: none;"> <label for="document_image" class="form-label">Chọn file ảnh:</label> <input class="form-control" type="file" id="document_image" name="document_image" accept="image/*"> <div class="form-text">Định dạng hỗ trợ: PNG, JPG, GIF, BMP, WEBP,...</div> </div>
-                    <div class="mb-3" id="video_input_div" style="display: none;"> <label for="document_video" class="form-label">Chọn file video:</label> <input class="form-control" type="file" id="document_video" name="document_video" accept="video/*"> <div class="form-text text-muted">Hỗ trợ: MP4, MOV, AVI, MKV,... (Mô phỏng: Chỉ lưu file, không phân tích sâu).</div> </div>
-                    <div class="mb-3" id="gdrive_link_input_div" style="display: none;"> <label for="document_gdrive_link" class="form-label">Nhập URL chia sẻ Google Drive:</label> <input type="url" class="form-control" id="document_gdrive_link" name="document_gdrive_link" placeholder="https://drive.google.com/..."> </div>
-                    <div class="mb-3" id="link_input_div" style="display: none;"> <label for="document_url" class="form-label">Nhập URL Web (Khác Google Drive):</label> <input type="url" class="form-control" id="document_url" name="document_url" placeholder="https://example.com"> </div>
+                <div id="section_image" class="upload-section">
+                    <label for="document_image" class="form-label fw-bold">Chọn file Ảnh</label>
+                    <input class="form-control" type="file" id="document_image" name="document_image" accept="image/*">
+                </div>
 
-                    <hr class="my-4">
+                <div id="section_video" class="upload-section">
+                    <label for="document_video" class="form-label fw-bold">Chọn file Video</label>
+                    <input class="form-control" type="file" id="document_video" name="document_video" accept="video/*">
+                </div>
+                
+                <div id="section_link" class="upload-section">
+                    <label for="document_url" class="form-label fw-bold">Dán Link Web vào đây</label>
+                    <input type="url" class="form-control" id="document_url" name="document_url" placeholder="https://...">
+                </div>
 
-                    <h5 class="mb-3 text-muted">Thiết lập Lộ trình (Tùy chọn)</h5>
+                <div id="section_gdrive" class="upload-section">
+                    <label for="document_gdrive_link" class="form-label fw-bold">Dán Link Google Drive vào đây</label>
+                    <input type="url" class="form-control" id="document_gdrive_link" name="document_gdrive_link" placeholder="https://drive.google.com/...">
+                </div>
 
-                    <div class="row">
-                         <div class="col-md-6 mb-3">
-                            <label for="learning_goal" class="form-label">Mục tiêu học tập:</label>
-                            <input type="text" class="form-control" id="learning_goal" name="learning_goal" placeholder="Ví dụ: Qua môn, Hiểu chương 1...">
-                            </div>
-                        <div class="col-md-6 mb-3">
-                            <label for="deadline" class="form-label">Thời hạn hoàn thành:</label>
-                            <input type="date" class="form-control" id="deadline" name="deadline">
-                             </div>
+                <hr class="my-4">
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="mb-3">
+                            <label for="learning_goal" class="form-label fw-bold">Mục tiêu học tập cho tài liệu này là gì?</label>
+                            <input type="text" class="form-control" id="learning_goal" name="learning_goal" placeholder="Ví dụ: Nắm vững khái niệm Điện trường, Đạt 8 điểm bài kiểm tra...">
+                        </div>
                     </div>
-                    <button type="submit" class="btn btn-primary btn-lg w-100 mt-4"><i class="bi bi-cloud-arrow-up-fill"></i> Tải lên & Lưu trữ</button>
-                </form>
-            </div> </div> <div class="mt-4 text-center">
-             <a href="{{ url_for('index') }}" class="btn btn-link text-secondary"><i class="bi bi-arrow-left-circle"></i> Quay lại Dashboard</a>
+                    <div class="col-md-4">
+                        <div class="mb-3">
+                            <label for="deadline" class="form-label fw-bold">Thời hạn hoàn thành</label>
+                            <input type="date" class="form-control" id="deadline" name="deadline">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-center mt-4">
+                    <button type="submit" class="btn btn-primary btn-lg px-5">
+                        <i class="bi bi-cloud-upload-fill me-2"></i>Tải lên
+                    </button>
+                </div>
+
+            </form>
         </div>
     </div>
+    <div class="mt-4 text-center">
+        <a href="{{ url_for('index') }}" class="btn btn-link text-secondary"><i class="bi bi-arrow-left-circle"></i> Quay lại Dashboard</a>
+    </div>
+{% endblock %}
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+{% block scripts %}
     <script>
         function toggleUploadFields() {
-            const uploadType = document.querySelector('input[name="upload_type"]:checked').value;
-            const fileInputDiv = document.getElementById('file_input_div'); const linkInputDiv = document.getElementById('link_input_div'); const imageInputDiv = document.getElementById('image_input_div'); const videoInputDiv = document.getElementById('video_input_div'); const gdriveLinkInputDiv = document.getElementById('gdrive_link_input_div');
-            const fileInput = document.getElementById('document_file'); const linkInput = document.getElementById('document_url'); const imageInput = document.getElementById('document_image'); const videoInput = document.getElementById('document_video'); const gdriveLinkInput = document.getElementById('document_gdrive_link');
-            // Ẩn tất cả và reset trạng thái required/value trước khi hiển thị cái cần thiết
-            fileInputDiv.style.display = 'none'; fileInput.required = false; fileInput.value = '';
-            linkInputDiv.style.display = 'none'; linkInput.required = false; linkInput.value = '';
-            imageInputDiv.style.display = 'none'; imageInput.required = false; imageInput.value = '';
-            videoInputDiv.style.display = 'none'; videoInput.required = false; videoInput.value = '';
-            gdriveLinkInputDiv.style.display = 'none'; gdriveLinkInput.required = false; gdriveLinkInput.value = '';
+            // Lấy giá trị của radio button đang được chọn
+            const selectedType = document.querySelector('input[name="upload_type"]:checked').value;
 
-            // Hiển thị và đặt required cho loại được chọn
-            if (uploadType === 'file') { fileInputDiv.style.display = 'block'; fileInput.required = true; }
-            else if (uploadType === 'link') { linkInputDiv.style.display = 'block'; linkInput.required = true; }
-            else if (uploadType === 'image') { imageInputDiv.style.display = 'block'; imageInput.required = true; }
-            else if (uploadType === 'video') { videoInputDiv.style.display = 'block'; videoInput.required = true; }
-            else if (uploadType === 'googledrive_link') { gdriveLinkInputDiv.style.display = 'block'; gdriveLinkInput.required = true; }
+            // Lấy tất cả các khu vực upload
+            const sections = {
+                file: document.getElementById('section_file'),
+                image: document.getElementById('section_image'),
+                video: document.getElementById('section_video'),
+                link: document.getElementById('section_link'),
+                googledrive_link: document.getElementById('section_gdrive')
+            };
+
+            // Ẩn tất cả các khu vực
+            for (const key in sections) {
+                if (sections[key]) {
+                    sections[key].style.display = 'none';
+                }
+            }
+
+            // Hiển thị khu vực tương ứng với lựa chọn
+            if (sections[selectedType]) {
+                sections[selectedType].style.display = 'block';
+            }
         }
-        // Chạy lần đầu khi tải trang
+
+        // Chạy hàm này ngay khi trang được tải để hiển thị đúng khu vực mặc định
         document.addEventListener('DOMContentLoaded', toggleUploadFields);
-        // Chạy lại khi quay lại trang (ví dụ: nhấn nút back của trình duyệt) để đảm bảo form đúng trạng thái
-        window.addEventListener('pageshow', function(event) {
-             if (event.persisted) { // Kiểm tra xem trang có được load từ cache không (bfcache)
-                const form = document.getElementById('uploadForm');
-                if (form) form.reset(); // Reset form để loại bỏ giá trị cũ
-                toggleUploadFields(); // Chạy lại logic ẩn/hiện
-             }
-        });
     </script>
-</body>
-</html>
+    
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+{% endblock %}

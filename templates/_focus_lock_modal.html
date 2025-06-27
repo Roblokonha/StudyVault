@@ -1,0 +1,30 @@
+<div class="modal fade" id="focusLockModal" tabindex="-1" aria-labelledby="focusLockModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="focusLockModalLabel"><i class="bi bi-unlock-fill text-primary"></i> Mở khóa Ứng dụng</h5>
+      </div>
+      <div class="modal-body">
+        <p class="text-muted small" id="focusLockIntroText">Để tiếp tục, hãy trả lời câu hỏi ôn tập:</p>
+        <div id="focusLockMascot" class="text-center my-3" style="display: none;">
+            <span id="mascotIcon" style="font-size: 2rem;">😼</span>
+            <p id="mascotMessage" class="small text-muted fst-italic mt-1"></p>
+        </div>
+        <div class="mb-3">
+            <label for="focusQuestion" class="form-label">Câu hỏi:</label>
+            <p id="focusQuestion" class="fw-bold fs-5"></p>
+            <small class="text-muted" id="focusQuestionCategory"></small>
+        </div>
+        <div class="mb-3">
+            <label for="focusAnswerInput" class="form-label">Câu trả lời:</label>
+            <textarea class="form-control" id="focusAnswerInput" rows="3"></textarea>
+        </div>
+        <div id="focusFeedback" class="mt-2"></div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+        <button type="button" class="btn btn-primary" id="checkFocusAnswerBtn">Kiểm tra</button>
+      </div>
+    </div>
+  </div>
+</div>

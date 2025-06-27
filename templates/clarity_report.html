@@ -1,0 +1,144 @@
+{% extends "layout.html" %}
+
+{% block title %}Clarity Report - {{ doc.filename }}{% endblock %}
+
+{% block head_styles %}
+<style>
+    #clarityReportContainer {
+        display: flex;
+        gap: 1.5rem;
+    }
+    .transcript-panel {
+        flex: 3; /* Chiếm 3 phần */
+        max-height: 75vh;
+        overflow-y: auto;
+        padding-right: 1rem;
+    }
+    .network-panel {
+        flex: 2; /* Chiếm 2 phần */
+        border-left: 1px solid #dee2e6;
+        padding-left: 1.5rem;
+    }
+    .transcript-item {
+        margin-bottom: 1rem;
+        padding: 0.75rem;
+        border-radius: var(--element-border-radius);
+    }
+    .transcript-item.speaker-ai {
+        background-color: #e9ecef;
+    }
+    .transcript-item.speaker-user {
+        background-color: #e2e3e5;
+    }
+    .transcript-item .speaker {
+        font-weight: 600;
+        font-size: 0.9em;
+        margin-bottom: 0.25rem;
+    }
+    .transcript-item .speaker-ai .speaker { color: var(--primary-blue); }
+    .transcript-item .speaker-user .speaker { color: #495057; }
+    
+    .answer-status {
+        font-weight: bold;
+        cursor: pointer;
+        border-bottom: 2px dotted;
+        transition: all 0.2s ease-in-out;
+    }
+    .answer-status.correct { color: #198754; border-color: #198754; }
+    .answer-status.incorrect { color: #dc3545; border-color: #dc3545; }
+    .answer-status:hover { background-color: rgba(255, 193, 7, 0.2); }
+
+    .network-map-item {
+        padding: 4px 8px;
+        border-radius: 4px;
+        margin-bottom: 4px;
+        transition: all 0.2s ease-in-out;
+    }
+    .network-map-item.highlighted-node {
+        background-color: #fff3cd;
+        font-weight: bold;
+        transform: scale(1.05);
+        box-shadow: 0 0 10px rgba(255, 193, 7, 0.5);
+    }
+    .network-map ul {
+        list-style-type: none;
+        padding-left: 20px;
+    }
+    .network-map ul li::before {
+        content: "↳ ";
+        color: #adb5bd;
+    }
+    .progress-bar {
+        font-size: 1rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div id="clarityReportContainer">
+    <div class="transcript-panel">
+        <h1 class="mb-1">Clarity Report</h1>
+        <p class="text-muted">Báo cáo chi tiết sau cuộc gọi AI về tài liệu: <strong>{{ doc.filename }}</strong></p>
+        
+        <div class="card mb-4">
+            <div class="card-header"><i class="bi bi-graph-up-arrow me-2"></i>Tiến độ Ghi nhớ</div>
+            <div class="card-body">
+                <p>So sánh kết quả của bạn giữa các lần kiểm tra:</p>
+                <div class="progress" style="height: 30px;">
+                    <div class="progress-bar bg-danger" role="progressbar" style="width: 50%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100">Lần trước: 50%</div>
+                </div>
+                <div class="progress mt-2" style="height: 30px;">
+                    <div class="progress-bar bg-success" role="progressbar" style="width: 75%" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100">Lần này: 75%</div>
+                </div>
+            </div>
+        </div>
+
+        <h4 class="mt-4"><i class="bi bi-card-list me-2"></i>Transcript Cuộc gọi</h4>
+        <div id="transcript-list">
+            {% for item in transcript %}
+            <div class="transcript-item speaker-{{ item.speaker }}">
+                <div class="speaker">
+                    {% if item.speaker == 'ai' %}<i class="bi bi-robot"></i> AI{% else %}<i class="bi bi-person-fill"></i> Bạn{% endif %}
+                </div>
+                <p class="mb-0">
+                    {% if item.status == 'neutral' %}
+                        {{ item.text }}
+                    {% else %}
+                        <span class="answer-status {{ item.status }}" data-node-id="{{ item.node_id }}">
+                            {{ item.text }}
+                        </span>
+                    {% endif %}
+                </p>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="alert alert-info mt-3 small">
+            <i class="bi bi-lightbulb-fill me-2"></i>
+            <strong>Mẹo:</strong> Nhấn vào một câu trả lời <span class="text-danger fw-bold">màu đỏ</span> để xem nó tương ứng với khái niệm nào trong Knowledge Network của bạn.
+        </div>
+    </div>
+
+    <div class="network-panel">
+        <h4><i class="bi bi-diagram-3-fill me-2"></i>Knowledge Network</h4>
+        <p class="text-muted small">Đây là bản đồ kiến thức của bạn. Các mục liên quan đến câu trả lời sai sẽ được tô sáng.</p>
+        <div class="network-map p-3 border rounded bg-light" id="knowledgeNetworkMap">
+            {% macro render_tree(items) %}
+                <ul>
+                {% for item in items %}
+                    <li class="network-map-item" id="report-node-{{ item.id }}">
+                        {{ item.title }}
+                        {% if item.children %}
+                            {{ render_tree(item.children) }}
+                        {% endif %}
+                    </li>
+                {% endfor %}
+                </ul>
+            {% endmacro %}
+            {{ render_tree(workspace_tree) }}
+        </div>
+    </div>
+</div>
+<div class="text-center mt-4">
+    <a href="{{ url_for('view_document', document_id=doc.id) }}" class="btn btn-secondary"><i class="bi bi-arrow-left-circle"></i> Quay lại Chi tiết Tài liệu</a>
+</div>
+{% endblock %}

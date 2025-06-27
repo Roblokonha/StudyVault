@@ -1,202 +1,219 @@
-<!doctype html>
-<html lang="vi">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
-    <title>{{ doc.filename }} - Chi tiết Tài liệu</title>
-    <style>
-        :root { --primary-blue: #0d6efd; --light-bg: #f8f9fa; --white-bg: #ffffff; --card-border-radius: 0.75rem; --element-border-radius: 0.5rem; --card-shadow: 0 4px 15px rgba(0, 0, 0, 0.07); --text-dark: #212529; --text-muted: #6c757d; --accent-red: #dc3545; --bs-success: #198754;}
-        body { background-color: var(--light-bg); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; }
-        .navbar { background-color: var(--white-bg) !important; box-shadow: var(--card-shadow); }
-        .card { border-radius: var(--card-border-radius); border: none; box-shadow: var(--card-shadow); margin-bottom: 1.5rem; }
-        .card-header { background-color: transparent; border-bottom: 1px solid #f1f3f5; font-weight: 600; padding: 1rem 1.25rem; color: var(--primary-blue); }
-        .btn { border-radius: var(--element-border-radius); }
-        .info-label { font-weight: 500; }
-        .nav-tabs .nav-link.active { color: var(--primary-blue); font-weight: 500; border-color: #dee2e6 #dee2e6 var(--white-bg); }
-        #extractedContent { white-space: pre-wrap; background-color: #f8f9fa; padding: 1.5rem; border-radius: var(--element-border-radius); max-height: 70vh; overflow-y: auto; }
-        .sub-item-title, .objective-item .d-flex span { word-break: break-word; }
-        .user-content-area { margin-top: 1rem; padding-top: 1rem; border-top: 1px dashed #ced4da; }
-        .goal-section { padding: 1rem; border-radius: var(--element-border-radius); background-color: #f8f9fa; }
-        .progress-container { background: #e9ecef; border-radius: 50px; }
-        .progress-bar-custom { background: linear-gradient(90deg, #198754, #28a745); border-radius: 50px; text-align: center; color: white; font-weight: bold; }
-        .no-score { color: #adb5bd; }
+{% extends "layout.html" %}
 
-        /* CSS cho hiệu ứng */
-        .pulsating-circle {
-            width: 100px;
-            height: 100px;
-            background-color: var(--primary-blue);
-            border-radius: 50%;
-            margin: 0 auto;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            position: relative;
+{% block title %}{{ doc.filename }} - Chi tiết Tài liệu{% endblock %}
+
+{% block head_styles %}
+<style>
+    /* Các style dành riêng cho trang view_document */
+    .info-label {
+        font-weight: 500;
+    }
+    .nav-tabs .nav-link.active {
+        color: var(--primary-blue);
+        font-weight: 500;
+        border-color: #dee2e6 #dee2e6 var(--white-bg);
+    }
+    #extractedContent {
+        white-space: pre-wrap;
+        background-color: #f8f9fa;
+        padding: 1.5rem;
+        border-radius: var(--element-border-radius);
+        max-height: 70vh;
+        overflow-y: auto;
+    }
+    .sub-item-title, .objective-item .d-flex span {
+        word-break: break-word;
+    }
+    .user-content-area {
+        margin-top: 1rem;
+        padding-top: 1rem;
+        border-top: 1px dashed #ced4da;
+    }
+    .goal-section {
+        padding: 1rem;
+        border-radius: var(--element-border-radius);
+        background-color: #f8f9fa;
+    }
+    .progress-container {
+        background: #e9ecef;
+        border-radius: 50px;
+    }
+    .progress-bar-custom {
+        background: linear-gradient(90deg, var(--bs-success), #28a745);
+        border-radius: 50px;
+        text-align: center;
+        color: white;
+        font-weight: bold;
+    }
+    .no-score {
+        color: #adb5bd;
+    }
+    .pulsating-circle {
+        width: 100px;
+        height: 100px;
+        background-color: var(--primary-blue);
+        border-radius: 50%;
+        margin: 0 auto;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+        box-shadow: 0 0 0 0 rgba(13, 110, 253, 0.7);
+        animation: pulse 1.5s infinite;
+    }
+    @keyframes pulse {
+        0% {
+            transform: scale(0.95);
             box-shadow: 0 0 0 0 rgba(13, 110, 253, 0.7);
-            animation: pulse 1.5s infinite;
         }
-
-        @keyframes pulse {
-            0% {
-                transform: scale(0.95);
-                box-shadow: 0 0 0 0 rgba(13, 110, 253, 0.7);
-            }
-            70% {
-                transform: scale(1);
-                box-shadow: 0 0 0 20px rgba(13, 110, 253, 0);
-            }
-            100% {
-                transform: scale(0.95);
-                box-shadow: 0 0 0 0 rgba(13, 110, 253, 0);
-            }
+        70% {
+            transform: scale(1);
+            box-shadow: 0 0 0 20px rgba(13, 110, 253, 0);
         }
-    </style>
-</head>
-<body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-white mb-4 sticky-top">
-        <div class="container">
-             <a class="navbar-brand fw-bold d-flex align-items-center" href="{{ url_for('index') }}">
-                <img src="{{ url_for('static', filename='img/logo.png') }}" alt="StudyVault Logo" height="30" class="d-inline-block align-text-top me-2">
-                StudyVault
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"><span class="navbar-toggler-icon"></span></button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item"><a class="nav-link" href="{{ url_for('index') }}">Dashboard</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{{ url_for('upload_file') }}">Tải lên</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{{ url_for('study_timeline') }}">Timeline</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{{ url_for('lazy_market') }}">Chia sẻ tài liệu & BXH</a></li>
-                </ul>
-            </div>
-        </div>
-    </nav>
+        100% {
+            transform: scale(0.95);
+            box-shadow: 0 0 0 0 rgba(13, 110, 253, 0);
+        }
+    }
+</style>
+{% endblock %}
 
-    <div class="container mt-4">
-        {% with messages = get_flashed_messages(with_categories=true) %}
-            {% if messages %}
-                {% for category, message in messages %}
-                <div class="alert alert-{{ category if category in ['success', 'danger', 'warning', 'info'] else 'info' }} alert-dismissible fade show rounded-pill" role="alert">
-                    {{ message }} <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-                {% endfor %}
-            {% endif %}
-        {% endwith %}
+{% block content %}
+<div id="viewDocumentData" data-doc-id="{{ doc.id }}">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="mb-0 text-break"><i class="bi bi-file-earmark-word text-primary me-2"></i><span class="align-middle">{{ doc.filename | truncate(70) }}</span></h1>
+        <a href="{{ url_for('index') }}" class="btn btn-outline-secondary"><i class="bi bi-arrow-left"></i> Quay lại</a>
+    </div>
 
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h1 class="mb-0 text-break"><i class="bi bi-file-earmark-word text-primary me-2"></i><span class="align-middle">{{ doc.filename | truncate(70) }}</span></h1>
-            <a href="{{ url_for('index') }}" class="btn btn-outline-secondary"><i class="bi bi-arrow-left"></i> Quay lại</a>
-        </div>
-
-        <div class="row">
-            <div class="col-lg-4">
-                <div class="card">
-                    <div class="card-header"><i class="bi bi-info-circle-fill me-2"></i>Thông tin chung</div>
+    <div class="row">
+        <div class="col-lg-4">
+            <div class="card">
+                <div class="card-header"><i class="bi bi-info-circle-fill me-2"></i>Thông tin chung</div>
                     <div class="card-body">
                         <p><span class="info-label">Danh mục:</span> <span class="badge bg-info-subtle text-info-emphasis border border-info-subtle rounded-pill">{{ doc.category }}</span></p>
                         <p><span class="info-label">Ngày tải lên:</span> <span>{{ doc.uploaded_date.strftime('%d/%m/%Y %H:%M') }}</span></p>
                         <p><span class="info-label">Xem lần cuối:</span> <span>{{ doc.last_viewed_date.strftime('%d/%m/%Y %H:%M') if doc.last_viewed_date else 'Chưa xem' }}</span></p>
+
                         <a href="{{ url_for('download_file', document_id=doc.id) }}" class="btn btn-sm btn-outline-primary"><i class="bi bi-download"></i> Tải về</a>
                         <form method="POST" action="{{ url_for('delete_document', document_id=doc.id) }}" style="display: inline;" onsubmit="return confirm('Bạn chắc chắn muốn xóa vĩnh viễn tài liệu này?');">
-                           <button type="submit" class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i> Xóa</button>
+                        <button type="submit" class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i> Xóa</button>
                         </form>
+                        
                         <button type="button" class="btn btn-sm btn-outline-success mt-2 w-100" data-bs-toggle="modal" data-bs-target="#aiVideoCallModal">
                             <i class="bi bi-camera-video-fill"></i> Video Call với AI
                         </button>
                     </div>
-                </div>
+            </div>
 
-                <div class="card">
-                    <div class="card-header d-flex justify-content-between align-items-center">
-                        <span><i class="bi bi-bullseye me-2"></i>Mục tiêu & Kết quả</span>
-                        <button class="btn btn-sm btn-outline-primary" type="button" data-bs-toggle="collapse" data-bs-target="#updateGoalCollapse" aria-expanded="false" aria-controls="updateGoalCollapse">
-                            <i class="bi bi-pencil-square"></i> Cập nhật
-                        </button>
-                    </div>
-                    <div class="card-body">
-                        <div id="goalDisplay">
-                            <strong>Mô tả mục tiêu:</strong>
-                            <p id="winCriteriaText" class="text-muted fst-italic mb-2">{{ doc.win_criteria_description or 'Chưa có mô tả mục tiêu.' }}</p>
-                            <strong>Tiến độ:</strong>
-                            <div class="goal-section mt-1">
-                                <div class="d-flex justify-content-between">
-                                    <span id="actualScoreDisplay" class="fw-bold fs-5 {{ 'text-success' if doc.actual_score is not none else 'no-score' }}">{{ doc.actual_score if doc.actual_score is not none else 'N/A' }}</span>
-                                    <span id="targetScoreDisplay" class="fw-bold fs-5 text-primary">{{ doc.target_score or 'N/A' }}</span>
-                                </div>
-                                <div class="progress-container mt-1">
-                                    {% set progress = (doc.actual_score or 0) / (doc.target_score or 100) * 100 %}
-                                    <div id="progressBar" class="progress-bar-custom" style="width: {{ progress }}%;">{{ '%.0f' % progress }}%</div>
-                                </div>
-                                <div class="d-flex justify-content-between small text-muted mt-1">
-                                    <span>Điểm thực tế</span>
-                                    <span>Điểm mục tiêu</span>
-                                </div>
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <span><i class="bi bi-bullseye me-2"></i>Mục tiêu & Kết quả</span>
+                    <button class="btn btn-sm btn-outline-primary" type="button" data-bs-toggle="collapse" data-bs-target="#updateGoalCollapse" aria-expanded="false" aria-controls="updateGoalCollapse">
+                        <i class="bi bi-pencil-square"></i> Cập nhật
+                    </button>
+                </div>
+                <div class="card-body">
+                    <div id="goalDisplay">
+                        <strong>Mô tả mục tiêu:</strong>
+                        <p id="winCriteriaText" class="text-muted fst-italic mb-2">{{ doc.win_criteria_description or 'Chưa có mô tả mục tiêu.' }}</p>
+                        <strong>Tiến độ:</strong>
+                        <div class="goal-section mt-1">
+                            <div class="d-flex justify-content-between">
+                                <span id="actualScoreDisplay" class="fw-bold fs-5 {{ 'text-success' if doc.actual_score is not none else 'no-score' }}">{{ doc.actual_score if doc.actual_score is not none else 'N/A' }}</span>
+                                <span id="targetScoreDisplay" class="fw-bold fs-5 text-primary">{{ doc.target_score or 'N/A' }}</span>
                             </div>
-                        </div>
-                        <div class="collapse mt-3" id="updateGoalCollapse">
-                            <hr>
-                            <div class="mb-3">
-                                <label for="win_criteria_description" class="form-label small fw-bold">Thiết lập mục tiêu</label>
-                                <textarea class="form-control form-control-sm" id="win_criteria_description" rows="2" placeholder="Ví dụ: Đạt 8/10 điểm trong bài kiểm tra">{{ doc.win_criteria_description or '' }}</textarea>
-                                <input type="number" class="form-control form-control-sm mt-2" id="target_score" placeholder="Điểm mục tiêu (ví dụ: 10)" value="{{ doc.target_score or '' }}">
-                                <button type="button" class="btn btn-primary btn-sm w-100 mt-2" id="saveWinCriteriaBtn">Lưu mục tiêu</button>
+                            <div class="progress-container mt-1">
+                                {% set progress = (doc.actual_score|float or 0) / (doc.target_score|float or 100) * 100 %}
+                                <div id="progressBar" class="progress-bar-custom" style="width: {{ progress }}%;">{{ '%.0f' % progress }}%</div>
                             </div>
-                            <div class="mb-2">
-                                 <label for="actual_score" class="form-label small fw-bold">Ghi nhận kết quả</label>
-                                <div class="input-group">
-                                    <input type="number" class="form-control form-control-sm" id="actual_score" placeholder="Nhập điểm thực tế" value="{{ doc.actual_score or '' }}">
-                                    <button class="btn btn-success btn-sm" type="button" id="logResultBtn">Ghi nhận</button>
-                                </div>
+                            <div class="d-flex justify-content-between small text-muted mt-1">
+                                <span>Điểm thực tế</span>
+                                <span>Điểm mục tiêu</span>
                             </div>
                         </div>
                     </div>
-                </div>
-
-                <div class="card">
-                    <div class="card-header"><i class="bi bi-journal-text me-2"></i>Bối cảnh & Ghi chú</div>
-                    <div class="card-body">
-                        <div class="mb-3">
-                            <label class="form-label fw-bold">Mục tiêu học tập:</label>
-                            <div id="objectives-container" class="border rounded p-2" style="min-height: 100px; max-height: 250px; overflow-y: auto;">
-                                <p class="text-muted small">Đang tải mục tiêu...</p>
-                            </div>
-                            <div class="input-group mt-2">
-                                <input type="text" id="new-main-objective-input" class="form-control" placeholder="Thêm mục tiêu chính mới...">
-                                <button class="btn btn-primary" type="button" id="add-main-objective-btn">Thêm</button>
-                            </div>
-                        </div>
+                    <div class="collapse mt-3" id="updateGoalCollapse">
                         <hr>
-                        <form id="updateContextForm" method="POST" action="{{ url_for('view_document', document_id=doc.id) }}">
-                            <input type="hidden" name="form_marker" value="update_context">
-                             <div class="mb-3"><label for="deadline" class="form-label">Thời hạn hoàn thành:</label><input type="date" class="form-control" id="deadline" name="deadline" value="{{ doc.deadline.strftime('%Y-%m-%d') if doc.deadline else '' }}"></div>
-                            <div class="mb-3"><label for="engagement_level" class="form-label">Mức độ chuyên sâu:</label><select class="form-select" id="engagement_level" name="engagement_level"><option value="">-- Chọn mức độ --</option><option value="Học lướt" {% if doc.engagement_level == 'Học lướt' %}selected{% endif %}>Học lướt</option><option value="Học hiểu" {% if doc.engagement_level == 'Học hiểu' %}selected{% endif %}>Học hiểu</option><option value="Học sâu" {% if doc.engagement_level == 'Học sâu' %}selected{% endif %}>Học sâu</option></select></div>
-                            <div class="mb-3"><label for="context_event" class="form-label">Dùng cho việc gì?</label><input type="text" class="form-control" id="context_event" name="context_event" placeholder="Ví dụ: Thi cuối kỳ, Làm dự án cá nhân..." value="{{ doc.context_event or '' }}"></div>
-                            <div class="mb-3"><label for="custom_note" class="form-label">Ghi chú cá nhân:</label><textarea class="form-control" id="custom_note" name="custom_note" rows="3" placeholder="Ghi chú thêm về tài liệu này...">{{ doc.custom_note or '' }}</textarea></div>
-                             <div class="text-end"><button type="submit" class="btn btn-primary">Lưu Ghi Chú</button></div>
-                        </form>
+                        <div class="mb-3">
+                            <label for="win_criteria_description" class="form-label small fw-bold">Thiết lập mục tiêu</label>
+                            <textarea class="form-control form-control-sm" id="win_criteria_description" rows="2" placeholder="Ví dụ: Đạt 8/10 điểm trong bài kiểm tra">{{ doc.win_criteria_description or '' }}</textarea>
+                            <input type="number" class="form-control form-control-sm mt-2" id="target_score" placeholder="Điểm mục tiêu (ví dụ: 10)" value="{{ doc.target_score or '' }}">
+                            <button type="button" class="btn btn-primary btn-sm w-100 mt-2" id="saveWinCriteriaBtn">Lưu mục tiêu</button>
+                        </div>
+                        <div class="mb-2">
+                             <label for="actual_score" class="form-label small fw-bold">Ghi nhận kết quả</label>
+                            <div class="input-group">
+                                <input type="number" class="form-control form-control-sm" id="actual_score" placeholder="Nhập điểm thực tế" value="{{ doc.actual_score or '' }}">
+                                <button class="btn btn-success btn-sm" type="button" id="logResultBtn">Ghi nhận</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <div class="col-lg-8">
-                <div class="card">
-                    <div class="card-header">
-                        <ul class="nav nav-tabs card-header-tabs" id="docContentTab" role="tablist">
-                            <li class="nav-item" role="presentation"><button class="nav-link {% if not extracted_content %}active{% endif %}" id="workspace-tab" data-bs-toggle="tab" data-bs-target="#workspace-pane" type="button">Không gian làm việc</button></li>
-                            {% if extracted_content %}<li class="nav-item" role="presentation"><button class="nav-link {% if extracted_content %}active{% endif %}" id="content-tab" data-bs-toggle="tab" data-bs-target="#content-pane" type="button">Nội dung trích xuất</button></li>{% endif %}
-                        </ul>
-                    </div>
-                    <div class="card-body">
-                        <div class="tab-content" id="docContentTabContent">
-                            <div class="tab-pane fade {% if not extracted_content %}show active{% endif %}" id="workspace-pane" role="tabpanel">
-                                <div class="d-flex justify-content-between align-items-center mb-3">
-                                    <h5 class="mb-0">Cấu trúc tài liệu</h5>
-                                    <button class="btn btn-sm btn-primary" id="addNewHeadingBtn"><i class="bi bi-plus-circle-fill me-1"></i>Thêm mục</button>
-                                </div><div id="workspace"><p class="text-center text-muted">Đang tải...</p></div>
-                            </div>
-                            {% if extracted_content %}<div class="tab-pane fade {% if extracted_content %}show active{% endif %}" id="content-pane" role="tabpanel"><div class="alert alert-info small"><i class="bi bi-lightbulb-fill me-2"></i><b>Mẹo:</b> Bạn có thể bôi đen bất kỳ đoạn văn bản nào tại đây để tạo nhanh một "Mục con" mới.</div><pre id="extractedContent">{{ extracted_content }}</pre></div>{% endif %}
+            <div class="card">
+                <div class="card-header"><i class="bi bi-journal-text me-2"></i>Bối cảnh & Ghi chú</div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Mục tiêu học tập:</label>
+                        <div id="objectives-container" class="border rounded p-2" style="min-height: 100px; max-height: 250px; overflow-y: auto;">
+                            <p class="text-muted small">Đang tải mục tiêu...</p>
                         </div>
+                        <div class="input-group mt-2">
+                            <input type="text" id="new-main-objective-input" class="form-control" placeholder="Thêm mục tiêu chính mới...">
+                            <button class="btn btn-primary" type="button" id="add-main-objective-btn">Thêm</button>
+                        </div>
+                    </div>
+                    <hr>
+                    <form id="updateContextForm" method="POST" action="{{ url_for('view_document', document_id=doc.id) }}">
+                        <input type="hidden" name="form_marker" value="update_context">
+                         <div class="mb-3"><label for="deadline" class="form-label">Thời hạn hoàn thành:</label><input type="date" class="form-control" id="deadline" name="deadline" value="{{ doc.deadline.strftime('%Y-%m-%d') if doc.deadline else '' }}"></div>
+                        <div class="mb-3"><label for="engagement_level" class="form-label">Mức độ chuyên sâu:</label><select class="form-select" id="engagement_level" name="engagement_level"><option value="">-- Chọn mức độ --</option><option value="Học lướt" {% if doc.engagement_level == 'Học lướt' %}selected{% endif %}>Học lướt</option><option value="Học hiểu" {% if doc.engagement_level == 'Học hiểu' %}selected{% endif %}>Học hiểu</option><option value="Học sâu" {% if doc.engagement_level == 'Học sâu' %}selected{% endif %}>Học sâu</option></select></div>
+                        <div class="mb-3"><label for="context_event" class="form-label">Dùng cho việc gì?</label><input type="text" class="form-control" id="context_event" name="context_event" placeholder="Ví dụ: Thi cuối kỳ, Làm dự án cá nhân..." value="{{ doc.context_event or '' }}"></div>
+                        <div class="mb-3"><label for="custom_note" class="form-label">Ghi chú cá nhân:</label><textarea class="form-control" id="custom_note" name="custom_note" rows="3" placeholder="Ghi chú thêm về tài liệu này...">{{ doc.custom_note or '' }}</textarea></div>
+                         <div class="text-end"><button type="submit" class="btn btn-primary">Lưu Ghi Chú</button></div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-8">
+            
+            <div class="d-grid gap-2 mb-4">
+                 <a href="{{ url_for('network_view', document_id=doc.id) }}" class="btn btn-primary btn-lg shadow-sm">
+                     <i class="bi bi-diagram-3-fill me-2"></i>Mở Không gian Kiến thức Tương tác
+                 </a>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <ul class="nav nav-tabs card-header-tabs" id="docContentTab" role="tablist">
+                        {% if extracted_content %}
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="content-tab" data-bs-toggle="tab" data-bs-target="#content-pane" type="button">
+                                <i class="bi bi-file-text-fill me-1"></i> Nội dung trích xuất
+                            </button>
+                        </li>
+                        {% endif %}
+                    </ul>
+                </div>
+                <div class="card-body">
+                    <div class="tab-content" id="docContentTabContent">
+                        {% if extracted_content %}
+                        <div class="tab-pane fade show active" id="content-pane" role="tabpanel">
+                            <div class="alert alert-info small">
+                                <i class="bi bi-lightbulb-fill me-2"></i>
+                                <b>Mẹo:</b> Bạn có thể bôi đen bất kỳ đoạn văn bản nào tại đây để tạo nhanh một "Mục con" mới trong Không gian Kiến thức.
+                            </div>
+                            <pre id="extractedContent">{{ extracted_content }}</pre>
+                        </div>
+                        {% else %}
+                        <div class="text-center p-5 text-muted">
+                            <i class="bi bi-file-earmark-x fs-1"></i>
+                            <p class="mt-2">Không có nội dung văn bản để hiển thị.</p>
+                            <p class="small">Tài liệu này có thể là hình ảnh, video, hoặc không thể trích xuất nội dung.</p>
+                        </div>
+                        {% endif %}
                     </div>
                 </div>
             </div>
@@ -210,341 +227,358 @@
     </div>
 
     <div class="modal fade" id="aiVideoCallModal" tabindex="-1" aria-labelledby="aiVideoCallModalLabel" aria-hidden="true">
-      <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="aiVideoCallModalLabel"><i class="bi bi-robot me-2"></i>Mô phỏng cuộc gọi Video với AI</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body text-center">
-            <div class="mb-3">
-              <label class="form-label fw-bold">Chọn chế độ:</label>
-              <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="callMode" id="modeNormal" value="normal" checked>
-                <label class="form-check-label" for="modeNormal">Bình thường</label>
-              </div>
-              <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="callMode" id="modeRandom" value="random">
-                <label class="form-check-label" for="modeRandom">Ngẫu nhiên</label>
-              </div>
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="aiVideoCallModalLabel"><i class="bi bi-robot me-2"></i>Mô phỏng cuộc gọi Video với AI</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <hr>
+            <div class="modal-body text-center">
+                <div class="mb-3">
+                <label class="form-label fw-bold">Chọn chế độ:</label>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="callMode" id="modeNormal" value="normal" checked>
+                    <label class="form-check-label" for="modeNormal">Bình thường</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="callMode" id="modeRandom" value="random">
+                    <label class="form-check-label" for="modeRandom">Ngẫu nhiên</label>
+                </div>
+                </div>
+                <hr>
 
-            <div id="normalModeContent">
-              <p class="text-muted">Chọn người bạn muốn nói chuyện cùng:</p>
-              <div class="d-grid gap-2 col-8 mx-auto">
-                 <button class="btn btn-primary"><i class="bi bi-person-video3 me-2"></i>Giáo viên </button>
-                 <button class="btn btn-secondary"><i class="bi bi-people-fill me-2"></i>Bạn bè</button>
-              </div>
-            </div>
+                <div id="normalModeContent">
+                <p class="text-muted">Chọn người bạn muốn nói chuyện cùng:</p>
+                <div class="d-grid gap-2 col-8 mx-auto">
+                    <button class="btn btn-primary"><i class="bi bi-person-video3 me-2"></i>Giáo viên </button>
+                    <button class="btn btn-secondary"><i class="bi bi-people-fill me-2"></i>Bạn bè</button>
+                </div>
+                </div>
 
-            <div id="randomModeContent" style="display: none;">
-                <p class="text-muted">Thiết lập thời gian cho cuộc gọi ngẫu nhiên:</p>
-                <div class="row g-2 align-items-center justify-content-center">
-                    <div class="col-sm-5">
-                        <label for="startTimeInput" class="form-label">Bắt đầu</label>
-                        <input type="time" class="form-control" id="startTimeInput">
-                    </div>
-                    <div class="col-sm-5">
-                        <label for="endTimeInput" class="form-label">Kết thúc</label>
-                        <input type="time" class="form-control" id="endTimeInput">
+                <div id="randomModeContent" style="display: none;">
+                    <p class="text-muted">Thiết lập thời gian cho cuộc gọi ngẫu nhiên:</p>
+                    <div class="row g-2 align-items-center justify-content-center">
+                        <div class="col-sm-5">
+                            <label for="startTimeInput" class="form-label">Bắt đầu</label>
+                            <input type="time" class="form-control" id="startTimeInput">
+                        </div>
                     </div>
                 </div>
+
+                <div class="my-4">
+                <div class="pulsating-circle">
+                    <i class="bi bi-person-fill" style="font-size: 2.5rem; color: white;"></i>
+                </div>
+                </div>
+
             </div>
-
-            <div class="my-4">
-              <div class="pulsating-circle">
-                <i class="bi bi-person-fill" style="font-size: 2.5rem; color: white;"></i>
-              </div>
-            </div>
-
-          </div>
-          <div class="modal-footer justify-content-center border-0">
-            <button type="button" class="btn btn-light border rounded-circle" style="width: 50px; height: 50px;" title="Tắt/Bật loa">
-                <i class="bi bi-volume-up-fill fs-5"></i>
-            </button>
-            <button type="button" class="btn btn-danger rounded-circle" style="width: 60px; height: 60px;" data-bs-dismiss="modal" title="Kết thúc cuộc gọi">
-                <i class="bi bi-telephone-x-fill fs-4"></i>
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // KHỞI TẠO BIẾN
-        const docId = {{ doc.id }};
-        const workspaceContainer = document.getElementById('workspace');
-        const contentPane = document.getElementById('content-pane');
-        const objectivesContainer = document.getElementById('objectives-container');
-        const addItemModal = new bootstrap.Modal(document.getElementById('addItemModal'));
-
-        // ==========================================================
-        // LOGIC CHO WORKSPACE (Cấu trúc cây đa cấp)
-        // ==========================================================
-        const renderItemAndChildren = (item, level) => {
-            if (item.children && item.children.length > 0) { item.children.sort((a, b) => a.order - b.order); }
-            const childrenHTML = (item.children || []).map(child => renderItemAndChildren(child, level + 1)).join('');
-            const indentation = level * 25;
-            const hasChildren = item.children && item.children.length > 0;
-            const toggleBtn = hasChildren ? `<button class="btn btn-sm btn-outline-secondary p-0 me-2 toggle-children-btn" style="width:24px;height:24px;" type="button" data-bs-toggle="collapse" data-bs-target="#children-of-${item.id}"><i class="bi bi-chevron-down"></i></button>` : `<span class="me-2" style="display:inline-block;width:24px;"></span>`;
-            return `<div class="workspace-item-container" style="margin-left:${indentation}px;margin-top:10px;" data-id="${item.id}" data-title="${item.title.replace(/"/g, '&quot;')}"><div class="sub-item"><div class="sub-item-title mb-1 d-flex align-items-center">${toggleBtn}<span>${item.title.replace(/</g,"&lt;")}</span></div>${item.content?`<p class="sub-item-content fst-italic text-muted small ps-4">${item.content.replace(/</g,"&lt;")}</p>`:''}<div class="user-content-area"><label for="user-content-${item.id}" class="form-label small fw-bold">Nội dung của bạn:</label><textarea class="form-control form-control-sm user-content-textarea" id="user-content-${item.id}" rows="3" placeholder="Nhập tóm tắt, phân tích...">${item.user_content||''}</textarea><button class="btn btn-sm btn-success mt-2 save-user-content-btn" data-item-id="${item.id}"><i class="bi bi-robot"></i> Lưu & AI Phân tích</button><button class="btn btn-sm btn-info mt-2 ms-2 ai-suggestion-btn" data-item-id="${item.id}"><i class="bi bi-lightbulb"></i> Góp ý từ AI</button><div class="ai-questions-area mt-2"></div></div></div><div class="children-container collapse show" id="children-of-${item.id}">${childrenHTML}</div></div>`;
-        };
-        const loadWorkspace = async () => {
-            if (!workspaceContainer) return;
-            try {
-                const response = await fetch(`/document/${docId}/workspace`);
-                const workspaceTree = await response.json();
-                workspaceContainer.innerHTML = workspaceTree.length > 0 ? workspaceTree.map(item => renderItemAndChildren(item, 0)).join('') : '<p class="text-center text-muted">Chưa có mục nào được tạo. Hãy nhấn "Thêm mục" để bắt đầu.</p>';
-            } catch (e) { console.error("Lỗi tải workspace:", e); }
-        };
-        const populateParentSelect = (items, select, level = 0) => {
-            const prefix = '— '.repeat(level);
-            items.forEach(item => { select.add(new Option(prefix + item.title, item.id)); if (item.children?.length > 0) { populateParentSelect(item.children, select, level + 1); } });
-        };
-        const openAddItemModal = (content = '') => {
-            document.getElementById('itemTitleInput').value = '';
-            document.getElementById('itemContentInput').value = content;
-            const parentSelect = document.getElementById('parentItemSelect');
-            parentSelect.innerHTML = '<option value="">-- Cấp cao nhất --</option>';
-            fetch(`/document/${docId}/workspace`).then(res => res.json()).then(tree => { populateParentSelect(tree, parentSelect); addItemModal.show(); setTimeout(() => document.getElementById('itemTitleInput').focus(), 500); });
-        };
-        document.getElementById('addNewHeadingBtn').addEventListener('click', () => openAddItemModal());
-        document.getElementById('saveNewItemBtn').addEventListener('click', async () => {
-            const title = document.getElementById('itemTitleInput').value.trim();
-            if (!title) return alert('Vui lòng nhập tiêu đề.');
-            const body = { title, content: document.getElementById('itemContentInput').value, parent_id: document.getElementById('parentItemSelect').value || null };
-            const response = await fetch(`/document/${docId}/workspace_items`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
-            if (response.ok) { addItemModal.hide(); await loadWorkspace(); } else { alert('Tạo mục thất bại.'); }
-        });
-
-        // ==========================================================
-        // LOGIC CHO MỤC TIÊU HỌC TẬP (đa cấp, thu gọn)
-        // ==========================================================
-        const renderObjective = (obj, level) => {
-            const childrenHTML = (obj.sub_objectives || []).map(sub => renderObjective(sub, level + 1)).join('');
-            const indentation = level * 20;
-            const hasChildren = obj.sub_objectives && obj.sub_objectives.length > 0;
-            const toggleBtn = hasChildren ? `<button class="btn btn-sm p-0 me-2 toggle-objective-btn" type="button" data-bs-toggle="collapse" data-bs-target="#obj-children-${obj.id}"><i class="bi bi-chevron-down"></i></button>` : `<span class="me-2" style="display:inline-block; width:18px;"></span>`;
-            return `<div class="objective-item" style="margin-left:${indentation}px; margin-top:5px;" data-id="${obj.id}"><div class="d-flex align-items-center">${toggleBtn}<input class="form-check-input me-2 objective-checkbox" type="checkbox" ${obj.is_completed?'checked':''}><span class="flex-grow-1 ${obj.is_completed?'text-muted text-decoration-line-through':''}">${obj.description}</span><button class="btn btn-sm btn-outline-secondary p-0 ms-1 add-sub-objective-btn" style="width:20px;height:20px;">+</button><button class="btn btn-sm btn-outline-danger p-0 ms-1 delete-objective-btn" style="width:20px;height:20px;">&times;</button></div><div class="collapse show" id="obj-children-${obj.id}">${childrenHTML}</div></div>`;
-        };
-        const loadObjectives = async () => {
-            if (!objectivesContainer) return;
-            try {
-                const response = await fetch(`/document/${docId}/objectives_tree`);
-                const tree = await response.json();
-                objectivesContainer.innerHTML = tree.length > 0 ? tree.map(obj => renderObjective(obj, 0)).join('') : '<p class="text-muted small">Chưa có mục tiêu nào được thiết lập.</p>';
-            } catch (e) { console.error("Lỗi tải mục tiêu:", e); }
-        };
-        document.getElementById('add-main-objective-btn')?.addEventListener('click', async () => {
-            const input = document.getElementById('new-main-objective-input');
-            const description = input.value.trim();
-            if (!description) return;
-            const response = await fetch(`/document/${docId}/objectives`, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ description, parent_id: null }) });
-            if (response.ok) { await loadObjectives(); input.value = ''; } else { alert('Thêm mục tiêu thất bại.'); }
-        });
-        objectivesContainer?.addEventListener('click', async (e) => {
-            const target = e.target;
-            const item = target.closest('.objective-item');
-            if (!item) return;
-            const id = item.dataset.id;
-            if (target.classList.contains('delete-objective-btn')) {
-                if (confirm('Xóa mục tiêu này và các mục tiêu con?')) {
-                    const res = await fetch(`/objective/${id}`, { method: 'DELETE' });
-                    if (res.ok) await loadObjectives(); else alert('Xóa thất bại');
-                }
-            } else if (target.classList.contains('add-sub-objective-btn')) {
-                const desc = prompt("Nhập nội dung cho mục tiêu con:");
-                if (desc && desc.trim()) {
-                    const res = await fetch(`/document/${docId}/objectives`, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ description: desc.trim(), parent_id: id }) });
-                    if (res.ok) await loadObjectives(); else alert('Thêm thất bại.');
-                }
-            } else if (target.classList.contains('objective-checkbox')) {
-                const res = await fetch(`/objective/${id}/toggle`, { method: 'PUT' });
-                if (!res.ok) { alert('Cập nhật thất bại'); target.checked = !target.checked; } else { await loadObjectives(); }
-            }
-        });
-
-        // ==========================================================
-        // CÁC LOGIC KHÁC
-        // ==========================================================
-        // 1. Gắn sự kiện chung cho toàn bộ trang (dùng event delegation)
-        document.body.addEventListener('click', async (event) => {
-            const target = event.target;
-            
-            // Xử lý sự kiện nhấn nút "Lưu & AI Phân tích" trong Workspace
-            if (target.closest('.save-user-content-btn')) {
-                const button = target.closest('.save-user-content-btn');
-                const itemId = button.dataset.itemId;
-                const itemDiv = button.closest('.user-content-area');
-                const userContent = itemDiv.querySelector('.user-content-textarea').value;
-                const questionsArea = itemDiv.querySelector('.ai-questions-area');
+            <div class="modal-footer justify-content-center border-0">
+                <button type="button" class="btn btn-light border rounded-circle" style="width: 50px; height: 50px;" title="Tắt/Bật loa">
+                    <i class="bi bi-volume-up-fill fs-5"></i>
+                </button>
                 
-                button.disabled = true;
-                button.innerHTML = `<span class="spinner-border spinner-border-sm"></span> Đang xử lý...`;
-                questionsArea.innerHTML = `<p class="text-muted small">AI đang phân tích...</p>`;
-                try {
-                    const response = await fetch(`/workspace_item/${itemId}/user_content`, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ user_content: userContent }) });
-                    const data = await response.json();
-                    if (response.ok && data.questions) {
-                        let questionsHtml = '<ul class="list-group list-group-flush">';
-                        data.questions.forEach(q => { questionsHtml += `<li class="list-group-item"><strong class="badge bg-secondary me-2">${q.type}</strong> ${q.q}</li>`; });
-                        questionsArea.innerHTML = questionsHtml + '</ul>';
-                    } else { 
-                        questionsArea.innerHTML = `<p class="text-danger small">${data.error || 'Lỗi không xác định'}</p>`; 
-                    }
-                } catch (e) { 
-                    questionsArea.innerHTML = `<p class="text-danger small">Lỗi kết nối mạng.</p>`; 
-                } finally { 
-                    button.disabled = false; 
-                    button.innerHTML = '<i class="bi bi-robot"></i> Lưu & AI Phân tích'; 
-                }
+                <a href="{{ url_for('clarity_report', doc_id=doc.id) }}" class="btn btn-danger rounded-circle" style="width: 60px; height: 60px;" title="Kết thúc và Xem Báo cáo">
+                    <i class="bi bi-telephone-x-fill fs-4"></i>
+                </a>
+            </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // KHỞI TẠO BIẾN
+    const dataContainer = document.getElementById('viewDocumentData');
+    const docId = dataContainer.dataset.docId;
+    
+    // GỠ BỎ: Các biến cho workspace tab không còn cần thiết
+    const contentPane = document.getElementById('content-pane');
+    const objectivesContainer = document.getElementById('objectives-container');
+    const addItemModalEl = document.getElementById('addItemModal');
+    let addItemModal = null;
+    if (addItemModalEl) {
+        addItemModal = new bootstrap.Modal(addItemModalEl);
+    }
+
+    // ==========================================================
+    // GỠ BỎ: TOÀN BỘ LOGIC CHO WORKSPACE TAB ĐÃ ĐƯỢC XÓA
+    // ==========================================================
+
+    const populateParentSelect = (items, select, level = 0) => {
+        const prefix = '— '.repeat(level);
+        items.forEach(item => { select.add(new Option(prefix + item.title, item.id)); if (item.children?.length > 0) { populateParentSelect(item.children, select, level + 1); } });
+    };
+
+    const openAddItemModal = (content = '') => {
+        if (!addItemModal) return;
+        document.getElementById('itemTitleInput').value = '';
+        document.getElementById('itemContentInput').value = content;
+        const parentSelect = document.getElementById('parentItemSelect');
+        parentSelect.innerHTML = '<option value="">-- Cấp cao nhất --</option>';
+        // Lưu ý: Lệnh fetch này giờ sẽ phục vụ cho popover chọn văn bản
+        fetch(`/document/${docId}/workspace`).then(res => res.json()).then(tree => { populateParentSelect(tree, parentSelect); addItemModal.show(); setTimeout(() => document.getElementById('itemTitleInput').focus(), 500); });
+    };
+
+    // GỠ BỎ: Event listener cho addNewHeadingBtn đã được xóa
+    document.getElementById('saveNewItemBtn')?.addEventListener('click', async () => {
+        if (!addItemModal) return;
+        const title = document.getElementById('itemTitleInput').value.trim();
+        if (!title) return alert('Vui lòng nhập tiêu đề.');
+        const body = { title, content: document.getElementById('itemContentInput').value, parent_id: document.getElementById('parentItemSelect').value || null };
+        const response = await fetch(`/document/${docId}/workspace_items`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+        if (response.ok) { 
+            addItemModal.hide(); 
+            alert('Đã tạo mục thành công trong Không gian Kiến thức!');
+        } else { alert('Tạo mục thất bại.'); }
+    });
+
+
+    // ==========================================================
+    // LOGIC CHO MỤC TIÊU HỌC TẬP (đa cấp, thu gọn) - Giữ nguyên
+    // ==========================================================
+    const renderObjective = (obj, level) => {
+        const childrenHTML = (obj.sub_objectives || []).map(sub => renderObjective(sub, level + 1)).join('');
+        const indentation = level * 20;
+        const hasChildren = obj.sub_objectives && obj.sub_objectives.length > 0;
+        const toggleBtn = hasChildren ? `<button class="btn btn-sm p-0 me-2 toggle-objective-btn" type="button" data-bs-toggle="collapse" data-bs-target="#obj-children-${obj.id}"><i class="bi bi-chevron-down"></i></button>` : `<span class="me-2" style="display:inline-block; width:18px;"></span>`;
+        return `<div class="objective-item" style="margin-left:${indentation}px; margin-top:5px;" data-id="${obj.id}"><div class="d-flex align-items-center">${toggleBtn}<input class="form-check-input me-2 objective-checkbox" type="checkbox" ${obj.is_completed?'checked':''}><span class="flex-grow-1 ${obj.is_completed?'text-muted text-decoration-line-through':''}">${obj.description}</span><button class="btn btn-sm btn-outline-secondary p-0 ms-1 add-sub-objective-btn" style="width:20px;height:20px;">+</button><button class="btn btn-sm btn-outline-danger p-0 ms-1 delete-objective-btn" style="width:20px;height:20px;">&times;</button></div><div class="collapse show" id="obj-children-${obj.id}">${childrenHTML}</div></div>`;
+    };
+    const loadObjectives = async () => {
+        if (!objectivesContainer) return;
+        try {
+            const response = await fetch(`/document/${docId}/objectives_tree`);
+            const tree = await response.json();
+            objectivesContainer.innerHTML = tree.length > 0 ? tree.map(obj => renderObjective(obj, 0)).join('') : '<p class="text-muted small">Chưa có mục tiêu nào được thiết lập.</p>';
+        } catch (e) { console.error("Lỗi tải mục tiêu:", e); }
+    };
+    document.getElementById('add-main-objective-btn')?.addEventListener('click', async () => {
+        const input = document.getElementById('new-main-objective-input');
+        const description = input.value.trim();
+        if (!description) return;
+        const response = await fetch(`/document/${docId}/objectives`, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ description, parent_id: null }) });
+        if (response.ok) { await loadObjectives(); input.value = ''; } else { alert('Thêm mục tiêu thất bại.'); }
+    });
+    objectivesContainer?.addEventListener('click', async (e) => {
+        const target = e.target;
+        const item = target.closest('.objective-item');
+        if (!item) return;
+        const id = item.dataset.id;
+        if (target.classList.contains('delete-objective-btn')) {
+            if (confirm('Xóa mục tiêu này và các mục tiêu con?')) {
+                const res = await fetch(`/objective/${id}`, { method: 'DELETE' });
+                if (res.ok) await loadObjectives(); else alert('Xóa thất bại');
             }
-            
-            // Xử lý sự kiện nhấn nút "Góp ý từ AI"
-            if (target.closest('.ai-suggestion-btn')) {
-                const button = target.closest('.ai-suggestion-btn');
-                const itemId = button.dataset.itemId;
-                const itemDiv = button.closest('.user-content-area');
-                const questionsArea = itemDiv.querySelector('.ai-questions-area');
-                const userContent = itemDiv.querySelector('.user-content-textarea').value;
-
-                button.disabled = true;
-                button.innerHTML = `<span class="spinner-border spinner-border-sm"></span>`;
-                questionsArea.innerHTML = '';
-
-                try {
-                    const response = await fetch(`/workspace_item/${itemId}/ai_suggestion`, {
-                        method: 'POST',
-                        headers: {'Content-Type': 'application/json'},
-                        body: JSON.stringify({ user_content: userContent })
-                    });
-                    const data = await response.json();
-
-                    if (response.ok && data.suggestion) {
-                        questionsArea.innerHTML = `<div class="alert alert-info p-2 small"><i class="bi bi-lightbulb-fill me-2"></i><strong>Góp ý:</strong> ${data.suggestion}</div>`;
-                    } else {
-                        questionsArea.innerHTML = `<p class="text-danger small">${data.error || 'Lỗi không xác định từ AI.'}</p>`;
-                    }
-                } catch (e) {
-                    questionsArea.innerHTML = `<p class="text-danger small">Lỗi kết nối mạng.</p>`;
-                } finally {
-                    button.disabled = false;
-                    button.innerHTML = '<i class="bi bi-lightbulb"></i> Góp ý từ AI';
-                }
+        } else if (target.classList.contains('add-sub-objective-btn')) {
+            const desc = prompt("Nhập nội dung cho mục tiêu con:");
+            if (desc && desc.trim()) {
+                const res = await fetch(`/document/${docId}/objectives`, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ description: desc.trim(), parent_id: id }) });
+                if (res.ok) await loadObjectives(); else alert('Thêm thất bại.');
             }
+        } else if (target.classList.contains('objective-checkbox')) {
+            const res = await fetch(`/objective/${id}/toggle`, { method: 'PUT' });
+            if (!res.ok) { alert('Cập nhật thất bại'); target.checked = !target.checked; } else { await loadObjectives(); }
+        }
+    });
 
-            // Xử lý nút "Lưu mục tiêu"
-            if (target.id === 'saveWinCriteriaBtn') {
-                event.preventDefault();
-                const description = document.getElementById('win_criteria_description').value;
-                const target_score = document.getElementById('target_score').value;
-                const response = await fetch(`/document/${docId}/win_criteria`, { method: 'PUT', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ description, target_score }) });
-                const data = await response.json();
-                if(response.ok) {
-                    document.getElementById('winCriteriaText').textContent = data.win_criteria_description || 'Chưa có mô tả mục tiêu.';
-                    document.getElementById('targetScoreDisplay').textContent = data.target_score || 'N/A';
-                    // Sau khi lưu mục tiêu, cũng cần cập nhật lại thanh progress
-                    const actual = parseFloat(document.getElementById('actualScoreDisplay').textContent) || 0;
-                    const newTarget = parseFloat(data.target_score) || 100;
-                    const progress = (actual / newTarget) * 100;
-                    const progressBar = document.getElementById('progressBar');
-                    progressBar.style.width = `${progress}%`;
-                    progressBar.textContent = `${Math.round(progress)}%`;
-                    alert('Đã lưu mục tiêu thành công!');
-                } else { 
-                    alert(data.error || 'Lỗi khi cập nhật mục tiêu.'); 
-                }
+    // ==========================================================
+    // CÁC LOGIC KHÁC (cho các nút lưu mục tiêu, kết quả...) - Giữ nguyên
+    // ==========================================================
+    document.body.addEventListener('click', async (event) => {
+        const target = event.target;
+        
+        // GỠ BỎ: Các event listener cho nút lưu và góp ý AI trong workspace tab cũ
+        
+        if (target.id === 'saveWinCriteriaBtn') {
+            event.preventDefault();
+            const description = document.getElementById('win_criteria_description').value;
+            const target_score = document.getElementById('target_score').value;
+            const response = await fetch(`/document/${docId}/win_criteria`, { method: 'PUT', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ description, target_score }) });
+            const data = await response.json();
+            if(response.ok) {
+                document.getElementById('winCriteriaText').textContent = data.win_criteria_description || 'Chưa có mô tả mục tiêu.';
+                document.getElementById('targetScoreDisplay').textContent = data.target_score || 'N/A';
+                const actual = parseFloat(document.getElementById('actualScoreDisplay').textContent) || 0;
+                const newTarget = parseFloat(data.target_score) || 100;
+                const progress = (actual / newTarget) * 100;
+                const progressBar = document.getElementById('progressBar');
+                progressBar.style.width = `${progress}%`;
+                progressBar.textContent = `${Math.round(progress)}%`;
+                alert('Đã lưu mục tiêu thành công!');
+            } else { 
+                alert(data.error || 'Lỗi khi cập nhật mục tiêu.'); 
             }
+        }
 
-            // Xử lý nút "Ghi nhận Kết quả"
-            if (target.id === 'logResultBtn') {
-                event.preventDefault();
-                const actual_score = document.getElementById('actual_score').value;
-                const response = await fetch(`/document/${docId}/result`, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ actual_score }) });
-                const data = await response.json();
-                if(response.ok) {
-                    const actualScoreDisplay = document.getElementById('actualScoreDisplay');
-                    actualScoreDisplay.textContent = data.actual_score !== null ? data.actual_score : 'N/A';
-                    actualScoreDisplay.classList.toggle('text-success', data.actual_score !== null);
-                    actualScoreDisplay.classList.toggle('no-score', data.actual_score === null);
-                    const target = parseFloat(document.getElementById('targetScoreDisplay').textContent) || 100;
-                    const actual = parseFloat(data.actual_score) || 0;
-                    const progress = (actual / target) * 100;
-                    const progressBar = document.getElementById('progressBar');
-                    progressBar.style.width = `${progress}%`;
-                    progressBar.textContent = `${Math.round(progress)}%`;
-                    alert('Đã ghi nhận kết quả!');
-                } else { 
-                    alert(data.error || 'Lỗi khi ghi nhận kết quả.'); 
-                }
+        if (target.id === 'logResultBtn') {
+            event.preventDefault();
+            const actual_score = document.getElementById('actual_score').value;
+            const response = await fetch(`/document/${docId}/result`, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ actual_score }) });
+            const data = await response.json();
+            if(response.ok) {
+                const actualScoreDisplay = document.getElementById('actualScoreDisplay');
+                actualScoreDisplay.textContent = data.actual_score !== null ? data.actual_score : 'N/A';
+                actualScoreDisplay.classList.toggle('text-success', data.actual_score !== null);
+                actualScoreDisplay.classList.toggle('no-score', data.actual_score === null);
+                const target = parseFloat(document.getElementById('targetScoreDisplay').textContent) || 100;
+                const actual = parseFloat(data.actual_score) || 0;
+                const progress = (actual / target) * 100;
+                const progressBar = document.getElementById('progressBar');
+                progressBar.style.width = `${progress}%`;
+                progressBar.textContent = `${Math.round(progress)}%`;
+                alert('Đã ghi nhận kết quả!');
+            } else { 
+                alert(data.error || 'Lỗi khi ghi nhận kết quả.'); 
             }
-        });
-
-        // 2. Logic cho Popover khi bôi đen văn bản
-        if (contentPane) {
-            const popover = document.getElementById('selection-popover');
-            contentPane.addEventListener('mouseup', (e) => {
-                setTimeout(() => {
-                    const selectedText = window.getSelection().toString().trim();
-                    if (selectedText.length > 5 && popover) {
-                        const rect = window.getSelection().getRangeAt(0).getBoundingClientRect();
-                        popover.style.left = `${window.scrollX + rect.left + rect.width / 2 - popover.offsetWidth / 2}px`;
-                        popover.style.top = `${window.scrollY + rect.top - popover.offsetHeight - 8}px`;
-                        popover.style.display = 'block';
-                    } else if (popover) {
-                        popover.style.display = 'none';
-                    }
-                }, 10);
-            });
-            document.addEventListener('mousedown', (e) => {
-                if (popover && !popover.contains(e.target) && !e.target.closest('#selection-popover')) {
+        }
+    });
+    
+    // Logic cho Popover chọn văn bản - Giữ nguyên
+    if (contentPane) {
+        const popover = document.getElementById('selection-popover');
+        contentPane.addEventListener('mouseup', (e) => {
+            setTimeout(() => {
+                const selectedText = window.getSelection().toString().trim();
+                if (selectedText.length > 5 && popover) {
+                    const rect = window.getSelection().getRangeAt(0).getBoundingClientRect();
+                    popover.style.left = `${window.scrollX + rect.left + rect.width / 2 - popover.offsetWidth / 2}px`;
+                    popover.style.top = `${window.scrollY + rect.top - popover.offsetHeight - 8}px`;
+                    popover.style.display = 'block';
+                } else if (popover) {
                     popover.style.display = 'none';
                 }
+            }, 10);
+        });
+        document.addEventListener('mousedown', (e) => {
+            if (popover && !popover.contains(e.target) && !e.target.closest('#selection-popover')) {
+                popover.style.display = 'none';
+            }
+        });
+        document.getElementById('add-as-subitem-btn')?.addEventListener('click', () => {
+            if (popover) popover.style.display = 'none';
+            // Popover này sẽ mở modal để tạo node mới trong Knowledge Network
+            openAddItemModal(window.getSelection().toString().trim());
+        });
+    }
+    
+    // Logic cho modal AI Call - Giữ nguyên
+    const callModeRadios = document.querySelectorAll('input[name="callMode"]');
+    const normalModeContent = document.getElementById('normalModeContent');
+    const randomModeContent = document.getElementById('randomModeContent');
+    if (callModeRadios.length > 0) {
+        callModeRadios.forEach(radio => {
+            radio.addEventListener('change', function() {
+                if (this.value === 'normal') {
+                    if(normalModeContent) normalModeContent.style.display = 'block';
+                    if(randomModeContent) randomModeContent.style.display = 'none';
+                } else {
+                    if(normalModeContent) normalModeContent.style.display = 'none';
+                    if(randomModeContent) randomModeContent.style.display = 'block';
+                }
             });
-            document.getElementById('add-as-subitem-btn').addEventListener('click', () => {
-                if (popover) popover.style.display = 'none';
-                openAddItemModal(window.getSelection().toString().trim());
-            });
-        }
+        });
+    }
 
-        // 3. Logic cho Collapse (thay đổi icon mũi tên)
-        if (workspaceContainer) {
-            workspaceContainer.addEventListener('show.bs.collapse', event => {
-                const button = document.querySelector(`[data-bs-target="#${event.target.id}"]`);
-                if (button) button.querySelector('.bi')?.classList.replace('bi-chevron-right', 'bi-chevron-down');
-            });
-            workspaceContainer.addEventListener('hide.bs.collapse', event => {
-                const button = document.querySelector(`[data-bs-target="#${event.target.id}"]`);
-                if (button) button.querySelector('.bi')?.classList.replace('bi-chevron-down', 'bi-chevron-right');
-            });
-        }
-        
-        // 4. Logic cho Modal Video Call
-        const callModeRadios = document.querySelectorAll('input[name="callMode"]');
-        const normalModeContent = document.getElementById('normalModeContent');
-        const randomModeContent = document.getElementById('randomModeContent');
+    // --- LOGIC CHO REVIEW MODAL ---
+    const isReview = {{ is_new_upload_for_review | tojson }};
+    if (isReview) {
+        const reviewModalEl = document.getElementById('uploadReviewModal');
+        if (reviewModalEl) {
+            const reviewModal = new bootstrap.Modal(reviewModalEl);
+            reviewModal.show();
 
-        if (callModeRadios.length > 0) {
-            callModeRadios.forEach(radio => {
-                radio.addEventListener('change', function() {
-                    if (this.value === 'normal') {
-                        normalModeContent.style.display = 'block';
-                        randomModeContent.style.display = 'none';
+            const moveToFocusBtn = document.getElementById('move-to-focus-btn');
+            if (moveToFocusBtn) {
+                moveToFocusBtn.addEventListener('click', async () => {
+                    const response = await fetch(`/document/{{ doc.id }}/toggle_goal_related`, {
+                        method: 'POST',
+                        headers: {'Content-Type': 'application/json'}
+                    });
+                    if (response.ok) {
+                        alert('Đã chuyển tài liệu vào Focus Workspace!');
+                        reviewModal.hide();
                     } else {
-                        normalModeContent.style.display = 'none';
-                        randomModeContent.style.display = 'block';
+                        alert('Có lỗi xảy ra, vui lòng thử lại.');
                     }
                 });
-            });
+            }
         }
+    }
 
-        // --- KHỞI ĐỘNG ---
-        loadWorkspace();
-        loadObjectives();
-    });
-    </script>
-</body>
-</html>
+    // --- KHỞI ĐỘNG ---
+    loadObjectives();
+});
+</script>
+
+<div class="modal fade" id="goalBundleModal" tabindex="-1" aria-labelledby="goalBundleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="goalBundleModalLabel"><i class="bi bi-box-seam me-2"></i> Goal Bundle được tạo bởi AI</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p class="text-muted">Dựa trên mục tiêu của bạn và nội dung tài liệu, AI đã chắt lọc các thông tin quan trọng nhất vào gói này.</p>
+        <hr>
+
+        <div id="goalBundleContent">
+            <div class="text-center">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+                <p class="mt-2">AI đang phân tích...</p>
+            </div>
+        </div>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="uploadReviewModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title"><i class="bi bi-magic me-2"></i>Kết quả Phân tích của AI</h5>
+      </div>
+      <div class="modal-body text-center">
+        {% if doc.is_goal_related %}
+            <div class="alert alert-success">
+                <i class="bi bi-check-circle-fill me-2"></i>
+                AI đã xác định tài liệu này phù hợp với mục tiêu của bạn và đã tự động lưu vào <strong>Focus Workspace</strong>.
+            </div>
+            <p>Bạn có thể bắt đầu xây dựng Mạng lưới Kiến thức ngay bây giờ!</p>
+        {% else %}
+            <div class="alert alert-warning">
+                <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                AI nhận thấy tài liệu này không liên quan trực tiếp đến mục tiêu của bạn và đã tạm lưu vào <strong>Sandbox</strong>.
+            </div>
+            <p>Bạn muốn làm gì với tài liệu này?</p>
+        {% endif %}
+      </div>
+      <div class="modal-footer justify-content-center">
+        {% if doc.is_goal_related %}
+             <button type="button" class="btn btn-primary" data-bs-dismiss="modal">OK, tôi đã hiểu</button>
+        {% else %}
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                <i class="bi bi-joystick me-1"></i>Giữ trong Sandbox
+            </button>
+            <button type="button" class="btn btn-success" id="move-to-focus-btn">
+                <i class="bi bi-star-fill me-1"></i>Chuyển vào Focus
+            </button>
+            <form action="{{ url_for('delete_document', document_id=doc.id) }}" method="POST" class="d-inline">
+                <button type="submit" class="btn btn-outline-danger">
+                    <i class="bi bi-trash3 me-1"></i>Từ chối & Xóa
+                </button>
+            </form>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

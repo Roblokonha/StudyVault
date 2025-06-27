@@ -1,0 +1,706 @@
+{% extends "layout.html" %}
+
+{% block title %}Knowledge Network - {{ doc.filename }}{% endblock %}
+
+{% block head_styles %}
+<style>
+    .network-container {
+        display: flex;
+        height: calc(100vh - 80px); 
+        gap: 1rem;
+    }
+    .left-sidebar, .right-sidebar {
+        flex: 0 0 300px;
+        padding: 1.5rem;
+        background-color: var(--white-bg); 
+        overflow-y: auto;
+        border: 1px solid #dee2e6;
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--card-shadow);
+    }
+    .main-canvas {
+        flex-grow: 1;
+        padding: 0;
+        overflow: hidden;
+        background-color: var(--white-bg); 
+        border: 1px solid #dee2e6;
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--card-shadow);
+    }
+    #network-graph-container, #network-graph-container .mermaid {
+        width: 100% !important;
+        height: 100% !important;
+    }
+    .doc-list-item {
+        padding: 0.5rem 0.75rem;
+        border-radius: var(--element-border-radius);
+        color: var(--text-dark); 
+        text-decoration: none;
+        display: block;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        border: 1px solid transparent;
+    }
+    .doc-list-item:hover {
+        background-color: #e9ecef;
+    }
+    .doc-list-item.active {
+        background-color: var(--primary-blue);
+        color: white;
+        font-weight: 600;
+    }
+    .right-sidebar h5, .left-sidebar h4, .right-sidebar h4 {
+        color: var(--primary-blue); 
+    }
+    .right-sidebar .form-label {
+        font-weight: 600;
+        color: #495057;
+        margin-top: 1rem;
+    }
+    .right-sidebar .form-control, .right-sidebar .form-control:focus {
+        background-color: #fff;
+        color: var(--text-dark);
+        border: 1px solid #ced4da;
+    }
+    .right-sidebar .content-display {
+        background-color: var(--light-bg); 
+        padding: 0.75rem;
+        border-radius: 6px;
+        font-style: italic;
+        color: var(--text-muted); 
+        white-space: pre-wrap;
+        border: 1px solid #eee;
+    }
+    .svg-pan-zoom-control-background {
+        fill: rgba(255, 255, 255, 0.8);
+        stroke: #ccc;
+    }
+    .svg-pan-zoom-control-element, .svg-pan-zoom-control-element:hover {
+        fill: #333;
+    }
+    .main-canvas .mermaid .node rect,
+    .main-canvas .mermaid .node circle,
+    .main-canvas .mermaid .node ellipse,
+    .main-canvas .mermaid .node polygon {
+        fill: #f9f9f9 !important; /* Màu nền node nhạt hơn */
+        stroke: #888 !important;   /* Viền node đậm hơn */
+        stroke-width: 2px !important;
+    }
+    .main-canvas .mermaid .node .label {
+        font-size: 14px !important; 
+        font-weight: 500 !important;
+        fill: var(--text-dark) !important; 
+    }
+    .main-canvas .mermaid .edgeLabel {
+        font-size: 12px !important;
+        background-color: #ffffff !important; 
+        color: var(--text-dark) !important; 
+        padding: 1px 4px !important;            
+        border-radius: 4px !important; 
+    }
+    .main-canvas .mermaid .edge-path .path {
+        stroke: #666 !important; 
+        stroke-width: 1.5px !important;
+    }
+    #simplification-results .issue-item { 
+        margin-bottom: 0.75rem; 
+        padding: 0.75rem; 
+        border-left: 4px solid; 
+        border-radius: var(--element-border-radius); 
+        background-color: #f8f9fa; 
+    }
+    #simplification-results .issue-type { 
+        font-weight: bold; 
+        display: block; 
+        margin-bottom: 0.25rem; 
+        color: #343a40; 
+    }
+    #simplification-results .issue-text { 
+        font-style: italic; 
+        color: #dc3545; 
+        font-weight: 500;
+    }
+    #simplification-results .issue-suggestion { font-size: 0.9em; }
+    .issue-bị-động { border-color: #ffc107; } 
+    .issue-câu-phức { border-color: #fd7e14; } 
+    .issue-nhiều-ý-tưởng { border-color: #d63384; } 
+    .issue-thuật-ngữ { border-color: #6f42c1; } 
+    .issue-thiếu-ví-dụ { border-color: #0dcaf0; } 
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="network-container" data-doc-id="{{doc.id}}">
+    <div class="left-sidebar">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h4><i class="bi bi-folder2-open"></i> Workspace</h4>
+        </div>
+        <div class="d-grid">
+            <button class="btn btn-primary" id="auto-breakdown-button">
+                <i class="bi bi-magic me-2"></i>AI Auto Breakdown
+            </button>
+            <button class="btn btn-success mt-2" data-bs-toggle="modal" data-bs-target="#addNodeModal">
+                <i class="bi bi-pencil-square me-2"></i>Thêm Node thủ công
+            </button>
+            <button class="btn btn-outline-info mt-2" id="autoPruneMergeBtn">
+                    <i class="bi bi-scissors me-2"></i>AI Đề xuất Tối ưu
+            </button>
+            <button class="btn btn-outline-warning mt-2" id="ai-merge-nodes-btn">
+                <i class="bi bi-link-45deg me-2"></i>AI Gộp Node Trùng lặp
+            </button>
+        </div>
+        <hr style="border-color: #444;">
+        <div class="list-group list-group-flush">
+            {% for document in all_docs %}
+                <a href="{{ url_for('network_view', document_id=document.id) }}"
+                   class="doc-list-item list-group-item-action {% if document.id == doc.id %}active{% endif %}"
+                   title="{{ document.filename }}">
+                    <i class="bi bi-file-earmark-text me-2"></i>
+                    {{ document.filename | truncate(25) }}
+                </a>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="main-canvas" id="main-canvas">
+        <div id="network-graph-container">
+            <p class="text-center text-muted" style="padding-top: 2rem;">Sẵn sàng để breakdown tài liệu...</p>
+        </div>
+    </div>
+
+    <div class="right-sidebar" id="right-sidebar-content">
+        <div class="filter-pane mb-4">
+            <h5><i class="bi bi-filter"></i> Bộ lọc Node</h5>
+            <div class="mb-2">
+                <label for="nodeSearchInput" class="form-label small">Tìm kiếm theo tên:</label>
+                <input type="text" class="form-control form-control-sm" id="nodeSearchInput" placeholder="Nhập tên node...">
+            </div>
+        </div>
+        <hr style="border-color: #444;">
+        <h4><i class="bi bi-vector-pen"></i> Explain in Simple Structures</h4>
+        <p class="text-muted">Chọn một nút trên biểu đồ để bắt đầu giải thích.</p>
+    </div>
+</div>
+
+<div class="modal fade" id="addNodeModal" tabindex="-1" aria-labelledby="addNodeModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addNodeModalLabel"><i class="bi bi-plus-circle-fill"></i> Tạo Node mới</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form id="addNodeForm">
+          <div class="mb-3">
+            <label for="nodeTitleInput" class="form-label fw-bold">Tiêu đề Node:</label>
+            <input type="text" class="form-control" id="nodeTitleInput" placeholder="Nhập tiêu đề cho node mới..." required>
+          </div>
+          <div class="mb-3">
+            <label for="nodeParentSelect" class="form-label fw-bold">Chọn Node cha:</label>
+            <select class="form-select" id="nodeParentSelect">
+              <option value="">-- Cấp cao nhất (Không có node cha) --</option>
+            </select>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+        <button type="button" class="btn btn-primary" id="saveNewNodeBtn">Lưu Node</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="simplificationQuizModal" tabindex="-1" aria-labelledby="quizModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="quizModalLabel"><i class="bi bi-patch-question-fill"></i> Kiểm tra nhanh</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="quizContainer">
+                </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="submitQuizBtn">Nộp bài</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="simplificationReportModal" tabindex="-1" aria-labelledby="reportModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="reportModalLabel"><i class="bi bi-clipboard-data-fill"></i> Báo cáo kết quả</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="reportContainer">
+                </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // =================================================================================
+    // KHAI BÁO BIẾN TOÀN CỤC VÀ CÁC HÀM XỬ LÝ CHÍNH
+    // =================================================================================
+
+    const container = document.querySelector('.network-container');
+    const docId = container.dataset.docId;
+    const graphContainer = document.getElementById('network-graph-container');
+    const rightSidebar = document.getElementById('right-sidebar-content');
+    
+    // Biến cho các modal
+    let simplificationQuizModal, simplificationReportModal;
+    // Biến để lưu trữ câu hỏi và câu trả lời của người dùng
+    let currentQuizQuestions = [];
+    let simplifiedExplanationText = '';
+
+    // =================================================================================
+    // VẼ BIỂU ĐỒ VÀ XỬ LÝ NODE
+    // =================================================================================
+
+    // Hàm xử lý khi người dùng click vào một node
+    async function handleNodeClick(nodeId) {
+        rightSidebar.innerHTML = '<p class="text-muted">Đang tải chi tiết...</p>';
+        try {
+            const response = await fetch(`/api/workspace_item/${nodeId}`);
+            if (!response.ok) throw new Error('Không thể tải dữ liệu của node.');
+            const data = await response.json();
+
+            // Hiển thị giao diện "Explain in Simple Structures"
+            rightSidebar.innerHTML = `
+                <h4><i class="bi bi-vector-pen me-2"></i>Explain in Simple Structures</h4>
+                <p class="text-muted small">Giải thích khái niệm <strong>"${data.title}"</strong> bằng ngôn ngữ đơn giản của bạn.</p>
+                <hr>
+                <div class="mb-3">
+                    <label for="simplification-input" class="form-label fw-bold">Nội dung giải thích:</label>
+                    <textarea class="form-control" id="simplification-input" rows="8" placeholder="Viết lại khái niệm ở đây...">${data.user_content || ''}</textarea>
+                </div>
+                <div class="d-grid">
+                    <button class="btn btn-primary" id="check-simplification-btn" data-node-id="${nodeId}">
+                        <i class="bi bi-magic me-1"></i> Kiểm tra với AI
+                    </button>
+                </div>
+                <div id="simplification-results" class="mt-4"></div>
+            `;
+            document.getElementById('check-simplification-btn').addEventListener('click', analyzeSimplification);
+        } catch (error) {
+            console.error('Lỗi khi lấy chi tiết node:', error);
+            rightSidebar.innerHTML = `<p class="text-danger">${error.message}</p>`;
+        }
+    }
+
+    // Hàm vẽ biểu đồ (đã được tối ưu)
+    async function drawGraph() {
+        graphContainer.innerHTML = '<p class="text-center text-muted" style="padding-top: 2rem;">Đang tải mạng lưới kiến thức...</p>';
+        try {
+            const response = await fetch(`/api/document/${docId}/network`);
+            if (!response.ok) throw new Error(`Lỗi khi lấy dữ liệu: ${response.statusText}`);
+            const mermaidSyntax = await response.text();
+
+            if (mermaidSyntax.includes("Chưa có mục nào")) {
+                graphContainer.innerHTML = `<p class="text-center text-muted" style="padding-top: 2rem;">${mermaidSyntax}</p>`;
+                return;
+            }
+
+            graphContainer.innerHTML = `<div class="mermaid">${mermaidSyntax}</div>`;
+            await window.mermaid.run({ nodes: graphContainer.querySelectorAll('.mermaid'), suppressErrors: true });
+            
+            const svgElement = graphContainer.querySelector('svg');
+            if (svgElement) {
+                svgElement.style.width = '100%';
+                svgElement.style.height = '100%';
+                svgPanZoom(svgElement, { zoomEnabled: true, controlIconsEnabled: true, fit: true, center: true, minZoom: 0.2, maxZoom: 10 });
+                
+                svgElement.querySelectorAll('.node').forEach(nodeElement => {
+                    // Sửa lỗi ID của mermaid có thể chứa ký tự đặc biệt
+                    const nodeIdMatch = nodeElement.id.match(/node_(\d+)/);
+                    if (nodeIdMatch && nodeIdMatch[1]) {
+                        const nodeId = parseInt(nodeIdMatch[1], 10);
+                        nodeElement.style.cursor = 'pointer';
+                        nodeElement.addEventListener('click', () => handleNodeClick(nodeId));
+                    }
+                });
+            } else {
+                throw new Error("Mermaid đã chạy nhưng không tìm thấy biểu đồ SVG.");
+            }
+        } catch (error) {
+            console.error('Lỗi khi vẽ biểu đồ:', error);
+            graphContainer.innerHTML = `<p class="text-center text-danger">Không thể hiển thị mạng lưới kiến thức.</p>`;
+        }
+    }
+    
+    // =================================================================================
+    // LOGIC CHO "STRUCTURAL SIMPLIFICATION"
+    // =================================================================================
+
+    // Phân tích nội dung giải thích của người dùng bằng AI.
+    async function analyzeSimplification(event) {
+        const button = event.currentTarget;
+        const nodeId = button.dataset.nodeId;
+        const userInput = document.getElementById('simplification-input').value;
+        const resultsContainer = document.getElementById('simplification-results');
+
+        if (!userInput.trim()) {
+            resultsContainer.innerHTML = '<div class="alert alert-warning">Vui lòng nhập nội dung để phân tích.</div>';
+            return;
+        }
+
+        button.disabled = true;
+        button.innerHTML = `<span class="spinner-border spinner-border-sm"></span> Đang phân tích...`;
+        resultsContainer.innerHTML = '';
+        simplifiedExplanationText = userInput; 
+
+        try {
+            const response = await fetch('/api/simplify_check', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ text: userInput })
+            });
+            const data = await response.json();
+
+            if (!response.ok) throw new Error(data.error || 'Lỗi server');
+
+            // Hiển thị các vấn đề cần sửa
+            if (data.issues && data.issues.length > 0) {
+                let resultsHTML = '<h6><i class="bi bi-exclamation-triangle-fill text-warning"></i> AI gợi ý bạn chỉnh sửa:</h6>';
+                data.issues.forEach(issue => {
+                    // Chuyển đổi type thành class CSS hợp lệ
+                    let issueClass = `issue-${issue.type.toLowerCase().replace(/ /g, '-')}`;
+                    resultsHTML += `
+                        <div class="issue-item ${issueClass}">
+                            <span class="issue-type">${issue.type}</span>
+                            ${issue.text ? `<p class="mb-1">Tìm thấy: <strong class="issue-text">"${issue.text}"</strong></p>` : ''}
+                            <p class="mb-0 issue-suggestion">${issue.suggestion}</p>
+                        </div>`;
+                });
+                resultsContainer.innerHTML = resultsHTML;
+            } else { // Nếu không có vấn đề, hiển thị quiz
+                resultsContainer.innerHTML = '<div class="alert alert-success">Tuyệt vời! Cách diễn giải của bạn rất rõ ràng. Hãy kiểm tra nhanh kiến thức nhé!</div>';
+                if (data.quiz_questions && data.quiz_questions.length > 0) {
+                    currentQuizQuestions = data.quiz_questions;
+                    // Lưu lại nội dung đã được đơn giản hóa vào node
+                    await saveSimplifiedContent(nodeId, userInput);
+                    showQuizModal(currentQuizQuestions);
+                }
+            }
+        } catch (error) {
+            resultsContainer.innerHTML = `<div class="alert alert-danger">${error.message}</div>`;
+        } finally {
+            button.disabled = false;
+            button.innerHTML = `<i class="bi bi-magic me-1"></i> Kiểm tra với AI`;
+        }
+    }
+    
+    // Hàm lưu nội dung đã được người dùng đơn giản hóa
+    async function saveSimplifiedContent(nodeId, content) {
+        try {
+            await fetch(`/api/workspace_item/${nodeId}/update`, {
+                 method: 'POST',
+                 headers: { 'Content-Type': 'application/json' },
+                 body: JSON.stringify({ user_content: content })
+            });
+        } catch(error) {
+            console.error("Lỗi khi lưu nội dung:", error);
+        }
+    }
+
+    // Hiển thị modal với các câu hỏi trắc nghiệm.
+    function showQuizModal(questions) {
+        const quizContainer = document.getElementById('quizContainer');
+        if (!quizContainer || !simplificationQuizModal) return;
+
+        let quizHTML = '';
+        questions.forEach((q, index) => {
+            // Trộn ngẫu nhiên các lựa chọn
+            const shuffledOptions = [...q.options].sort(() => Math.random() - 0.5);
+            const optionsHTML = shuffledOptions.map(opt => `
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="question-${index}" id="q-${index}-opt-${opt.replace(/\s+/g, '-')}" value="${opt}">
+                    <label class="form-check-label" for="q-${index}-opt-${opt.replace(/\s+/g, '-')}">
+                        ${opt}
+                    </label>
+                </div>
+            `).join('');
+            quizHTML += `
+                <div class="mb-4">
+                    <p class="fw-bold">Câu ${index + 1}: ${q.question}</p>
+                    ${optionsHTML}
+                </div>
+            `;
+        });
+        quizContainer.innerHTML = quizHTML;
+        simplificationQuizModal.show();
+    }
+    
+    // Xử lý khi người dùng nộp bài quiz, tính điểm và hiển thị báo cáo.
+    function handleSubmitQuiz() {
+        let score = 0;
+        currentQuizQuestions.forEach((q, index) => {
+            const selectedOption = document.querySelector(`input[name="question-${index}"]:checked`);
+            if (selectedOption && selectedOption.value === q.answer) {
+                score++;
+            }
+        });
+        
+        const total = currentQuizQuestions.length;
+        simplificationQuizModal.hide();
+        showReportModal(score, total);
+    }
+
+    // Hiển thị modal báo cáo kết quả quiz.
+    function showReportModal(score, total) {
+        const reportContainer = document.getElementById('reportContainer');
+        if (!reportContainer || !simplificationReportModal) return;
+
+        const percentage = total > 0 ? Math.round((score / total) * 100) : 0;
+        
+        reportContainer.innerHTML = `
+            <div class="text-center">
+                <h3>Kết quả của bạn: <span class="text-success">${score}/${total}</span></h3>
+                <div class="progress mt-3" style="height: 25px;">
+                    <div class="progress-bar bg-success" role="progressbar" style="width: ${percentage}%;" aria-valuenow="${percentage}" aria-valuemin="0" aria-valuemax="100">${percentage}%</div>
+                </div>
+            </div>
+            <hr>
+            <h5>Phần giải thích của bạn đã được lưu:</h5>
+            <div class="p-3 bg-light border rounded">
+                <p class="fst-italic">"${simplifiedExplanationText}"</p>
+            </div>
+        `;
+        simplificationReportModal.show();
+    }
+
+    // =================================================================================
+    // CẬP NHẬT LOGIC CHO CÁC NÚT TỐI ƯU HÓA
+    // =================================================================================
+    
+    // Gửi yêu cầu Auto-Breakdown và vẽ lại biểu đồ.
+    async function handleAutoBreakdown() {
+        const button = document.getElementById('auto-breakdown-button');
+        button.disabled = true;
+        button.innerHTML = `<span class="spinner-border spinner-border-sm"></span> Đang phân rã...`;
+
+        try {
+            const response = await fetch(`/api/document/${docId}/auto_breakdown`, { method: 'POST' });
+            const data = await response.json();
+            if (!response.ok) throw new Error(data.error || 'Auto-breakdown thất bại.');
+            
+            await drawGraph();
+            alert('AI đã phân rã tài liệu thành công!');
+        } catch (error) {
+            console.error('Lỗi khi thực hiện auto-breakdown:', error);
+            alert(`Đã xảy ra lỗi: ${error.message}`);
+        } finally {
+            button.disabled = false;
+            button.innerHTML = `<i class="bi bi-magic me-2"></i>AI Auto Breakdown`;
+        }
+    }
+
+    // Prune: Tìm và làm mờ các node lá (node không quan trọng/chưa phát triển)
+     function handleAutoPrune() {
+        const svgElement = graphContainer.querySelector('svg');
+        if (!svgElement) return;
+
+        const sourceNodeIds = new Set();
+        
+        // === ĐÂY LÀ PHẦN SỬA LỖI QUAN TRỌNG ===
+        // Sử dụng selector chính xác hơn để lấy group chứa tất cả các edge
+        const edgePathsGroup = svgElement.querySelector('g.edgePaths');
+
+        // Chỉ thực hiện nếu group này tồn tại
+        if (edgePathsGroup) {
+            // Duyệt qua từng element con (mỗi element là một edge) của group
+            for (const edge of edgePathsGroup.children) {
+                // Kiểm tra kỹ edge và ID của nó có tồn tại không
+                if (!edge || !edge.id) continue; 
+
+                const parts = edge.id.split('-');
+                // ID của Mermaid thường có dạng "L-node_X-node_Y-Z"
+                if (parts.length >= 3 && parts[1] && parts[1].startsWith('node_')) {
+                    const sourceId = parts[1].substring(5); // Lấy phần số sau "node_"
+                    sourceNodeIds.add(sourceId);
+                }
+            }
+        }
+
+        // Phần logic làm mờ giữ nguyên, nhưng giờ sẽ chạy đúng vì sourceNodeIds đã có dữ liệu
+        svgElement.querySelectorAll('.node').forEach(node => {
+            const nodeIdMatch = node.id.match(/node_(\d+)/);
+            if (nodeIdMatch && nodeIdMatch[1]) {
+                const nodeId = nodeIdMatch[1];
+                // Nếu node ID không nằm trong danh sách các node cha -> nó là node lá
+                if (!sourceNodeIds.has(nodeId)) {
+                    node.style.opacity = '0.3'; // Làm mờ node
+                } else {
+                    node.style.opacity = '1'; // Đảm bảo các node khác rõ nét
+                }
+            }
+        });
+    }
+
+
+    // Merge: Gọi API để thực hiện gộp và vẽ lại biểu đồ
+    async function handleAiMergeNodes() {
+        const button = document.getElementById('ai-merge-nodes-btn');
+        button.disabled = true;
+        button.innerHTML = `<span class="spinner-border spinner-border-sm"></span> Đang gộp...`;
+
+        try {
+            const response = await fetch(`/api/network/${docId}/execute_merge`, {
+                method: 'POST'
+            });
+            
+            const data = await response.json();
+            if (!response.ok) {
+                throw new Error(data.error || 'Gộp node thất bại.');
+            }
+
+            await drawGraph();
+
+        } catch (error) {
+            console.error('Lỗi khi gộp node:', error);
+            alert(`Lỗi: ${error.message}`); 
+        } finally {
+            button.disabled = false;
+            button.innerHTML = `<i class="bi bi-link-45deg me-2"></i>AI Gộp Node Trùng lặp`;
+        }
+    }
+
+    // Hàm phụ trợ để tô sáng các node tìm được
+    function highlightNodes(nodeList, color) {
+        graphContainer.querySelectorAll('.node rect, .node circle, .node ellipse, .node polygon').forEach(shape => {
+            shape.style.stroke = '#888';
+            shape.style.strokeWidth = '2px';
+        });
+        nodeList.forEach(node => {
+            const shape = node.querySelector('rect, circle, ellipse, polygon');
+            if (shape) {
+                shape.style.stroke = color;
+                shape.style.strokeWidth = '4px';
+            }
+        });
+    }
+
+    // Hàm phụ trợ để hiển thị báo cáo lên thanh sidebar
+    function displayOptimizationReport(title, description, suggestions) {
+        let reportHTML = `
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <h5 class="mb-0 text-primary">${title}</h5>
+                <button type="button" class="btn-close" onclick="resetRightSidebar()" title="Đóng" aria-label="Close"></button>
+            </div>
+            <p class="text-muted small">${description}</p>
+            <div class="list-group list-group-flush">`;
+
+        if (suggestions.length > 0) {
+            suggestions.forEach(item => {
+                reportHTML += `
+                    <div class="list-group-item px-0 py-2">
+                        <p class="fw-bold mb-1">${item.title}</p>
+                        <p class="small text-muted mb-0">${item.suggestion}</p>
+                    </div>
+                `;
+            });
+        } else {
+            reportHTML += '<p class="text-muted">Không tìm thấy đề xuất nào.</p>';
+        }
+
+        reportHTML += '</div>';
+        rightSidebar.innerHTML = reportHTML;
+    }
+
+    // Hàm để trả về giao diện mặc định cho sidebar
+    function resetRightSidebar() {
+        rightSidebar.innerHTML = `
+            <div class="filter-pane mb-4">
+                <h5><i class="bi bi-filter"></i> Bộ lọc Node</h5>
+                <div class="mb-2">
+                    <label for="nodeSearchInput" class="form-label small">Tìm kiếm theo tên:</label>
+                    <input type="text" class="form-control form-control-sm" id="nodeSearchInput" placeholder="Nhập tên node...">
+                </div>
+            </div>
+            <hr style="border-color: #444;">
+            <h4><i class="bi bi-vector-pen"></i> Explain in Simple Structures</h4>
+            <p class="text-muted">Chọn một nút trên biểu đồ để bắt đầu giải thích.</p>
+        `;
+        document.getElementById('nodeSearchInput')?.addEventListener('input', filterNodesByName);
+    }
+
+    //Lọc node
+    function filterNodesByName(event) {
+        const searchText = event.target.value.toLowerCase().trim();
+        const svgElement = graphContainer.querySelector('svg');
+        if (!svgElement) return;
+
+        svgElement.querySelectorAll('.node').forEach(node => {
+            const labelElement = node.querySelector('.nodeLabel');
+            if (labelElement) {
+                const nodeText = labelElement.textContent.toLowerCase();
+                if (searchText === '' || nodeText.includes(searchText)) {
+                    node.style.opacity = '1'; // Hiển thị rõ
+                } else {
+                    node.style.opacity = '0.2'; // Làm mờ
+                }
+            }
+        });
+    }
+
+    // =================================================================================
+    // KHỞI CHẠY KHI TẢI TRANG
+    // =================================================================================
+
+    document.addEventListener('DOMContentLoaded', function() {
+        mermaid.initialize({ startOnLoad: false, securityLevel: 'loose' });
+        drawGraph();
+        
+        // Khởi tạo các modal
+        const quizModalEl = document.getElementById('simplificationQuizModal');
+        if (quizModalEl) simplificationQuizModal = new bootstrap.Modal(quizModalEl);
+
+        const reportModalEl = document.getElementById('simplificationReportModal');
+        if (reportModalEl) simplificationReportModal = new bootstrap.Modal(reportModalEl);
+        
+        // Gán sự kiện cho các nút
+        document.getElementById('submitQuizBtn')?.addEventListener('click', handleSubmitQuiz);
+        document.getElementById('auto-breakdown-button')?.addEventListener('click', handleAutoBreakdown);
+        // Nút "AI Đề xuất Tối ưu" giờ sẽ gọi hàm Prune
+        document.getElementById('autoPruneMergeBtn')?.addEventListener('click', handleAutoPrune); 
+        document.getElementById('ai-merge-nodes-btn')?.addEventListener('click', handleAiMergeNodes);
+        document.getElementById('nodeSearchInput')?.addEventListener('input', filterNodesByName);
+    });
+</script>
+
+<div class="modal fade" id="simplificationQuizModal" tabindex="-1" aria-labelledby="quizModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="quizModalLabel"><i class="bi bi-patch-question-fill"></i> Kiểm tra nhanh</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="quizContainer">
+                </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="submitQuizBtn">Nộp bài</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="simplificationReportModal" tabindex="-1" aria-labelledby="reportModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="reportModalLabel"><i class="bi bi-clipboard-data-fill"></i> Báo cáo kết quả</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="reportContainer">
+                </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

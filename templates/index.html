@@ -1,630 +1,265 @@
-<!doctype html>
-<html lang="vi">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
-    <title>StudyVault - Dashboard</title>
+{% extends "layout.html" %}
+
+{% block title %}StudyVault - Dashboard{% endblock %}
+
+{% block head_styles %}
     <style>
-        /* --- Phong cách chung --- */
-        :root {
-             --primary-blue: #0d6efd; --light-bg: #f8f9fa; --white-bg: #ffffff; --card-border-radius: 0.75rem; --element-border-radius: 0.5rem; --card-shadow: 0 4px 15px rgba(0, 0, 0, 0.07); --text-dark: #212529; --text-muted: #6c757d; --accent-red: #dc3545; --bs-info: #0dcaf0; --bs-info-subtle: #cff4fc; --bs-info-text-emphasis: #055160; --bs-warning: #ffc107; --bs-success: #198754; --bs-danger: #dc3545; --bs-purple: #6f42c1;
-        }
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; background-color: var(--light-bg); color: var(--text-dark); position: relative; min-height: 100vh; padding-bottom: 80px; }
-        .navbar { background-color: var(--white-bg) !important; box-shadow: var(--card-shadow); }
-        .navbar-brand { color: var(--text-dark) !important; font-weight: 600; }
-        .navbar-brand i { color: var(--primary-blue); }
-        .nav-link { color: #495057 !important; font-weight: 500; }
-        .nav-link.active { color: var(--primary-blue) !important; font-weight: 600;}
-        .card { border-radius: var(--card-border-radius); border: none; box-shadow: var(--card-shadow); margin-bottom: 1.5rem; background-color: var(--white-bg); border-top: 4px solid var(--primary-blue); }
-        .card-header { background-color: transparent; border-bottom: 1px solid #f1f3f5; font-weight: 600; padding: 1rem 1.25rem; color: var(--primary-blue); }
-        .card-header i { color: var(--primary-blue) !important; }
-        .btn { border-radius: var(--element-border-radius); padding: 0.5rem 1rem; font-weight: 500; }
-        .btn-primary { background-color: var(--primary-blue); border-color: var(--primary-blue); }
-        .btn-primary:hover { background-color: #0b5ed7; border-color: #0a58ca; }
-        .btn-danger { background-color: var(--accent-red); border-color: var(--accent-red); }
-        .btn-danger:hover { background-color: #c82333; border-color: #bd2130; }
-        .btn-outline-secondary { border-color: #ced4da; color: #495057;}
-        .btn-outline-secondary:hover { background-color: #e9ecef; color: #343a40;}
-        .btn-outline-danger { border-color: var(--accent-red); color: var(--accent-red); }
-        .btn-outline-danger:hover { background-color: var(--accent-red); color: white; }
-        .btn-outline-primary { border-color: var(--primary-blue); color: var(--primary-blue);}
-        .btn-outline-primary:hover { background-color: var(--primary-blue); color: white;}
-        .btn-outline-info { border-color: #0dcaf0; color: #0dcaf0;}
-        .btn-outline-info:hover { background-color: #0dcaf0; color: white;}
-        .btn-outline-success { border-color: #198754; color: #198754;}
-        .btn-outline-success:hover { background-color: #198754; color: white;}
-        .form-control, .form-select { border-radius: var(--element-border-radius); border-color: #dee2e6; }
-        .form-control:focus, .form-select:focus { border-color: var(--primary-blue); box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25); }
-        .badge { border-radius: 50px; font-weight: 500; padding: 0.35em 0.65em; }
-        h1 { margin-bottom: 1.5rem !important; font-weight: 600; color: var(--primary-blue); }
-        h3 { margin-bottom: 1.5rem !important; font-weight: 600; }
-        .table { border: none; margin-bottom: 0; }
-        .table thead th { background-color: var(--light-bg); border-bottom: 2px solid #dee2e6; font-weight: 600; color: var(--text-dark); text-transform: uppercase; font-size: 0.8em; padding-top: 0.75rem; padding-bottom: 0.75rem; text-align: center; }
-        .table tbody td { vertical-align: middle; padding-top: 0.75rem; padding-bottom: 0.75rem; }
-        .table tbody tr { border-color: #f1f3f5; }
-        .table tbody tr:last-child td { border-bottom: none; }
-        .table tbody tr:hover { background-color: #f8f9fa; }
-        .action-btn { margin: 0 2px; padding: 0.3rem 0.5rem; font-size: 0.85rem; }
         .doc-icon { margin-right: 8px; vertical-align: -0.1em; font-size: 1.1em;}
-        .keywords-list { font-size: 0.85em; color: var(--text-muted); max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; display: inline-block; vertical-align: middle;}
-        .status-dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; margin-right: 5px; background-color: #adb5bd; }
-        .status-dot.dot-read { background-color: #198754; }
-        .status-dot.dot-unread { background-color: #ffc107; }
-        .pagination .page-link { border-radius: var(--element-border-radius); margin: 0 3px; border-color: #dee2e6;}
-        .pagination .page-item.active .page-link { background-color: var(--primary-blue); border-color: var(--primary-blue);}
-        .suggestion-card-body { font-size: 0.9rem; }
-        .suggestion-card-title { font-size: 1rem; font-weight: 600; margin-bottom: 0.5rem;}
-        .suggestion-card-text { margin-bottom: 0.5rem; }
-        .suggestion-card-footer { font-size: 0.8rem; padding-top: 0.75rem; border-top: 1px solid #eee; margin-top: 1rem;}
-        #focusLockBtn { position: fixed; bottom: 20px; right: 20px; z-index: 1050; background-color: var(--primary-blue) !important; border-color: var(--primary-blue) !important; color: white !important; box-shadow: 0 4px 8px rgba(0,0,0,0.2); border-radius: 50%; width: 60px; height: 60px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; }
-        #focusLockModal .form-label { font-weight: 500; }
-        #focusLockModal .modal-content { border-radius: var(--card-border-radius); border-top: 4px solid var(--primary-blue); }
-        #focusFeedback { margin-top: 1rem; font-weight: 500;}
+        .keywords-list { font-size: 0.85em; color: var(--text-muted); max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .status-dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; margin-right: 5px; }
+        .status-dot.dot-read { background-color: var(--bs-success); }
+        .status-dot.dot-unread { background-color: var(--bs-warning); }
+        #focusLockBtn { position: fixed; bottom: 20px; right: 20px; z-index: 1050; }
+        .avatar-selection img { cursor: pointer; border: 2px solid transparent; transition: all 0.2s ease-in-out; }
+        .avatar-selection img.selected { border-color: var(--primary-blue); transform: scale(1.05); box-shadow: 0 0 10px rgba(13, 110, 253, 0.5); }
+        .color-box { width: 40px; height: 40px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; transition: all 0.2s ease-in-out; }
+        .color-box.selected { border-color: #fff; box-shadow: 0 0 0 5px rgba(13, 110, 253, 0.5); transform: scale(1.1); }
+        .goal-related-star { color: #ffc107; }
+        .document-row.fading-out {
+            opacity: 0;
+            transform: scale(0.95);
+            transition: opacity 0.4s ease-out, transform 0.4s ease-out;
+        }
+        .feedback-message {
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-style: italic;
+        }
     </style>
-</head>
-<body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-white mb-4 sticky-top">
-        <div class="container">
-            <a class="navbar-brand fw-bold d-flex align-items-center" href="{{ url_for('index') }}">
-                <img src="{{ url_for('static', filename='img/logo.png') }}" alt="StudyVault Logo" height="30" class="d-inline-block align-text-top me-2">
-                StudyVault
+{% endblock %}
+
+
+{% block content %}
+    {% if user and user.short_term_mode_active and user.short_term_mode_end_date >= today %}
+    <div class="alert alert-danger fw-bold text-center text-uppercase">
+        <i class="bi bi-lightning-charge-fill"></i>
+        SHORT-TERM MODE ĐANG HOẠT ĐỘNG! KẾT THÚC VÀO NGÀY {{ user.short_term_mode_end_date.strftime('%d/%m/%Y') }}.
+        <i class="bi bi-lightning-charge-fill"></i>
+    </div>
+    {% endif %}
+
+    {% if suggested_docs %}
+    <div class="card mb-4">
+        <div class="card-header"><i class="bi bi-lightbulb-fill text-warning"></i> Gợi ý cho bạn</div>
+        <div class="list-group list-group-flush">
+            {% for s_doc in suggested_docs %}
+            <a href="{{ url_for('network_view', document_id=s_doc.id) }}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                <span><i class="bi bi-file-earmark-text me-2"></i>{{ s_doc.filename | truncate(70) }}</span>
+                <span class="badge bg-light text-dark border rounded-pill">{{ s_doc.category }}</span>
             </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"><span class="navbar-toggler-icon"></span></button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item"><a class="nav-link active" aria-current="page" href="{{ url_for('index') }}">Dashboard</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{{ url_for('upload_file') }}">Tải lên</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{{ url_for('study_timeline') }}">Timeline</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{{ url_for('lazy_market') }}">Chia sẻ tài liệu & BXH</a></li>
-                </ul>
-            </div>
+            {% endfor %}
         </div>
-    </nav>
-    <div class="container mt-4">
-        {% with messages = get_flashed_messages(with_categories=true) %}
-            {% if messages %}
-                {% for category, message in messages %}
-                <div class="alert alert-{{ category if category in ['success', 'danger', 'warning', 'info'] else 'info' }} alert-dismissible fade show rounded-pill" role="alert">
-                    {{ message }} <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-                {% endfor %}
+    </div>
+    {% endif %}
+
+    {% if user and (user.ultimate_goal or user.role_model_character) %}
+    <div class="card mb-4">
+        <div class="card-header"><i class="bi bi-star-fill"></i> Mục tiêu tối thượng</div>
+        <div class="card-body">
+            {% if user.ultimate_goal %}
+            <p class="mb-2"><strong><i class="bi bi-flag-fill text-danger"></i> Mục tiêu:</strong> {{ user.ultimate_goal }}</p>
             {% endif %}
-        {% endwith %}
-        <div class="card mb-4 border-info">
-            <div class="card-header bg-info-subtle text-info-emphasis">
-               <i class="bi bi-stars me-2"></i> Tài liệu Cộng đồng Hot Nhất (Demo)
-            </div>
-            <div class="card-body">
-                <div class="d-flex flex-nowrap overflow-auto pb-2" style="gap: 1rem;">
-                    <div class="card flex-shrink-0" style="width: 18rem; border-top-color: var(--bs-warning);">
-                        <div class="card-body small">
-                            <h6 class="card-title text-truncate"><i class="bi bi-file-earmark-pdf text-danger me-1"></i>Tổng hợp Đề thi Kinh tế Vĩ mô</h6>
-                            <p class="card-text text-muted mb-1">Danh mục: Kinh tế học</p>
-                            <p class="card-text mb-1">
-                                <i class="bi bi-star-fill text-warning"></i><i class="bi bi-star-fill text-warning"></i><i class="bi bi-star-fill text-warning"></i><i class="bi bi-star-fill text-warning"></i><i class="bi bi-star-half text-warning"></i><span class="ms-1 small">(4.6)</span>
-                            </p>
-                            <a href="#" class="btn btn-sm btn-outline-primary mt-1" onclick="return false;">Xem chi tiết (Demo)</a>
-                        </div>
-                    </div>
-                    <div class="card flex-shrink-0" style="width: 18rem; border-top-color: var(--bs-success);">
-                         <div class="card-body small">
-                            <h6 class="card-title text-truncate"><i class="bi bi-filetype-py text-primary me-1"></i>Giải thuật Quy hoạch động cơ bản</h6>
-                            <p class="card-text text-muted mb-1">Danh mục: Lập trình</p>
-                            <p class="card-text mb-1">
-                                <i class="bi bi-star-fill text-warning"></i><i class="bi bi-star-fill text-warning"></i><i class="bi bi-star-fill text-warning"></i><i class="bi bi-star-fill text-warning"></i><i class="bi bi-star text-warning"></i><span class="ms-1 small">(4.1)</span>
-                            </p>
-                            <a href="#" class="btn btn-sm btn-outline-primary mt-1" onclick="return false;">Xem chi tiết (Demo)</a>
-                        </div>
-                    </div>
-                     <div class="card flex-shrink-0" style="width: 18rem; border-top-color: var(--bs-danger);">
-                        <div class="card-body small">
-                            <h6 class="card-title text-truncate"><i class="bi bi-file-earmark-word text-primary me-1"></i>Từ vựng IELTS Band 8+</h6>
-                            <p class="card-text text-muted mb-1">Danh mục: Ngoại ngữ</p>
-                             <p class="card-text mb-1">
-                                <i class="bi bi-star-fill text-warning"></i><i class="bi bi-star-fill text-warning"></i><i class="bi bi-star-fill text-warning"></i><i class="bi bi-star-fill text-warning"></i><i class="bi bi-star-fill text-warning"></i><span class="ms-1 small">(4.9)</span>
-                            </p>
-                            <a href="#" class="btn btn-sm btn-outline-primary mt-1" onclick="return false;">Xem chi tiết (Demo)</a>
-                        </div>
-                    </div>
-                     <div class="card flex-shrink-0" style="width: 18rem; border-top-color: var(--bs-purple);">
-                        <div class="card-body small">
-                            <h6 class="card-title text-truncate"><i class="bi bi-calculator text-success me-1"></i>Công thức Tích phân cơ bản</h6>
-                            <p class="card-text text-muted mb-1">Danh mục: Toán học</p>
-                             <p class="card-text mb-1">
-                                <i class="bi bi-star-fill text-warning"></i><i class="bi bi-star-fill text-warning"></i><i class="bi bi-star-fill text-warning"></i><i class="bi bi-star-fill text-warning"></i><i class="bi bi-star-half text-warning"></i><span class="ms-1 small">(4.7)</span>
-                            </p>
-                            <a href="#" class="btn btn-sm btn-outline-primary mt-1" onclick="return false;">Xem chi tiết (Demo)</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        {% if suggested_docs %}
-         <div class="card mb-4">
-             <div class="card-header"><i class="bi bi-lightbulb-fill text-warning"></i> Gợi ý cho bạn</div>
-             <div class="card-body suggestion-card-body">
-                 <div class="row">
-                     {% for sugg_doc in suggested_docs %}
-                     <div class="col-lg-4 col-md-6 mb-3">
-                         <div class="card h-100 border-0 shadow-sm">
-                             <div class="card-body d-flex flex-column">
-                                 <h6 class="card-title suggestion-card-title">
-                                     {% set sugg_icon = 'bi-file-earmark' %}
-                                     {% if sugg_doc.doc_type == 'pdf' %}{% set sugg_icon = 'bi-file-earmark-pdf text-danger' %}
-                                     {% elif sugg_doc.doc_type == 'link' %}{% set sugg_icon = 'bi-link-45deg text-primary' %}
-                                     {% elif sugg_doc.doc_type == 'image' %}{% set sugg_icon = 'bi-image text-success' %}
-                                     {% elif sugg_doc.doc_type == 'video' %}{% set sugg_icon = 'bi-film text-warning' %}
-                                     {% elif sugg_doc.doc_type == 'googledrive_link' %}{% set sugg_icon = 'bi-google text-info' %}
-                                     {% elif sugg_doc.doc_type == 'docx' %}{% set sugg_icon = 'bi-file-earmark-word text-primary' %}
-                                     {% elif sugg_doc.doc_type == 'txt' %}{% set sugg_icon = 'bi-file-earmark-text text-secondary' %}
-                                     {% endif %}
-                                     <i class="bi {{ sugg_icon }} doc-icon" title="{{ sugg_doc.doc_type | capitalize }}"></i>
-                                     {{ sugg_doc.filename | truncate(40) }}
-                                 </h6>
-                                 <p class="card-text suggestion-card-text"><span class="badge bg-secondary rounded-pill">{{ sugg_doc.category }}</span></p>
-                                 {% set suggestion_reason = 'Chưa đọc' if not sugg_doc.last_viewed_date else ('Thiếu thông tin' if not sugg_doc.engagement_level or not sugg_doc.context_event else 'Xem lại') %}
-                                 {% set badge_color = 'bg-warning text-dark' if suggestion_reason == 'Chưa đọc' else ('bg-info text-dark' if suggestion_reason == 'Thiếu thông tin' else 'bg-light text-dark') %}
-                                 <div class="mt-auto suggestion-card-footer d-flex justify-content-between align-items-center">
-                                     <span class="badge {{ badge_color }} rounded-pill">{{ suggestion_reason }}</span>
-                                     <div>
-                                         <a href="{{ url_for('view_document', document_id=sugg_doc.id) }}" class="btn btn-sm btn-outline-primary action-btn" title="Xem & Bổ sung thông tin"><i class="bi bi-eye-fill"></i> Xem</a>
-                                         <a href="{{ url_for('lazy_market', suggest_job='summary', doc_id=sugg_doc.id) }}" class="btn btn-sm btn-outline-info action-btn" title="Mô phỏng gửi job tóm tắt"><i class="bi bi-send-check-fill"></i> Job?</a>
-                                     </div>
-                                 </div>
-                             </div>
-                         </div>
-                     </div>
-                     {% endfor %}
-                 </div>
-             </div>
-         </div>
-         {% endif %}
-        <h1 class="mb-3"><i class="bi bi-collection-fill"></i> Tất cả Tài liệu</h1>
+            {% if user.role_model_character %}
+            <p class="mb-0"><strong><i class="bi bi-person-check-fill text-success"></i> Hình mẫu:</strong> {{ user.role_model_character }}</p>
+            {% endif %}
 
-        <div class="row mb-4">
-            <div class="col-md-6 mb-2 mb-md-0">
-                <form method="GET" action="{{ url_for('index') }}">
-                    <div class="input-group">
-                        <span class="input-group-text bg-white"><i class="bi bi-search text-primary"></i></span>
-                        <input type="text" class="form-control" placeholder="Tìm theo tên file hoặc keyword..." name="search_query" value="{{ search_query or '' }}">
-                        {% if category_filter %} <input type="hidden" name="category" value="{{ category_filter }}"> {% endif %}
-                         {% if search_query or category_filter %}
-                           <a href="{{ url_for('index') }}" class="btn btn-outline-secondary" style="border-radius: 0 var(--element-border-radius) var(--element-border-radius) 0;" title="Xóa bộ lọc/tìm kiếm">&times;</a>
-                         {% endif %}
-                    </div>
-                </form>
+            {% if documents %}
+            <div class="mt-3 pt-3 border-top">
+                <button type="button" class="btn btn-info text-white w-100" data-bs-toggle="modal" data-bs-target="#goalBundleModal" data-doc-filename="{{ documents[0].filename if documents else 'Chưa có tài liệu' }}">
+                    <i class="bi bi-box-seam me-2"></i> Xem Goal Bundle của Tài liệu đầu tiên
+                </button>
             </div>
-            <div class="col-md-6">
-                 <div class="dropdown">
-                    <button class="btn btn-outline-secondary dropdown-toggle w-100" type="button" id="categoryDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                        <i class="bi bi-filter-left me-1"></i> {{ 'Lọc: ' + category_filter if category_filter else 'Lọc theo Danh mục' }}
-                    </button>
-                    <ul class="dropdown-menu w-100" aria-labelledby="categoryDropdown">
-                        <li><a class="dropdown-item {% if not category_filter %}active{% endif %}" href="{{ url_for('index', search_query=search_query) }}">-- Tất cả --</a></li>
-                        {% for cat in categories %}
-                        <li><a class="dropdown-item {% if category_filter == cat %}active{% endif %}" href="{{ url_for('index', category=cat, search_query=search_query) }}">{{ cat }}</a></li>
-                        {% endfor %}
-                    </ul>
-                </div>
-            </div>
+            {% endif %}
         </div>
-        <div class="card">
-            <div class="table-responsive">
-                 <table class="table table-hover align-middle">
-                    <thead>
-                       <tr>
-                            <th scope="col">#</th>
-                            <th scope="col">Tên file / Link</th>
-                            <th scope="col">Danh mục</th>
-                            <th scope="col">Trạng thái</th>
-                            <th scope="col">Keywords</th>
-                            <th scope="col">Ngày tải</th>
-                            <th scope="col">Hành động</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for doc in documents %}
-                        <tr>
-                            <td class="text-center text-muted">{{ pagination.per_page * (pagination.page - 1) + loop.index }}</td>
-                            <td>
-                                 {% set icon_class = 'bi-file-earmark' %}
-                                 {% if doc.doc_type == 'pdf' %}{% set icon_class = 'bi-file-earmark-pdf text-danger' %}
-                                 {% elif doc.doc_type == 'link' %}{% set icon_class = 'bi-link-45deg text-primary' %}
-                                 {% elif doc.doc_type == 'image' %}{% set icon_class = 'bi-image text-success' %}
-                                 {% elif doc.doc_type == 'video' %}{% set icon_class = 'bi-film text-warning' %}
-                                 {% elif doc.doc_type == 'googledrive_link' %}{% set icon_class = 'bi-google text-info' %}
-                                 {% elif doc.doc_type == 'docx' %}{% set icon_class = 'bi-file-earmark-word text-primary' %}
-                                 {% elif doc.doc_type == 'txt' %}{% set icon_class = 'bi-file-earmark-text text-secondary' %}
-                                 {% endif %}
-                                 <i class="bi {{ icon_class }} doc-icon" title="{{ doc.doc_type | capitalize }}"></i>
-                                <a href="{{ url_for('view_document', document_id=doc.id) }}" class="text-decoration-none fw-medium" title="{{ doc.filename }}"> {% if doc.doc_type in ['link', 'googledrive_link'] %}
-                                        {{ doc.filepath | truncate(50) }}
-                                    {% else %}
-                                        {{ doc.filename | truncate(50) }}
-                                    {% endif %}
-                                </a>
-                            </td>
-                            <td class="text-center"><span class="badge bg-info-subtle text-info-emphasis border border-info-subtle rounded-pill">{{ doc.category | default('N/A', true) }}</span></td>
-                            <td class="text-center">
-                                <span class="status-dot {{ 'dot-read' if doc.last_viewed_date else 'dot-unread' }}" title="{{ 'Đã đọc' if doc.last_viewed_date else 'Chưa đọc' }}"></span>
-                                <span class="small">{{ 'Đã đọc' if doc.last_viewed_date else 'Chưa đọc' }}</span>
-                            </td>
-                            <td>
-                                {% if doc.keywords %} <span class="keywords-list" title="{{ doc.keywords }}">{{ doc.keywords }}</span>
-                                {% else %} <span class="text-muted small">N/A</span> {% endif %}
-                            </td>
-                            <td class="text-center text-muted small">{{ doc.uploaded_date.strftime('%d/%m/%y') }}</td>
-                            <td class="text-center">
-                                <form method="POST" action="{{ url_for('delete_document', document_id=doc.id) }}" style="display: inline;" onsubmit="return confirm('Xóa vĩnh viễn tài liệu này?');">
-                                    <button type="submit" class="btn btn-danger btn-sm action-btn" title="Xóa"><i class="bi bi-trash"></i></button>
-                                </form>
-                                <button type="button"
-                                        class="btn btn-outline-success btn-sm action-btn share-doc-btn"
-                                        title="Chia sẻ lên BXH (Demo)"
-                                        data-doc-id="{{ doc.id }}"
-                                        data-doc-filename="{{ doc.filename }}"
-                                        data-doc-category="{{ doc.category | default('N/A', true) }}"
-                                        data-doc-type="{{ doc.doc_type }}">
-                                    <i class="bi bi-share-fill"></i>
-                                </button>
-                                <button type="button" class="btn btn-outline-secondary btn-sm action-btn" title="Sửa Danh mục"
-                                        data-bs-toggle="modal" data-bs-target="#editCategoryModal"
-                                        data-doc-id="{{ doc.id }}"
-                                        data-doc-filename="{{ doc.filename }}"
-                                        data-doc-category="{{ doc.category }}">
-                                    <i class="bi bi-pencil-square"></i>
-                                </button>
-                            </td>
-                        </tr>
-                        {% else %}
-                        <tr><td colspan="7" class="text-center text-muted py-5">Chưa có tài liệu nào. Hãy <a href="{{ url_for('upload_file') }}">tải lên</a>!</td></tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
+    </div>
+    {% endif %}
+
+    <div class="card mb-4">
+        <div class="card-header"><i class="bi bi-stopwatch-fill"></i> Chế độ học tập ngắn hạn</div>
+        <div class="card-body text-center">
+            <p>Kích hoạt chế độ học tập cường độ cao cho các kỳ thi hoặc deadline.</p>
+            <button type="button" class="btn btn-warning btn-lg mt-3" data-bs-toggle="modal" data-bs-target="#shortTermModeSetupModal">
+                <i class="bi bi-lightning-fill me-2"></i>Kích hoạt
+            </button>
         </div>
-        {% if pagination and pagination.pages > 1 %}
-         <nav aria-label="Document navigation" class="mt-4 d-flex justify-content-center">
-            <ul class="pagination">
-                <li class="page-item {% if not pagination.has_prev %}disabled{% endif %}"> <a class="page-link" href="{{ url_for('index', page=pagination.prev_num, search_query=search_query, category=category_filter) if pagination.has_prev else '#' }}" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a> </li>
-                {% for page_num in pagination.iter_pages(left_edge=1, right_edge=1, left_current=2, right_current=2) %} {% if page_num %} {% if page_num == pagination.page %} <li class="page-item active" aria-current="page"><span class="page-link">{{ page_num }}</span></li> {% else %} <li class="page-item"><a class="page-link" href="{{ url_for('index', page=page_num, search_query=search_query, category=category_filter) }}">{{ page_num }}</a></li> {% endif %} {% else %} <li class="page-item disabled"><span class="page-link">...</span></li> {% endif %} {% endfor %}
-                <li class="page-item {% if not pagination.has_next %}disabled{% endif %}"> <a class="page-link" href="{{ url_for('index', page=pagination.next_num, search_query=search_query, category=category_filter) if pagination.has_next else '#' }}" aria-label="Next"><span aria-hidden="true">&raquo;</span></a> </li>
-            </ul>
-         </nav>
-         <p class="text-center text-muted small mt-2"> Trang {{ pagination.page }} / {{ pagination.pages }} (Tổng: {{ pagination.total }} tài liệu) </p>
-         {% elif pagination and pagination.total > 0 %}
-         <p class="text-center text-muted small mt-2"> Hiển thị tất cả {{ pagination.total }} tài liệu. </p>
-         {% endif %}
-        <div class="mt-4 mb-5 text-center">
-            <a href="{{ url_for('upload_file') }}" class="btn btn-primary btn-lg">
-                <i class="bi bi-cloud-arrow-up-fill"></i> Tải lên tài liệu mới
+    </div>
+
+    {% if user and user.short_term_mode_active and user.short_term_mode_end_date >= today %}
+    <div class="card mb-4">
+        <div class="card-header"><i class="bi bi-calendar-check-fill"></i> Lịch trình học tập ngắn hạn</div>
+        <div class="card-body">
+            <ul class="list-group list-group-flush" id="shortTermTimelineList"></ul>
+            <p class="text-center mt-3">
+                <button type="button" class="btn btn-sm btn-outline-danger" id="deactivateShortTermModeBtn">
+                    <i class="bi bi-x-circle me-1"></i>Vô hiệu hóa
+                </button>
+            </p>
+        </div>
+    </div>
+    {% endif %}
+
+    <div class="mb-4">
+    <ul class="nav nav-pills nav-fill" id="workspaceTabs">
+        <li class="nav-item">
+            <a class="nav-link active" href="#" data-tab-target="focus">
+                <i class="bi bi-bullseye me-1"></i> Focus Workspace
             </a>
-        </div>
-    </div> <div class="modal fade" id="editCategoryModal" tabindex="-1" aria-labelledby="editCategoryModalLabel" aria-hidden="true">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <form id="editCategoryForm" method="POST" action="">
-            <div class="modal-header"> <h5 class="modal-title" id="editCategoryModalLabel">Sửa Danh mục cho Tài liệu</h5> <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> </div>
-            <div class="modal-body"> <p>Tài liệu: <strong id="modal-doc-filename"></strong></p> <div class="mb-3"> <label for="edit-category-select" class="form-label">Chọn danh mục mới:</label> <select class="form-select" id="edit-category-select" name="new_category" required> {% set all_cats = categories + ([default_category] if default_category not in categories else []) %} {% for cat in all_cats | sort %} <option value="{{ cat }}">{{ cat }}</option> {% endfor %} </select> </div> </div>
-            <div class="modal-footer"> <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button> <button type="submit" class="btn btn-primary">Lưu thay đổi</button> </div>
-          </form>
-        </div>
-      </div>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="#" data-tab-target="sandbox">
+                <i class="bi bi-joystick me-1"></i> Sandbox
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="#" data-tab-target="all">
+                <i class="bi bi-collection-fill me-1"></i> Tất cả
+            </a>
+        </li>
+    </ul>
     </div>
 
-    <button type="button" class="btn btn-primary" id="focusLockBtn" title="Kích hoạt Chế độ Tập trung (Thủ công)">
-        <i class="bi bi-joystick"></i>
+    <h1 class="mb-3"><i class="bi bi-collection-fill"></i> Tất cả Tài liệu</h1>
+    <div class="card">
+        <div class="card-body">
+            <form method="GET" action="{{ url_for('index') }}" class="row g-3 align-items-center">
+                <div class="col-md-7">
+                    <input type="text" class="form-control" name="search_query" placeholder="Tìm kiếm theo tên, từ khóa..." value="{{ search_query or '' }}">
+                </div>
+                <div class="col-md-3">
+                    <select name="category" class="form-select">
+                        <option value="">Tất cả danh mục</option>
+                        {% for cat in categories %}
+                        <option value="{{ cat }}" {% if cat == category_filter %}selected{% endif %}>{{ cat }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-primary w-100">Tìm kiếm</button>
+                </div>
+            </form>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th scope="col" style="width: 45%;">Tên tài liệu</th>
+                        <th scope="col">Danh mục</th>
+                        <th scope="col">Từ khóa</th>
+                        <th scope="col">Xem lần cuối</th>
+                        <th scope="col" style="width: 15%;">Hành động</th>
+                    </tr>
+                </thead>
+                
+                <tbody>
+                    {% for doc in documents %}
+                    <tr class="document-row" data-doc-type="{{ 'goal-related' if doc.is_goal_related else 'sandbox' }}" data-doc-id="{{ doc.id }}">
+                        <td>
+                            {% if doc.last_viewed_date %}
+                                <span class="status-dot dot-read" title="Đã xem"></span>
+                            {% else %}
+                                <span class="status-dot dot-unread" title="Chưa xem"></span>
+                            {% endif %}
+                            
+                            {% if doc.doc_type == 'pdf' %}<i class="bi bi-file-earmark-pdf text-danger doc-icon"></i>
+                            {% elif doc.doc_type == 'docx' %}<i class="bi bi-file-earmark-word text-primary doc-icon"></i>
+                            {% elif doc.doc_type == 'txt' %}<i class="bi bi-file-earmark-text text-secondary doc-icon"></i>
+                            {% elif doc.doc_type == 'image' %}<i class="bi bi-file-image text-info doc-icon"></i>
+                            {% elif doc.doc_type == 'video' %}<i class="bi bi-file-play text-purple doc-icon"></i>
+                            {% elif 'link' in doc.doc_type %}<i class="bi bi-link-45deg text-success doc-icon"></i>
+                            {% else %}<i class="bi bi-file-earmark text-muted doc-icon"></i>
+                            {% endif %}
+                            
+                            <a href="{{ url_for('view_document', document_id=doc.id) }}" class="fw-bold text-decoration-none">{{ doc.filename | truncate(50) }}</a>
+                            
+                            {% if doc.is_goal_related %}<i class="bi bi-star-fill goal-related-star ms-1" title="Liên quan đến mục tiêu của bạn"></i>{% endif %}
+                        </td>
+                        <td><span class="badge bg-light text-dark border">{{ doc.category }}</span></td>
+                        <td><div class="keywords-list">{{ doc.keywords or 'N/A' }}</div></td>
+                        <td>{{ doc.last_viewed_date.strftime('%d/%m/%Y') if doc.last_viewed_date else 'Chưa xem' }}</td>
+                        <td>
+                            <button type="button" class="btn btn-sm toggle-workspace-btn me-1" data-doc-id="{{ doc.id }}" data-is-goal-related="{{ 'true' if doc.is_goal_related else 'false' }}">
+                                {% if doc.is_goal_related %}
+                                <i class="bi bi-box-arrow-right"></i> Chuyển Sandbox
+                                {% else %}
+                                <i class="bi bi-box-arrow-in-left"></i> Chuyển Focus
+                                {% endif %}
+                            </button>
+                            <button type="button" class="btn btn-sm btn-outline-secondary me-1" data-bs-toggle="modal" data-bs-target="#editCategoryModal" data-doc-id="{{ doc.id }}" data-doc-filename="{{ doc.filename }}" data-doc-category="{{ doc.category }}">Sửa</button>
+                            <form method="POST" action="{{ url_for('delete_document', document_id=doc.id) }}" class="d-inline" onsubmit="return confirm('Bạn chắc chắn muốn xóa vĩnh viễn tài liệu này?');">
+                                <button type="submit" class="btn btn-sm btn-outline-danger">Xóa</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr><td colspan="5" class="text-center py-5 text-muted">Không có tài liệu nào phù hợp.</td></tr>
+                    {% endfor %}
+            </tbody>
+            </table>
+        </div>
+    </div>
+
+    {% if pagination and pagination.pages > 1 %}
+    <nav class="mt-4 d-flex justify-content-center">
+        <ul class="pagination">
+            <li class="page-item {% if not pagination.has_prev %}disabled{% endif %}">
+                <a class="page-link" href="{{ url_for('index', page=pagination.prev_num, search_query=search_query, category=category_filter) }}">Trước</a>
+            </li>
+            {% for page_num in pagination.iter_pages() %}
+                <li class="page-item {% if page_num == pagination.page %}active{% endif %}">
+                    <a class="page-link" href="{{ url_for('index', page=page_num, search_query=search_query, category=category_filter) }}">{{ page_num }}</a>
+                </li>
+            {% endfor %}
+            <li class="page-item {% if not pagination.has_next %}disabled{% endif %}">
+                <a class="page-link" href="{{ url_for('index', page=pagination.next_num, search_query=search_query, category=category_filter) }}">Sau</a>
+            </li>
+        </ul>
+    </nav>
+    {% endif %}
+
+    <button type="button" class="btn btn-primary rounded-circle shadow-lg" id="focusLockBtn" title="Chế độ Tập trung" style="width: 60px; height: 60px;">
+        <i class="bi bi-joystick fs-4"></i>
     </button>
+    
+    {% include '_edit_category_modal.html' %}
+    {% include '_short_term_modal.html' %}
+    {% include '_focus_lock_modal.html' %}
 
-    <div class="modal fade" id="focusLockModal" tabindex="-1" aria-labelledby="focusLockModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
-      <div class="modal-dialog modal-dialog-centered modal-lg">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="focusLockModalLabel"><i class="bi bi-unlock-fill text-primary"></i> Mở khóa Ứng dụng (Mô phỏng)</h5>
-          </div>
-          <div class="modal-body">
-            <p class="text-muted small" id="focusLockIntroText">Để tiếp tục sử dụng ứng dụng khác (ví dụ: Facebook, Youtube - Mô phỏng), bạn cần trả lời đúng các câu hỏi ôn tập kiến thức đã học:</p>
-            <div id="focusLockMascot" class="text-center my-3" style="display: none;">
-                <span id="mascotIcon" style="font-size: 2rem;">😼</span>
-                <p id="mascotMessage" class="small text-muted fst-italic mt-1"></p>
+
+    <div class="modal fade" id="goalBundleModal" tabindex="-1" aria-labelledby="goalBundleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="goalBundleModalLabel"><i class="bi bi-box-seam me-2"></i> Goal Bundle được tạo bởi AI</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p class="text-muted">Dựa trên mục tiêu của bạn và nội dung tài liệu, AI đã chắt lọc các thông tin quan trọng nhất vào gói này.</p>
+                    <hr>
+
+                    <div id="goalBundleContent">
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                </div>
             </div>
-            <div class="mb-3">
-                <label for="focusQuestion" class="form-label">Câu hỏi:</label>
-                <p id="focusQuestion" class="fw-bold fs-5"></p>
-                <small class="text-muted" id="focusQuestionCategory"></small>
-            </div>
-            <div class="mb-3">
-                <label for="focusAnswerInput" class="form-label">Câu trả lời của bạn:</label>
-                <textarea class="form-control" id="focusAnswerInput" placeholder="Nhập câu trả lời..." rows="3"></textarea>
-            </div>
-            <div id="focusFeedback" class="mt-2"></div>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
-            <button type="button" class="btn btn-primary" id="checkFocusAnswerBtn">Kiểm tra</button>
-          </div>
         </div>
-      </div>
     </div>
+{% endblock %}
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+{% block scripts %}
     <script>
-        // --- Script Modal Sửa Danh mục ---
-        var editModalEl = document.getElementById('editCategoryModal');
-        if (editModalEl) {
-            editModalEl.addEventListener('show.bs.modal', function (event) {
-                var button = event.relatedTarget;
-                var docId = button.getAttribute('data-doc-id');
-                var docFilename = button.getAttribute('data-doc-filename');
-                var currentCategory = button.getAttribute('data-doc-category');
-                var modalFilenameEl = editModalEl.querySelector('#modal-doc-filename');
-                var categorySelectEl = editModalEl.querySelector('#edit-category-select');
-                var formEl = editModalEl.querySelector('#editCategoryForm');
-                if(modalFilenameEl) modalFilenameEl.textContent = docFilename;
-                if(categorySelectEl) {
-                    let categoryExists = false;
-                    for(let i=0; i < categorySelectEl.options.length; i++) {
-                        if (categorySelectEl.options[i].value === currentCategory) {
-                            categoryExists = true; break;
-                        }
-                    }
-                    categorySelectEl.value = categoryExists ? currentCategory : (categorySelectEl.options[0] ? categorySelectEl.options[0].value : '');
-                 }
-                if(formEl) formEl.action = '/edit_category/' + docId;
-            });
-        }
-
-        // --- Script cho Focus Lock ---
-        const focusLockBtn = document.getElementById('focusLockBtn');
-        const focusLockModalEl = document.getElementById('focusLockModal');
-        const focusQuestionEl = document.getElementById('focusQuestion');
-        const focusQuestionCategoryEl = document.getElementById('focusQuestionCategory');
-        const focusAnswerInput = document.getElementById('focusAnswerInput');
-        const checkFocusAnswerBtn = document.getElementById('checkFocusAnswerBtn');
-        const focusFeedbackEl = document.getElementById('focusFeedback');
-        const focusLockMascotEl = document.getElementById('focusLockMascot');
-        const mascotIconEl = document.getElementById('mascotIcon');
-        const mascotMessageEl = document.getElementById('mascotMessage');
-        const focusLockModalLabel = document.getElementById('focusLockModalLabel');
-        const focusLockIntroTextEl = document.getElementById('focusLockIntroText');
-
-        let questionsBatch = [];
-        let currentQuestionIndex = 0;
-        let questionsCorrect = 0;
-        let failedAttemptsInSession = 0;
-        const MIN_CORRECT_TO_UNLOCK = 2; 
-
-        let focusModal = null;
-        if (focusLockModalEl) {
-            focusModal = new bootstrap.Modal(focusLockModalEl);
-        }
-
-        // --- Logic cho Idle Timer ---
-        let idleTimer = null;
-        const IDLE_TIMEOUT = 3 * 60 * 1000;
-
-        function resetIdleTimer() {
-            clearTimeout(idleTimer);
-            if (focusLockModalEl && !focusLockModalEl.classList.contains('show')) {
-                 idleTimer = setTimeout(triggerFocusLockOnIdle, IDLE_TIMEOUT);
-            }
-        }
-
-        function triggerFocusLockOnIdle() {
-            const anyOtherModalOpen = document.querySelector('.modal.show:not(#focusLockModal)');
-            if (focusLockModalEl && !focusLockModalEl.classList.contains('show') && !anyOtherModalOpen) {
-                if(focusLockIntroTextEl) focusLockIntroTextEl.textContent = "Có vẻ bạn đang nghỉ ngơi? Hãy trả lời vài câu hỏi để củng cố kiến thức nhé!";
-                displayMascotMessage('🤔', 'Lâu rồi không thấy bạn hoạt động. Làm vài câu hỏi ôn tập cho vui nhé!', 'info');
-                startFocusLockSession(true); 
-                focusModal.show();
-            } else {
-                resetIdleTimer();
-            }
-        }
-        
-        function checkAnswerSimilarity(userAnswer, correctAnswer) {
-            if (!userAnswer || !correctAnswer) return false;
-            const normalize = (str) => str.toLowerCase().replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g,"").replace(/\s{2,}/g," ");
-            const ua = normalize(userAnswer);
-            const ca = normalize(correctAnswer);
-            const correctWords = new Set(ca.split(' ').filter(w => w.length > 1));
-            const userWords = new Set(ua.split(' '));
-            if (correctWords.size === 0) return ua === ca;
-            let matchCount = 0;
-            for (const word of userWords) {
-                if (correctWords.has(word)) {
-                    matchCount++;
-                }
-            }
-            const similarity = matchCount / correctWords.size;
-            console.log(`Answer similarity: ${similarity.toFixed(2)}`);
-            return similarity > 0.7;
-        }
-
-        function updateModalTitle() {
-            if (questionsBatch.length > 0 && currentQuestionIndex < questionsBatch.length) {
-                focusLockModalLabel.innerHTML = `<i class="bi bi-unlock-fill text-primary"></i> Mở khóa (Câu ${currentQuestionIndex + 1}/${questionsBatch.length})`;
-            } else if (questionsBatch.length > 0 && currentQuestionIndex >= questionsBatch.length) {
-                focusLockModalLabel.innerHTML = `<i class="bi bi-unlock-fill text-primary"></i> Kết quả Mở khóa`;
-            } else {
-                focusLockModalLabel.innerHTML = `<i class="bi bi-unlock-fill text-primary"></i> Mở khóa Ứng dụng (Mô phỏng)`;
-            }
-        }
-
-        function displayCurrentQuestion() {
-            if (currentQuestionIndex < questionsBatch.length) {
-                const questionData = questionsBatch[currentQuestionIndex];
-                focusQuestionEl.textContent = questionData.q || "Lỗi: Không có nội dung câu hỏi.";
-                focusQuestionCategoryEl.textContent = `(Lĩnh vực: ${questionData.cat || 'Chung'})`;
-                focusAnswerInput.value = '';
-                focusFeedbackEl.innerHTML = '';
-                focusFeedbackEl.className = 'mt-2';
-                focusAnswerInput.disabled = false;
-                checkFocusAnswerBtn.disabled = false;
-                checkFocusAnswerBtn.textContent = 'Kiểm tra';
-                updateModalTitle();
-            } else {
-                handleSessionEnd();
-            }
-        }
-
-        async function startFocusLockSession(isAutoTriggered = false) {
-            focusQuestionEl.textContent = 'Đang tải bộ câu hỏi...';
-            focusQuestionCategoryEl.textContent = '';
-            focusAnswerInput.value = '';
-            focusAnswerInput.disabled = true;
-            checkFocusAnswerBtn.disabled = true;
-            focusFeedbackEl.innerHTML = '';
-            focusFeedbackEl.className = 'mt-2';
-            
-            if (!isAutoTriggered) {
-                if (focusLockMascotEl) focusLockMascotEl.style.display = 'none';
-                if(focusLockIntroTextEl) focusLockIntroTextEl.textContent = "Để tiếp tục sử dụng ứng dụng khác, bạn cần trả lời đúng các câu hỏi ôn tập kiến thức đã học:";
-            }
-            
-            questionsBatch = [];
-            currentQuestionIndex = 0;
-            questionsCorrect = 0;
-            failedAttemptsInSession = 0;
-            updateModalTitle();
-
-            try {
-                const response = await fetch('/get_recall_data');
-                const data = await response.json();
-
-                if (!response.ok || !Array.isArray(data) || data.length === 0) {
-                     throw new Error(data.error || "Không thể tải bộ câu hỏi.");
-                }
-
-                if (data[0].type === 'error') {
-                     focusQuestionEl.textContent = data[0].q;
-                     focusQuestionCategoryEl.textContent = `(Lĩnh vực: ${data[0].cat || 'Hệ thống'})`;
-                     displayMascotMessage('😿', 'Hmm, hiện tại không có câu hỏi nào cả. Bạn thử tải thêm tài liệu hoặc tóm tắt nhé!', 'info');
-                     questionsBatch = [];
-                     return; 
-                }
-                questionsBatch = data;
-                displayCurrentQuestion(); 
-                displayMascotMessage('😼', `Bắt đầu thử thách với ${questionsBatch.length} câu hỏi nào!`);
-                
-            } catch (error) {
-                console.error("Lỗi khi lấy bộ câu hỏi ôn tập:", error);
-                focusQuestionEl.textContent = error.message;
-                displayMascotMessage('🙀', 'Hệ thống gặp trục trặc khi tải câu hỏi!');
-            }
-        }
-
-        function displayMascotMessage(icon, message, type = 'info') {
-            if (!focusLockMascotEl || !mascotIconEl || !mascotMessageEl) return;
-            mascotIconEl.textContent = icon;
-            mascotMessageEl.textContent = message;
-            focusLockMascotEl.style.display = 'block';
-
-            mascotMessageEl.className = 'small fst-italic mt-1 ';
-            if (type === 'warning') mascotMessageEl.classList.add('text-danger');
-            else if (type === 'success') mascotMessageEl.classList.add('text-success');
-            else mascotMessageEl.classList.add('text-muted');
-        }
-
-        function handleSessionEnd() {
-            focusAnswerInput.disabled = true;
-            checkFocusAnswerBtn.disabled = true;
-            checkFocusAnswerBtn.textContent = 'Hoàn thành';
-            updateModalTitle(); 
-            const totalAttempted = questionsBatch.length;
-
-            if (totalAttempted === 0) {
-                 focusFeedbackEl.innerHTML = `<div class="alert alert-info">Không có câu hỏi nào để hoàn thành phiên này.</div>`;
-                 displayMascotMessage('🤔', 'Không có thử thách nào lúc này cả!', 'info');
-                 setTimeout(() => { if (focusModal) focusModal.hide(); }, 3000);
-                 return;
-            }
-
-            if (questionsCorrect >= MIN_CORRECT_TO_UNLOCK) {
-                focusFeedbackEl.innerHTML = `<div class="alert alert-success">Tuyệt vời! Bạn đã trả lời đúng ${questionsCorrect}/${totalAttempted} câu. Mở khóa thành công!</div>`;
-                displayMascotMessage('🎉', `Xuất sắc! Bạn đã chinh phục được thử thách! Mở khóa thôi!`, 'success');
-                setTimeout(() => { if (focusModal) focusModal.hide(); }, 2500);
-            } else {
-                focusFeedbackEl.innerHTML = `<div class="alert alert-warning">Bạn đã trả lời đúng ${questionsCorrect}/${totalAttempted} câu. Cần ít nhất ${MIN_CORRECT_TO_UNLOCK} câu đúng để mở khóa. Hãy cố gắng hơn!</div>`;
-                displayMascotMessage('😿', `Chưa đủ số câu đúng rồi. Đừng nản, lần sau sẽ tốt hơn nhé!`, 'warning');
-                setTimeout(() => { if (focusModal) focusModal.hide(); }, 4000);
-            }
-        }
-
-        if (focusLockBtn && focusModal) {
-            focusLockBtn.addEventListener('click', function() {
-                startFocusLockSession(false); 
-                focusModal.show();
-            });
-        }
-
-        if (checkFocusAnswerBtn) {
-            checkFocusAnswerBtn.addEventListener('click', function() {
-                if (currentQuestionIndex >= questionsBatch.length) return;
-                const questionData = questionsBatch[currentQuestionIndex];
-                const userAnswer = focusAnswerInput.value;
-                const correctAnswer = questionData.a || "";
-                
-                let isCorrect = checkAnswerSimilarity(userAnswer, correctAnswer);
-
-                if (isCorrect) {
-                    questionsCorrect++;
-                    focusFeedbackEl.innerHTML = '<div class="alert alert-success p-1 small">Chính xác!</div>';
-                    displayMascotMessage('😻', 'Đúng rồi! Giỏi quá đi!', 'success');
-                } else {
-                    failedAttemptsInSession++;
-                    focusFeedbackEl.innerHTML = `<div class="alert alert-danger p-1 small">Sai rồi. Đáp án đúng là: "<strong>${correctAnswer}</strong>"</div>`;
-                    displayMascotMessage('😿', 'Hmm, có vẻ bạn cần xem lại bài này một chút rồi!', 'warning');
-                }
-                
-                currentQuestionIndex++;
-                focusAnswerInput.disabled = true;
-                checkFocusAnswerBtn.disabled = true;
-                
-                setTimeout(() => {
-                    displayCurrentQuestion();
-                }, 2500);
-            });
-        }
-
-        if (focusLockModalEl) {
-            focusLockModalEl.addEventListener('hide.bs.modal', function (event) {
-                resetIdleTimer();
-            });
-            focusLockModalEl.addEventListener('hidden.bs.modal', function () {
-                questionsBatch = [];
-                currentQuestionIndex = 0;
-                questionsCorrect = 0;
-                failedAttemptsInSession = 0;
-                if(focusLockIntroTextEl) focusLockIntroTextEl.textContent = "Để tiếp tục sử dụng ứng dụng khác, bạn cần trả lời đúng các câu hỏi ôn tập kiến thức đã học:";
-                updateModalTitle();
-                resetIdleTimer(); 
-            });
-        }
-        
-        document.addEventListener('DOMContentLoaded', function() {
-            ['mousemove', 'mousedown', 'keydown', 'scroll', 'touchstart'].forEach(function(eventName) {
-                document.addEventListener(eventName, resetIdleTimer, false);
-            });
-            resetIdleTimer(); 
-        });
-
-        // --- Script cho Nút Share (dùng localStorage) ---
-        document.addEventListener('click', function(event) {
-            const shareButton = event.target.closest('.share-doc-btn');
-            if (shareButton) {
-                event.preventDefault();
-                const docData = { id: shareButton.dataset.docId, name: shareButton.dataset.docFilename, category: shareButton.dataset.docCategory, doc_type: shareButton.dataset.docType };
-                try {
-                    localStorage.setItem('sharedDocForRanking', JSON.stringify(docData));
-                    window.location.href = "{{ url_for('lazy_market') }}#ranking-tab";
-                } catch (e) {
-                    console.error("Lỗi khi lưu vào localStorage:", e);
-                }
-            }
-        });
+        document.body.dataset.documentsDataForJs = JSON.stringify({{ documents_data_for_js | tojson | safe }});
+        document.body.dataset.userStmActive = '{{ user.short_term_mode_active | lower if user else 'false' }}';
+        document.body.dataset.userStmEndDate = '{{ user.short_term_mode_end_date.isoformat() if user and user.short_term_mode_end_date else '' }}';
+        document.body.dataset.userStmKeywords = '{{ user.short_term_mode_focus_keywords if user else '' }}';
+        document.body.dataset.userStmIntensity = '{{ user.short_term_mode_intensity if user else '' }}';
+        document.body.dataset.todayDate = '{{ today.isoformat() }}';
+        document.body.dataset.userRoleModel = '{{ user.role_model_character | default('') }}';
     </script>
-</body>
-</html>
+    
+    <script src="{{ url_for('static', filename='js/main.js', v=version) }}"></script>
+{% endblock %}

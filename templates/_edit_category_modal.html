@@ -1,0 +1,22 @@
+<div class="modal fade" id="editCategoryModal" tabindex="-1" aria-labelledby="editCategoryModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form id="editCategoryForm" method="POST" action="">
+        <div class="modal-header"> <h5 class="modal-title" id="editCategoryModalLabel">Sửa Danh mục</h5> <button type="button" class="btn-close" data-bs-dismiss="modal"></button> </div>
+        <div class="modal-body">
+            <p>Tài liệu: <strong id="modal-doc-filename"></strong></p>
+            <div class="mb-3">
+                <label for="edit-category-select" class="form-label">Chọn danh mục mới:</label>
+                <select class="form-select" id="edit-category-select" name="new_category" required>
+                    {% set all_cats = categories + ([default_category] if default_category not in categories else []) %}
+                    {% for cat in all_cats | sort %}
+                        <option value="{{ cat }}">{{ cat }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+        <div class="modal-footer"> <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button> <button type="submit" class="btn btn-primary">Lưu</button> </div>
+      </form>
+    </div>
+  </div>
+</div>

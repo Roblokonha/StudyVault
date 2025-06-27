@@ -1,6 +1,5 @@
 Flask
 Flask-SQLAlchemy
 Flask-Migrate
-PyPDF2
+PyMuPDF
 python-docx
-scikit-learn

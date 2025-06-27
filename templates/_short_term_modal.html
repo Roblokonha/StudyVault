@@ -1,0 +1,34 @@
+<div class="modal fade" id="shortTermModeSetupModal" tabindex="-1" aria-labelledby="shortTermModeSetupModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="shortTermModeSetupModalLabel"><i class="bi bi-lightning-fill me-2"></i> Thiết lập SHORT-TERM MODE</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <p class="alert alert-warning small"><i class="bi bi-exclamation-triangle-fill me-2"></i>Kích hoạt chế độ học tập cường độ cao!</p>
+        <form id="shortTermModeForm">
+            <div class="mb-3">
+                <label for="studyDuration" class="form-label fw-bold">Thời gian học (ngày):</label>
+                <input type="number" class="form-control" id="studyDuration" name="study_duration" min="1" max="7" value="7" required>
+            </div>
+            <div class="mb-3">
+                <label for="studyFocusKeywords" class="form-label fw-bold">Trọng tâm kiến thức:</label>
+                <input type="text" class="form-control" id="studyFocusKeywords" name="study_focus_keywords" placeholder="Ví dụ: Điện trường, Phân tích dữ liệu..." value="{{ user.short_term_mode_focus_keywords or user.ultimate_goal or '' if user else '' }}" required>
+            </div>
+            <div class="mb-3">
+                <label for="studyIntensity" class="form-label fw-bold">Cường độ học tập:</label>
+                <select class="form-select" id="studyIntensity" name="study_intensity" required>
+                    <option value="x3">Bình thường (x3)</option>
+                    <option value="x7">Cao (x7)</option>
+                    <option value="x10">Rất cao (x10)</option>
+                </select>
+            </div>
+            <div class="text-center mt-4">
+                <button type="submit" class="btn btn-primary btn-lg" id="activateShortTermModeBtn"><i class="bi bi-play-circle-fill me-2"></i>Bắt đầu</button>
+            </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

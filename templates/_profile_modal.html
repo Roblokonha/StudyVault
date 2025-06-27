@@ -1,0 +1,122 @@
+{% if user %}
+<div class="modal fade" id="profileSetupModal" tabindex="-1" aria-labelledby="profileSetupModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="profileSetupModalLabel"><i class="bi bi-person-circle me-2"></i> Thiết lập Hồ sơ StudyVault</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form id="profileSetupForm" method="POST" action="{{ url_for('handle_profile_setup_post') }}">
+            <div class="mb-4">
+                <label for="ultimateGoal" class="form-label fw-bold">Mục tiêu tối thượng của bạn là gì?</label>
+                <textarea class="form-control" id="ultimateGoal" name="ultimate_goal" rows="3" placeholder="Ví dụ: Trở thành chuyên gia AI...">{{ user.ultimate_goal or '' }}</textarea>
+            </div>
+            <div class="mb-4">
+                <label for="roleModelCharacter" class="form-label fw-bold">Bạn muốn trở thành hình mẫu nào?</label>
+                <select class="form-select" id="roleModelCharacter" name="role_model_character" required>
+                    <option value="" disabled {% if not user.role_model_character %}selected{% endif %}>-- Chọn --</option>
+                    <option value="Successful Businessman" {% if user.role_model_character == 'Successful Businessman' %}selected{% endif %}>Doanh nhân</option>
+                    <option value="Game Developer" {% if user.role_model_character == 'Game Developer' %}selected{% endif %}>Lập trình viên Game</option>
+                    <option value="AI Expert" {% if user.role_model_character == 'AI Expert' %}selected{% endif %}>Chuyên gia AI</option>
+                    <option value="Teacher" {% if user.role_model_character == 'Teacher' %}selected{% endif %}>Giáo viên</option>
+                    <option value="Scientist" {% if user.role_model_character == 'Scientist' %}selected{% endif %}>Nhà khoa học</option>
+                    <option value="Doctor" {% if user.role_model_character == 'Doctor' %}selected{% endif %}>Bác sĩ</option>
+                    <option value="Architect" {% if user.role_model_character == 'Architect' %}selected{% endif %}>kiến trúc sư</option>
+                    <option value="Engineer" {% if user.role_model_character == 'Engineer' %}selected{% endif %}>Kỹ sư</option>
+                </select>
+            </div>
+
+            <div class="mb-4">
+                <label for="specificStudyGoal" class="form-label fw-bold">1. Mục tiêu học tập cụ thể của bạn là gì?</label>
+                <textarea class="form-control" id="specificStudyGoal" name="specific_study_goal" rows="2" placeholder="Ví dụ: Đạt 7.0 IELTS trong 3 tháng, Thi đỗ học bổng toàn phần ngành Khoa học dữ liệu...">{{ user.specific_study_goal or '' }}</textarea>
+            </div>
+
+            <div class="mb-4">
+                <label class="form-label fw-bold">2. Bạn ưu tiên học những loại nội dung nào? (Chọn tối đa 5)</label>
+                <div class="row row-cols-2 g-2">
+                    {% set preferred_content_types_list = (user.preferred_content_types | from_json) if user.preferred_content_types else [] %}
+                    {% for content_type in ['Sách/Giáo trình', 'Bài báo khoa học', 'Video bài giảng', 'Podcast', 'Mindmap', 'Flashcard', 'Tóm tắt/Ghi chú', 'Bài tập/Thực hành', 'Thảo luận nhóm', 'Case Study'] %}
+                    <div class="col">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="preferred_content_types" value="{{ content_type }}" id="pc_{{ loop.index }}" {% if content_type in preferred_content_types_list %}checked{% endif %}>
+                            <label class="form-check-label" for="pc_{{ loop.index }}">{{ content_type }}</label>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="mb-4">
+                <label for="expectedCompletionTime" class="form-label fw-bold">3. Thời gian dự kiến để hoàn thành mục tiêu?</label>
+                <select class="form-select" id="expectedCompletionTime" name="expected_completion_time" required>
+                    <option value="" disabled {% if not user.expected_completion_time %}selected{% endif %}>-- Chọn --</option>
+                    <option value="1-3_months" {% if user.expected_completion_time == '1-3_months' %}selected{% endif %}>1 - 3 tháng</option>
+                    <option value="3-6_months" {% if user.expected_completion_time == '3-6_months' %}selected{% endif %}>3 - 6 tháng</option>
+                    <option value="6-12_months" {% if user.expected_completion_time == '6-12_months' %}selected{% endif %}>6 - 12 tháng</option>
+                    <option value="1+_year" {% if user.expected_completion_time == '1+_year' %}selected{% endif %}>Trên 1 năm</option>
+                    <option value="unlimited" {% if user.expected_completion_time == 'unlimited' %}selected{% endif %}>Vô thời hạn</option>
+                </select>
+            </div>
+
+            <div class="mb-4">
+                <label class="form-label fw-bold">4. Khó khăn cá nhân bạn thường gặp khi tự học? (Chọn các yếu tố)</label>
+                <div class="row row-cols-2 g-2">
+                    {% set personal_learning_challenges_list = (user.personal_learning_challenges | from_json) if user.personal_learning_challenges else [] %}
+                    {% for challenge in ['Thiếu động lực', 'Dễ phân tâm', 'Không biết bắt đầu từ đâu', 'Khó ghi nhớ', 'Khó tập trung', 'Không có tài liệu phù hợp', 'Không có người hướng dẫn', 'Quản lý thời gian kém'] %}
+                    <div class="col">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="personal_learning_challenges" value="{{ challenge }}" id="plc_{{ loop.index }}" {% if challenge in personal_learning_challenges_list %}checked{% endif %}>
+                            <label class="form-check-label" for="plc_{{ loop.index }}">{{ challenge }}</label>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="mb-4">
+                <label class="form-label fw-bold">5. Bạn kỳ vọng điều gì nhất từ StudyVault? (Chọn các tính năng mong muốn)</label>
+                <div class="row row-cols-2 g-2">
+                    {% set studyvault_expectations_list = (user.studyvault_expectations | from_json) if user.studyvault_expectations else [] %}
+                    {% for expectation in ['Gợi ý lộ trình học', 'Tóm tắt tài liệu tự động', 'Tạo Mindmap/Sơ đồ', 'Hệ thống câu hỏi ôn tập', 'Theo dõi tiến độ học tập', 'Cảnh báo/Nhắc nhở', 'Đề xuất tài liệu liên quan', 'Chatbot hỗ trợ học tập', 'Phân tích hiệu suất cá nhân', 'Chế độ học tập cường độ cao'] %}
+                    <div class="col">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="studyvault_expectations" value="{{ expectation }}" id="sve_{{ loop.index }}" {% if expectation in studyvault_expectations_list %}checked{% endif %}>
+                            <label class="form-check-label" for="sve_{{ loop.index }}">{{ expectation }}</label>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="mb-4">
+                <label class="form-label fw-bold">Chọn Avatar:</label>
+                <div class="d-flex flex-wrap gap-3 avatar-selection" id="avatarSelection">
+                    <img src="{{ url_for('static', filename='img/avatar1.png') }}" alt="Avatar 1" width="60" height="60" class="rounded-circle" data-avatar-id="avatar1">
+                    <img src="{{ url_for('static', filename='img/avatar2.png') }}" alt="Avatar 2" width="60" height="60" class="rounded-circle" data-avatar-id="avatar2">
+                    <img src="{{ url_for('static', filename='img/avatar3.png') }}" alt="Avatar 3" width="60" height="60" class="rounded-circle" data-avatar-id="avatar3">
+                    <img src="{{ url_for('static', filename='img/avatar4.png') }}" alt="Avatar 4" width="60" height="60" class="rounded-circle" data-avatar-id="avatar4">
+                    <img src="{{ url_for('static', filename='img/avatar5.png') }}" alt="Avatar 5" width="60" height="60" class="rounded-circle" data-avatar-id="avatar5">
+                    <img src="{{ url_for('static', filename='img/avatar6.png') }}" alt="Avatar 6" width="60" height="60" class="rounded-circle" data-avatar-id="avatar6">
+                </div>
+                <input type="hidden" name="selected_avatar" id="selectedAvatarInput" value="{{ user.selected_avatar or '' }}">
+            </div>
+            <div class="mb-4">
+                <label class="form-label fw-bold">Chọn Màu chủ đạo:</label>
+                <div class="d-flex flex-wrap gap-3" id="colorThemeSelection">
+                    <div class="color-box" data-color-theme="blue" style="background-color: #0d6efd;"></div>
+                    <div class="color-box" data-color-theme="green" style="background-color: #198754;"></div>
+                    <div class="color-box" data-color-theme="purple" style="background-color: #6f42c1;"></div>
+                    <div class="color-box" data-color-theme="dark" style="background-color: #343a40;"></div>
+                    <div class="color-box" data-color-theme="pink" style="background-color: #d63384;"></div>
+                </div>
+                <input type="hidden" name="workspace_color_theme" id="selectedColorThemeInput" value="{{ user.workspace_color_theme or 'blue' }}">
+            </div>
+            <div class="text-center">
+                <button type="submit" class="btn btn-primary btn-lg">Lưu Hồ sơ</button>
+            </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endif %}

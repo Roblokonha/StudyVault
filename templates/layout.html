@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    
+    <title>{% block title %}StudyVault{% endblock %}</title>
+
+    {% block head_styles %}{% endblock %}
+
+    <style>
+        /* --- Phong cách chung --- */
+        :root {
+             --primary-blue: #0d6efd; --light-bg: #f8f9fa; --white-bg: #ffffff; --card-border-radius: 0.75rem; --element-border-radius: 0.5rem; --card-shadow: 0 4px 15px rgba(0, 0, 0, 0.07); --text-dark: #212529; --text-muted: #6c757d; --accent-red: #dc3545; --bs-info: #0dcaf0; --bs-info-subtle: #cff4fc; --bs-info-text-emphasis: #055160; --bs-warning: #ffc107; --bs-success: #198754; --bs-danger: #dc3545; --bs-purple: #6f42c1;
+        }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; background-color: var(--light-bg); color: var(--text-dark); position: relative; min-height: 100vh; padding-bottom: 80px; }
+        .navbar { background-color: var(--white-bg) !important; box-shadow: var(--card-shadow); }
+        .nav-link.active { color: var(--primary-blue) !important; font-weight: 600;}
+        .card { border-radius: var(--card-border-radius); border: none; box-shadow: var(--card-shadow); margin-bottom: 1.5rem; background-color: var(--white-bg); border-top: 4px solid var(--primary-blue); }
+        .card-header { background-color: transparent; border-bottom: 1px solid #f1f3f5; font-weight: 600; padding: 1rem 1.25rem; color: var(--primary-blue); }
+        .btn { border-radius: var(--element-border-radius); font-weight: 500; }
+        .btn-primary { background-color: var(--primary-blue); border-color: var(--primary-blue); }
+        .btn-primary:hover { background-color: #0b5ed7; border-color: #0a58ca; }
+        .form-control:focus, .form-select:focus { border-color: var(--primary-blue); box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25); }
+
+        #profile-avatar-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%; 
+            padding: 0;
+            overflow: hidden; 
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid #dee2e6;
+            transition: all 0.2s ease-in-out;
+        }
+        #profile-avatar-btn:hover {
+            border-color: var(--primary-blue);
+            transform: scale(1.05); 
+        }
+        .profile-avatar-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; 
+        }
+    </style>
+</head>
+
+<body data-user-color-theme="{{ user.workspace_color_theme if user else 'blue' }}">
+    <nav class="navbar navbar-expand-lg navbar-light bg-white mb-4 sticky-top">
+        <div class="container">
+            <a class="navbar-brand fw-bold d-flex align-items-center" href="{{ url_for('index') }}">
+                <img src="{{ url_for('static', filename='img/logo.png') }}" alt="StudyVault Logo" height="30" class="d-inline-block align-text-top me-2">
+                StudyVault
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"><span class="navbar-toggler-icon"></span></button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link {% if request.endpoint == 'index' %}active{% endif %}" href="{{ url_for('index') }}">Dashboard</a></li>
+                    <li class="nav-item"><a class="nav-link {% if request.endpoint == 'upload_file' %}active{% endif %}" href="{{ url_for('upload_file') }}">Tải lên</a></li>
+                    <li class="nav-item"><a class="nav-link {% if request.endpoint == 'study_timeline' %}active{% endif %}" href="{{ url_for('study_timeline') }}">Timeline</a></li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link" id="profile-avatar-btn" data-bs-toggle="modal" data-bs-target="#profileSetupModal" title="Thiết lập Hồ sơ">
+                            {% if user and user.selected_avatar %}
+                                <img src="{{ url_for('static', filename='img/' + user.selected_avatar + '.png') }}" alt="User Avatar" class="profile-avatar-img">
+                            {% else %}
+                                <i class="bi bi-person-circle" style="font-size: 1.5rem;"></i>
+                            {% endif %}
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    
+    <div class="container mt-4">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                <div class="alert alert-{{ category if category in ['success', 'danger', 'warning', 'info'] else 'info' }} alert-dismissible fade show rounded-pill" role="alert">
+                    {{ message }} <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        {% block content %}{% endblock %}
+    </div>
+
+    {% include '_profile_modal.html' %}
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+    {% block scripts %}{% endblock %}
+
+    <script src="https://cdn.jsdelivr.net/npm/svg-pan-zoom@3.6.1/dist/svg-pan-zoom.min.js"></script>
+    
+    <script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+        mermaid.initialize({ startOnLoad: false, theme: 'dark' });
+        window.mermaid = mermaid; 
+    </script>
+
+    <script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+        mermaid.initialize({ startOnLoad: false, theme: 'dark' });
+        window.mermaid = mermaid; 
+    </script>
+
+    <script>
+      (function() {
+          const userColorTheme = document.body.dataset.userColorTheme || 'blue';
+          const root = document.documentElement;
+          let primaryColorValue = '#0d6efd'; // Màu xanh dương mặc định
+
+          if (userColorTheme === 'green') { primaryColorValue = '#198754'; }
+          else if (userColorTheme === 'purple') { primaryColorValue = '#6f42c1'; }
+          else if (userColorTheme === 'dark') { primaryColorValue = '#343a40'; }
+          else if (userColorTheme === 'pink') { primaryColorValue = '#d63384'; }
+          
+          root.style.setProperty('--primary-blue', primaryColorValue);
+      })();
+    </script>
+</body>
+</html>

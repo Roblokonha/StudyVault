@@ -1,36 +1,9 @@
-<!doctype html>
-<html lang="vi">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
-    <title>Timeline Học Tập (Demo) - StudyVault</title>
-    <style>
-        /* --- Phong cách chung --- */
-        :root { --primary-blue: #0d6efd; --light-bg: #f8f9fa; --white-bg: #ffffff; --card-border-radius: 0.75rem; --element-border-radius: 0.5rem; --card-shadow: 0 4px 15px rgba(0, 0, 0, 0.07); --text-dark: #212529; --text-muted: #6c757d; --green-act-1: #c6e48b; --green-act-2: #7bc96f; --green-act-3: #239a3b; --green-act-4: #196127;}
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; background-color: var(--light-bg); color: var(--text-dark); }
-        .navbar { background-color: var(--white-bg) !important; box-shadow: var(--card-shadow); }
-        .navbar-brand { color: var(--text-dark) !important; font-weight: 600; }
-        .navbar-brand i { color: var(--primary-blue); }
-        .nav-link { color: #495057 !important; font-weight: 500; }
-        .nav-link.active { color: var(--primary-blue) !important; font-weight: 600;}
-        .card { border-radius: var(--card-border-radius); border: none; box-shadow: var(--card-shadow); margin-bottom: 1.5rem; background-color: var(--white-bg); border-top: 4px solid var(--primary-blue); }
-        .card-header { background-color: transparent; border-bottom: 1px solid #f1f3f5; font-weight: 600; padding: 1rem 1.25rem; color: var(--primary-blue); }
-         .card-header i { color: var(--primary-blue) !important; }
-        .btn { border-radius: var(--element-border-radius); padding: 0.5rem 1rem; font-weight: 500; }
-        .btn-primary { background-color: var(--primary-blue); border-color: var(--primary-blue); }
-        .btn-primary:hover { background-color: #0b5ed7; border-color: #0a58ca; }
-        .btn-secondary { background-color: #6c757d; border-color: #6c757d; color: white;}
-        .btn-secondary:hover { background-color: #5a6268; border-color: #545b62;}
-        .form-control, .form-select, .form-check-input { border-radius: var(--element-border-radius); border-color: #dee2e6; }
-        .form-control:focus, .form-select:focus { border-color: var(--primary-blue); box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25); }
-        .form-check-input:checked { background-color: var(--primary-blue); border-color: var(--primary-blue); }
-        .badge { border-radius: 50px; font-weight: 500; padding: 0.35em 0.65em; }
-        h1 { margin-bottom: 1.5rem !important; font-weight: 600; color: var(--primary-blue); }
-         h1 i { color: var(--primary-blue) !important; }
-        .list-group-item { border-color: #f1f3f5; padding-top: 0.75rem; padding-bottom: 0.75rem;}
+{% extends "layout.html" %}
 
+{% block title %}Timeline Học Tập - StudyVault{% endblock %}
+
+{% block head_styles %}
+    <style>
         /* --- CSS Lịch Tuần --- */
         .timeline-table-container { background-color: var(--white-bg); border-radius: var(--card-border-radius); padding: 15px; box-shadow: var(--card-shadow); }
         .timeline-table { table-layout: fixed; border-collapse: separate; border-spacing: 5px; width: 100%; }
@@ -42,19 +15,18 @@
         .timeline-table td.activity-0 { background-color: #f8f9fa !important; }
         .timeline-table td.activity-0 .day-number, .timeline-table td.activity-0 .activity-content { color: #212529 !important; }
         .timeline-table td.activity-0 .activity-content.text-muted { color: #6c757d !important; }
-        .timeline-table td.activity-1 { background-color: var(--green-act-1) !important; }
+        .timeline-table td.activity-1 { background-color: #c6e48b !important; }
         .timeline-table td.activity-1 .day-number, .timeline-table td.activity-1 .activity-content { color: #333 !important; }
         .timeline-table td.activity-1 .badge { color: #155724 !important; background-color: rgba(255, 255, 255, 0.7) !important; border-color: #c3e6cb !important; }
-        .timeline-table td.activity-2 { background-color: var(--green-act-2) !important; }
+        .timeline-table td.activity-2 { background-color: #7bc96f !important; }
         .timeline-table td.activity-2 .day-number, .timeline-table td.activity-2 .activity-content { color: #111 !important; }
         .timeline-table td.activity-2 .badge { color: #155724 !important; background-color: rgba(255, 255, 255, 0.75) !important; border-color: #b1dfbb !important; }
-        .timeline-table td.activity-3 { background-color: var(--green-act-3) !important; color: white !important; }
+        .timeline-table td.activity-3 { background-color: #239a3b !important; color: white !important; }
         .timeline-table td.activity-3 .day-number, .timeline-table td.activity-3 .activity-content { color: white !important; }
         .timeline-table td.activity-3 .badge { color: #196127 !important; background-color: rgba(255, 255, 255, 0.85) !important; border: none !important;}
-        .timeline-table td.activity-4 { background-color: var(--green-act-4) !important; color: white !important; }
+        .timeline-table td.activity-4 { background-color: #196127 !important; color: white !important; }
         .timeline-table td.activity-4 .day-number, .timeline-table td.activity-4 .activity-content { color: white !important; }
         .timeline-table td.activity-4 .badge { color: #196127 !important; background-color: rgba(255, 255, 255, 0.9) !important; border: none !important; }
-
 
         /* --- CSS Phần còn lại --- */
         .stat-card .card-body { display: flex; align-items: center; justify-content: space-around; flex-wrap: wrap; gap: 1rem;}
@@ -76,10 +48,10 @@
          .month-days-header > div { padding: 2px 0; }
         .month-days-grid { display: grid !important; grid-template-columns: repeat(7, 1fr) !important; gap: 2px; }
         .month-day { width: 100%; padding-bottom: 100%; position: relative; border-radius: 3px; background-color: #f0f0f0 !important; transition: background-color 0.2s ease-in-out; border: none; }
-        .month-day.activity-1 { background-color: var(--green-act-1) !important; }
-        .month-day.activity-2 { background-color: var(--green-act-2) !important; }
-        .month-day.activity-3 { background-color: var(--green-act-3) !important; }
-        .month-day.activity-4 { background-color: var(--green-act-4) !important; }
+        .month-day.activity-1 { background-color: #c6e48b !important; }
+        .month-day.activity-2 { background-color: #7bc96f !important; }
+        .month-day.activity-3 { background-color: #239a3b !important; }
+        .month-day.activity-4 { background-color: #196127 !important; }
 
         /* --- CSS CHO AI CHAT MODAL --- */
         #aiChatModal .modal-body { display: flex; flex-direction: column; height: 70vh; }
@@ -89,181 +61,172 @@
         .chat-bubble.ai { background-color: #e9ecef; color: var(--text-dark); margin-right: auto; border-bottom-left-radius: 0.25rem; }
         .chat-bubble .sender-name { font-size: 0.75em; font-weight: 600; display: block; margin-bottom: 0.2rem; }
     </style>
-</head>
-<body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-white mb-4 sticky-top">
-        <div class="container"> <a class="navbar-brand fw-bold d-flex align-items-center" href="{{ url_for('index') }}">
-            <img src="{{ url_for('static', filename='img/logo.png') }}" alt="StudyVault Logo" height="30" class="d-inline-block align-text-top me-2">
-            StudyVault
-        </a>
-         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"><span class="navbar-toggler-icon"></span></button> <div class="collapse navbar-collapse" id="navbarNav"> <ul class="navbar-nav ms-auto"> <li class="nav-item"><a class="nav-link" href="{{ url_for('index') }}">Dashboard</a></li> <li class="nav-item"><a class="nav-link" href="{{ url_for('upload_file') }}">Tải lên</a></li>
-                     <li class="nav-item"><a class="nav-link active" aria-current="page" href="{{ url_for('study_timeline') }}">Timeline</a></li>
-                     <li class="nav-item"><a class="nav-link" href="{{ url_for('lazy_market') }}">Chia sẻ tài liệu & BXH</a></li> </ul> </div> </div>
-    </nav>
+{% endblock %}
 
-    <div class="container mt-4">
-        <h1 class="mb-4 fw-bold"><i class="bi bi-calendar-check text-primary"></i> Dòng thời gian & Hiệu suất học tập</h1>
-        <div class="row">
-            <div class="col-lg-5">
-                 <div class="card" id="aiMascotSection">
-                     <span id="mascotIcon">😊</span>
-                     <div id="mascotMessage" class="alert alert-secondary">Chọn một tính cách để bắt đầu!</div>
-                     <div class="mt-3 text-start" id="personalitySelector">
-                         <span class="me-2 small text-muted d-block mb-2">Chọn tính cách chatbot:</span>
-                         <div class="form-check mb-1">
-                             <input class="form-check-input" type="radio" name="aiPersonality" id="p_cute_lover" value="cute_lover" checked>
-                             <label class="form-check-label" for="p_cute_lover">👧 Người yêu dễ thương</label>
-                         </div>
-                         <div class="form-check mb-1">
-                             <input class="form-check-input" type="radio" name="aiPersonality" id="p_kind_grandparents" value="kind_grandparents">
-                             <label class="form-check-label" for="p_kind_grandparents">👵 Ông bà hiền từ</label>
-                         </div>
-                         <div class="form-check mb-1">
-                            <input class="form-check-input" type="radio" name="aiPersonality" id="p_angry_mom" value="angry_mom">
-                             <label class="form-check-label" for="p_angry_mom">🙎‍♀️ Mẹ giận dữ</label>
-                         </div>
-                          <div class="form-check mb-1">
-                             <input class="form-check-input" type="radio" name="aiPersonality" id="p_quiet_dad" value="quiet_dad">
-                             <label class="form-check-label" for="p_quiet_dad">🧔‍♂️ Bố ít nói</label>
-                         </div>
-                         <div class="form-check mb-1">
-                             <input class="form-check-input" type="radio" name="aiPersonality" id="p_patriarchal_lover" value="patriarchal_lover">
-                             <label class="form-check-label" for="p_patriarchal_lover">🙎‍♂️ Người yêu gia trưởng</label>
-                         </div>
+{% block content %}
+    <h1 class="mb-4 fw-bold"><i class="bi bi-calendar-check text-primary"></i> Dòng thời gian & Hiệu suất học tập</h1>
+    <div class="row">
+        <div class="col-lg-5">
+             <div class="card" id="aiMascotSection">
+                 <span id="mascotIcon">😊</span>
+                 <div id="mascotMessage" class="alert alert-secondary">Chọn một tính cách để bắt đầu!</div>
+                 <div class="mt-3 text-start" id="personalitySelector">
+                     <span class="me-2 small text-muted d-block mb-2">Chọn tính cách chatbot:</span>
+                     <div class="form-check mb-1">
+                         <input class="form-check-input" type="radio" name="aiPersonality" id="p_cute_lover" value="cute_lover" checked>
+                         <label class="form-check-label" for="p_cute_lover">👧 Người yêu dễ thương</label>
                      </div>
-                     <div class="mt-3 pt-3 border-top">
-                         <button type="button" class="btn btn-outline-primary w-100" data-bs-toggle="modal" data-bs-target="#aiChatModal">
-                             <i class="bi bi-chat-dots-fill me-2"></i>Trò chuyện Ôn tập với AI
-                         </button>
+                     <div class="form-check mb-1">
+                         <input class="form-check-input" type="radio" name="aiPersonality" id="p_kind_grandparents" value="kind_grandparents">
+                         <label class="form-check-label" for="p_kind_grandparents">👵 Ông bà hiền từ</label>
+                     </div>
+                     <div class="form-check mb-1">
+                        <input class="form-check-input" type="radio" name="aiPersonality" id="p_angry_mom" value="angry_mom">
+                         <label class="form-check-label" for="p_angry_mom">🙎‍♀️ Mẹ giận dữ</label>
+                     </div>
+                      <div class="form-check mb-1">
+                         <input class="form-check-input" type="radio" name="aiPersonality" id="p_quiet_dad" value="quiet_dad">
+                         <label class="form-check-label" for="p_quiet_dad">🧔‍♂️ Bố ít nói</label>
+                     </div>
+                     <div class="form-check mb-1">
+                         <input class="form-check-input" type="radio" name="aiPersonality" id="p_patriarchal_lover" value="patriarchal_lover">
+                         <label class="form-check-label" for="p_patriarchal_lover">🙎‍♂️ Người yêu gia trưởng</label>
                      </div>
                  </div>
+                 <div class="mt-3 pt-3 border-top">
+                     <button type="button" class="btn btn-outline-primary w-100" data-bs-toggle="modal" data-bs-target="#aiChatModal">
+                         <i class="bi bi-chat-dots-fill me-2"></i>Trò chuyện Ôn tập với AI
+                     </button>
+                 </div>
+             </div>
 
-                 <div class="card mb-4">
-                    <div class="card-header">
-                        <i class="bi bi-calendar3-range me-2"></i>Lộ trình học tập đề xuất 
+             <div class="card mb-4">
+                <div class="card-header">
+                    <i class="bi bi-calendar3-range me-2"></i>Lộ trình học tập đề xuất 
+                </div>
+                <div class="card-body small">
+                    <p class="text-muted" id="pathway-description">Đang tải lộ trình...</p>
+                    <ul class="list-group list-group-flush" id="suggested-pathway-list">
+                        <li class="list-group-item">Đang tải...</li>
+                    </ul>
+                     <p class="text-center mt-3">
+                        <button type="button" class="btn btn-sm btn-outline-primary" id="change-pathway-btn">
+                            <i class="bi bi-shuffle me-1"></i>Đổi lộ trình học
+                        </button>
+                     </p>
+                </div>
+             </div>
+
+             <div class="card stat-card">
+                 <div class="card-header"><i class="bi bi-bar-chart-line-fill"></i> Hiệu suất Tuần Này </div>
+                 <div class="card-body">
+                     <div class="text-center">
+                        <i class="bi bi-fire stat-icon text-danger"></i>
+                        <div class="stat-value">{{ current_streak }}</div>
+                        <div class="stat-label">Ngày Streak</div>
+                     </div>
+                     <div class="text-center">
+                        <i class="bi bi-check2-square stat-icon text-success"></i>
+                        <div class="stat-value">{{ docs_viewed_today }}</div>
+                        <div class="stat-label">Xem hôm nay</div>
+                     </div>
+                     <div class="text-center">
+                        <i class="bi bi-clock-history stat-icon text-info"></i>
+                        <div class="stat-value">{{ avg_session_minutes }}<small>p</small></div>
+                        <div class="stat-label">TB / lần học</div>
+                     </div>
+                     <div class="text-center">
+                        <i class="bi bi-brain stat-icon text-warning"></i>
+                        <div class="stat-value" id="recall-rate-value">--<small>%</small></div>
+                        <div class="stat-label">Tỉ lệ Ghi nhớ </div>
                     </div>
-                    <div class="card-body small">
-                        <p class="text-muted" id="pathway-description">Đang tải lộ trình...</p>
-                        <ul class="list-group list-group-flush" id="suggested-pathway-list">
-                            <li class="list-group-item">Đang tải...</li>
-                        </ul>
-                         <p class="text-center mt-3">
-                            <button type="button" class="btn btn-sm btn-outline-primary" id="change-pathway-btn">
-                                <i class="bi bi-shuffle me-1"></i>Đổi lộ trình học
-                            </button>
-                         </p>
-                    </div>
                  </div>
+                 <div class="card-footer text-muted small"> Tổng tài liệu đã tóm tắt: {{ total_docs_summarized }} </div>
+             </div>
 
-                 <div class="card stat-card">
-                     <div class="card-header"><i class="bi bi-bar-chart-line-fill"></i> Hiệu suất Tuần Này </div>
-                     <div class="card-body">
-                         <div class="text-center">
-                            <i class="bi bi-fire stat-icon text-danger"></i>
-                            <div class="stat-value">{{ current_streak }}</div>
-                            <div class="stat-label">Ngày Streak</div>
-                         </div>
-                         <div class="text-center">
-                            <i class="bi bi-check2-square stat-icon text-success"></i>
-                            <div class="stat-value">{{ docs_viewed_today }}</div>
-                            <div class="stat-label">Xem hôm nay</div>
-                         </div>
-                         <div class="text-center">
-                            <i class="bi bi-clock-history stat-icon text-info"></i>
-                            <div class="stat-value">{{ avg_session_minutes }}<small>p</small></div>
-                            <div class="stat-label">TB / lần học</div>
-                         </div>
-                         <div class="text-center">
-                            <i class="bi bi-brain stat-icon text-warning"></i>
-                            <div class="stat-value" id="recall-rate-value">--<small>%</small></div>
-                            <div class="stat-label">Tỉ lệ Ghi nhớ </div>
-                        </div>
-                     </div>
-                     <div class="card-footer text-muted small"> Tổng tài liệu đã tóm tắt: {{ total_docs_summarized }} </div>
-                 </div>
+             <div class="card">
+                 <div class="card-header"><i class="bi bi-calendar-check-fill"></i> Hàng đợi Ôn tập </div>
+                 <ul class="list-group list-group-flush">
+                     {% if review_items %}
+                         {% for item in review_items %}
+                         <li class="list-group-item d-flex justify-content-between align-items-center">
+                             <a href="{{ url_for('view_document', document_id=item.id) if item.id else '#' }}" class="text-decoration-none text-dark" title="{{ item.name }}">
+                                 <i class="bi bi-file-earmark-text me-2"></i>{{ item.name | truncate(35) }}
+                             </a>
+                             <span class="badge bg-warning text-dark rounded-pill">{{ item.due }}</span>
+                         </li>
+                         {% endfor %}
+                     {% else %}
+                         <li class="list-group-item text-muted">Không có tài liệu nào cần ôn tập ngay.</li>
+                     {% endif %}
+                 </ul>
+             </div>
 
-                 <div class="card">
-                     <div class="card-header"><i class="bi bi-calendar-check-fill"></i> Hàng đợi Ôn tập </div>
-                     <ul class="list-group list-group-flush">
-                         {% if review_items %}
-                             {% for item in review_items %}
-                             <li class="list-group-item d-flex justify-content-between align-items-center">
-                                 <a href="{{ url_for('view_document', document_id=item.id) if item.id else '#' }}" class="text-decoration-none text-dark" title="{{ item.name }}">
-                                     <i class="bi bi-file-earmark-text me-2"></i>{{ item.name | truncate(35) }}
-                                 </a>
-                                 <span class="badge bg-warning text-dark rounded-pill">{{ item.due }}</span>
-                             </li>
+             <div class="card">
+                 <div class="card-header"><i class="bi bi-award-fill"></i> Thành Tựu Đạt Được </div>
+                 <div class="card-body">
+                     <div id="achievementsList">
+                         {% if earned_achievements %}
+                             {% for ach in earned_achievements %}
+                             <span class="badge bg-light text-dark border rounded-pill achievement-badge">
+                                 <i class="bi {{ ach.icon }} me-1"></i>{{ ach.text }}
+                             </span>
                              {% endfor %}
                          {% else %}
-                             <li class="list-group-item text-muted">Không có tài liệu nào cần ôn tập ngay.</li>
+                             <p class="text-muted">Hãy bắt đầu học để mở khóa thành tựu nhé!</p>
                          {% endif %}
-                     </ul>
-                 </div>
-
-                 <div class="card">
-                     <div class="card-header"><i class="bi bi-award-fill"></i> Thành Tựu Đạt Được </div>
-                     <div class="card-body">
-                         <div id="achievementsList">
-                             {% if earned_achievements %}
-                                 {% for ach in earned_achievements %}
-                                 <span class="badge bg-light text-dark border rounded-pill achievement-badge">
-                                     <i class="bi {{ ach.icon }} me-1"></i>{{ ach.text }}
-                                 </span>
-                                 {% endfor %}
-                             {% else %}
-                                 <p class="text-muted">Hãy bắt đầu học để mở khóa thành tựu nhé!</p>
-                             {% endif %}
-                         </div>
-                         <hr>
-                         <button id="shareAchievementsBtn" class="btn btn-primary w-100">
-                             <i class="bi bi-share-fill"></i> Cập nhật Điểm vào BXH
-                         </button>
                      </div>
                  </div>
-            </div> <div class="col-lg-7">
-                 <div class="card">
-                    <div class="card-header"><i class="bi bi-calendar-week"></i> Kế hoạch học tâp</div>
-                    <div class="card-body p-3">
-                         <div class="d-flex align-items-center mb-3 justify-content-center small text-muted">
-                            <span class="me-1">Ít</span>
-                            <span class="me-1" style="width:15px; height:15px; background-color: #f8f9fa !important; border: 1px solid #ccc; border-radius: 3px;">&nbsp;</span>
-                            <span class="me-1" style="width:15px; height:15px; background-color: var(--green-act-1) !important; border-radius: 3px;"></span>
-                            <span class="me-1" style="width:15px; height:15px; background-color: var(--green-act-2) !important; border-radius: 3px;"></span>
-                            <span class="me-1" style="width:15px; height:15px; background-color: var(--green-act-3) !important; border-radius: 3px;"></span>
-                            <span class="me-1" style="width:15px; height:15px; background-color: var(--green-act-4) !important; border-radius: 3px;"></span>
-                            <span class="ms-1">Nhiều</span>
-                         </div>
-                         <div class="timeline-table-container bg-transparent p-0 shadow-none border-0">
-                            <table class="timeline-table w-100" id="weeklyTimelineTable">
-                                <thead> <tr> <th>Hai</th> <th>Ba</th> <th>Tư</th> <th>Năm</th> <th>Sáu</th> <th>Bảy</th> <th>CN</th> </tr> </thead>
-                                <tbody> <tr> <td></td><td></td><td></td><td></td><td></td><td></td><td></td> </tr> </tbody>
-                            </table>
-                        </div>
-                        <p class="text-center small text-muted mt-3">**Kế hoạch dựa trên mục tiêu mà bạn đã thiết lập ở bước upload và chuyển hóa các tài liệu.**</p>
+             </div>
+        </div>
+        <div class="col-lg-7">
+             <div class="card">
+                <div class="card-header"><i class="bi bi-calendar-week"></i> Kế hoạch học tâp</div>
+                <div class="card-body p-3">
+                     <div class="d-flex align-items-center mb-3 justify-content-center small text-muted">
+                        <span class="me-1">Ít</span>
+                        <span class="me-1" style="width:15px; height:15px; background-color: #f8f9fa !important; border: 1px solid #ccc; border-radius: 3px;">&nbsp;</span>
+                        <span class="me-1" style="width:15px; height:15px; background-color: #c6e48b !important; border-radius: 3px;"></span>
+                        <span class="me-1" style="width:15px; height:15px; background-color: #7bc96f !important; border-radius: 3px;"></span>
+                        <span class="me-1" style="width:15px; height:15px; background-color: #239a3b !important; border-radius: 3px;"></span>
+                        <span class="me-1" style="width:15px; height:15px; background-color: #196127 !important; border-radius: 3px;"></span>
+                        <span class="ms-1">Nhiều</span>
+                     </div>
+                     <div class="timeline-table-container bg-transparent p-0 shadow-none border-0">
+                        <table class="timeline-table w-100" id="weeklyTimelineTable">
+                            <thead> <tr> <th>Hai</th> <th>Ba</th> <th>Tư</th> <th>Năm</th> <th>Sáu</th> <th>Bảy</th> <th>CN</th> </tr> </thead>
+                            <tbody> <tr> <td></td><td></td><td></td><td></td><td></td><td></td><td></td> </tr> </tbody>
+                        </table>
                     </div>
+                    <p class="text-center small text-muted mt-3">**Kế hoạch dựa trên mục tiêu mà bạn đã thiết lập ở bước upload và chuyển hóa các tài liệu.**</p>
+                </div>
+             </div>
+
+             <div class="card">
+                 <div class="card-header"><i class="bi bi-calendar-month"></i> Hoạt động theo Tháng </div>
+                 <div class="card-body">
+                     <p class="text-muted small">Hiển thị mức độ hoạt động giả lập trong các tháng qua. Màu ô vuông thể hiện mức độ.</p>
+                     <div class="d-flex align-items-center mb-3 justify-content-center small text-muted">
+                         <span class="me-1">Ít</span>
+                         <span class="badge me-1" style="width:15px; height:15px; background-color: #f8f9fa !important; border: 1px solid #ccc; border-radius: 3px;">&nbsp;</span>
+                         <span class="badge me-1" style="width:15px; height:15px; background-color: #c6e48b !important; border-radius: 3px;">&nbsp;</span>
+                         <span class="badge me-1" style="width:15px; height:15px; background-color: #7bc96f !important; border-radius: 3px;">&nbsp;</span>
+                         <span class="badge me-1" style="width:15px; height:15px; background-color: #239a3b !important; border-radius: 3px;">&nbsp;</span>
+                         <span class="badge me-1" style="width:15px; height:15px; background-color: #196127 !important; border-radius: 3px;">&nbsp;</span>
+                         <span class="ms-1">Nhiều</span>
+                      </div>
+                     <div id="monthlyActivitySection" class="monthly-heatmap-container">
+                         </div>
                  </div>
+             </div>
 
-                 <div class="card">
-                     <div class="card-header"><i class="bi bi-calendar-month"></i> Hoạt động theo Tháng </div>
-                     <div class="card-body">
-                         <p class="text-muted small">Hiển thị mức độ hoạt động giả lập trong các tháng qua. Màu ô vuông thể hiện mức độ.</p>
-                         <div class="d-flex align-items-center mb-3 justify-content-center small text-muted">
-                             <span class="me-1">Ít</span>
-                             <span class="badge me-1" style="width:15px; height:15px; background-color: #f8f9fa !important; border: 1px solid #ccc; border-radius: 3px;">&nbsp;</span>
-                             <span class="badge me-1" style="width:15px; height:15px; background-color: var(--green-act-1) !important; border-radius: 3px;">&nbsp;</span>
-                             <span class="badge me-1" style="width:15px; height:15px; background-color: var(--green-act-2) !important; border-radius: 3px;">&nbsp;</span>
-                             <span class="badge me-1" style="width:15px; height:15px; background-color: var(--green-act-3) !important; border-radius: 3px;">&nbsp;</span>
-                             <span class="badge me-1" style="width:15px; height:15px; background-color: var(--green-act-4) !important; border-radius: 3px;">&nbsp;</span>
-                             <span class="ms-1">Nhiều</span>
-                          </div>
-                         <div id="monthlyActivitySection" class="monthly-heatmap-container">
-                             </div>
-                     </div>
-                 </div>
+        </div>
+    </div>
+    <div class="mt-4 mb-5 text-center">
+        <a href="{{ url_for('index') }}" class="btn btn-secondary"><i class="bi bi-arrow-left-circle"></i> Quay lại Dashboard</a>
+    </div>
 
-            </div> </div> <div class="mt-4 mb-5 text-center"> <a href="{{ url_for('index') }}" class="btn btn-secondary"><i class="bi bi-arrow-left-circle"></i> Quay lại Dashboard</a> </div>
-
-    </div> <div class="modal fade" id="aiChatModal" tabindex="-1" aria-labelledby="aiChatModalLabel" aria-hidden="true">
+    <div class="modal fade" id="aiChatModal" tabindex="-1" aria-labelledby="aiChatModalLabel" aria-hidden="true">
       <div class="modal-dialog modal-lg modal-dialog-scrollable">
         <div class="modal-content">
           <div class="modal-header">
@@ -287,7 +250,9 @@
         </div>
       </div>
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+{% endblock %}
+
+{% block scripts %}
     <script>
          const earnedAchievementsData = {{ earned_achievements | tojson | safe }};
          const pathwayExamples = [
@@ -304,25 +269,6 @@
              quiet_dad: { icon: '🧔‍♂️', dialogues: { reminder: ["Học bài đi con.", "Đến giờ rồi.", "Tập trung.", "..."], streak_lost: ["Hôm qua không học à?", "Cần cố gắng hơn.", "...", "Ừm."], milestone_streak: ["{N} ngày. Tốt.", "Được.", "Tiếp tục.", "Ừm."], milestone_docs: ["{N}.", "Được.", "Xem tiếp đi.", "..."], generic_greeting: ["...", "Học đi.", "Ừm.", "Cố lên."] } },
              patriarchal_lover: { icon: '🙎‍♂️', dialogues: { reminder: ["Học bài! Nghe lời anh/em!", "Em/anh phải học, biết chưa?", "Đừng để anh/em nhắc!", "Lo mà học cho giỏi vào!"], streak_lost: ["Mất streak rồi! Anh/em đã bảo mà!", "Thấy tác hại của việc không nghe lời chưa?", "Lần sau phải cố hơn, rõ chưa?", "Thật là làm anh/em thất vọng!"], milestone_streak: ["Được {N} ngày rồi, cũng được. Nhưng phải hơn nữa!", "Tạm chấp nhận.", "Đừng tự mãn!", "Phải giữ vững phong độ!"], milestone_docs: ["{N} tài liệu. Cần học nhiều hơn!", "Phải phấn đấu nữa!", "Kiến thức là phải hơn người!", "Chưa đủ đâu!"], generic_greeting: ["Học hành cho cẩn thận!", "Nghe lời anh/em!", "Phải chăm chỉ!", "Đừng làm anh/em phiền lòng!"] } }
          };
-
-         function shareAchievements() {
-             console.log("shareAchievements called!");
-             const achievementsContainer = document.getElementById('achievementsList');
-             const achievementsCount = achievementsContainer ? achievementsContainer.querySelectorAll('.achievement-badge').length : (Array.isArray(earnedAchievementsData) ? earnedAchievementsData.length : 0);
-             console.log("Achievements count:", achievementsCount);
-             const baseScore = achievementsCount * 4000;
-             const bonusScore = Math.floor(Math.random() * 151) + 50;
-             const totalScore = baseScore + bonusScore;
-             console.log(`Calculated score: ${totalScore} (Base: ${baseScore}, Bonus: ${bonusScore})`);
-             if (typeof(Storage) !== "undefined") {
-                 localStorage.setItem('myTimelineScore', totalScore);
-                 console.log(`Timeline score saved to localStorage: ${totalScore}`);
-                 window.location.href = "{{ url_for('lazy_market') }}#ranking-tab";
-             } else {
-                 console.error("LocalStorage is not supported!");
-                 alert("Trình duyệt của bạn không hỗ trợ lưu trữ cục bộ, không thể cập nhật điểm.");
-             }
-         }
          
          function displayPathway(pathwayData, pathwayTitle) {
              const listElement = document.getElementById('suggested-pathway-list');
@@ -361,12 +307,12 @@
              const sampleActivities = ["Đọc tài liệu", "Xem video", "Tóm tắt", "Quiz", "Nghiên cứu", "Ôn tập", "(Nghỉ)", "Bài tập", "Code", "Lab"];
              const sampleTags = ["Python", "Kinh tế", "Toán", "IELTS", "Web", "Data", "Luật", "Sử", "Văn"];
              const today = new Date();
-             const currentDayOfWeek = (today.getDay() + 6) % 7; // 0 for Monday, 6 for Sunday
+             const currentDayOfWeek = (today.getDay() + 6) % 7; 
 
              for (let index = 0; index < 7; index++) {
                  const cell = document.createElement('td');
-                 let activityLevel = Math.floor(Math.random() * 5); // 0 to 4
-                 if (index >= 5 && Math.random() < 0.4) { activityLevel = 0; } // Higher chance of rest on weekends
+                 let activityLevel = Math.floor(Math.random() * 5); 
+                 if (index >= 5 && Math.random() < 0.4) { activityLevel = 0; } 
                  cell.className = 'activity-' + activityLevel;
 
                  const dayNumberSpan = document.createElement('span');
@@ -526,10 +472,6 @@
             const changePathwayBtn = document.getElementById('change-pathway-btn');
             if(changePathwayBtn) { changePathwayBtn.addEventListener('click', function() { let newIndex = Math.floor(Math.random() * pathwayExamples.length); if (pathwayExamples.length > 1) { while (newIndex === currentPathwayIndex) { newIndex = Math.floor(Math.random() * pathwayExamples.length); } } currentPathwayIndex = newIndex; if(pathwayExamples[currentPathwayIndex] && pathwayExamples[currentPathwayIndex][0]) { displayPathway(pathwayExamples[currentPathwayIndex], pathwayExamples[currentPathwayIndex][0].title); } }); }
 
-            const shareBtn = document.getElementById('shareAchievementsBtn');
-            if (shareBtn) { shareBtn.addEventListener('click', shareAchievements); }
-            else { console.error("Could not find shareAchievementsBtn!"); }
-
             // --- JAVASCRIPT CHO AI CHAT MODAL (Kết nối Backend) ---
             const chatInput = document.getElementById('chatInput');
             const sendChatMessageBtn = document.getElementById('sendChatMessageBtn');
@@ -628,5 +570,4 @@
             }
          });
     </script>
-</body>
-</html>
+{% endblock %}

@@ -301,30 +301,34 @@ def build_tree(items):
     tree.sort(key=lambda x: x['order'])
     return tree
    
-def generate_mermaid_graph(items):
+def generate_mermaid_graph(items, relations):
     if not items:
         return "Chưa có mục nào trong không gian làm việc. Hãy tạo mục đầu tiên!"
+
     mermaid_string = "graph TD;\n"
-    relationships = [
-        "-->|dẫn tới|", 
-        "-.->|so sánh|", 
-        "==>|kết quả|", 
-        "--o|là một phần của|"
-    ]
-    colors = ["#87CEEB", "#FFD700", "#98FB98", "#FFB6C1", "#F0E68C"]
+    link_styles = []
+    link_index = 0
+
     for item in items:
         clean_title = item.title.replace('"', '#quot;').replace('\n', '<br/>')
         mermaid_string += f'    node_{item.id}["{clean_title}"];\n'
-    link_index = 0
-    link_styles = ""
+
     for item in items:
         if item.parent_id:
-            random_relationship = random.choice(relationships)
-            mermaid_string += f'    node_{item.parent_id} {random_relationship} node_{item.id};\n'
-            random_color = random.choice(colors)
-            link_styles += f'    linkStyle {link_index} stroke:{random_color},stroke-width:2px;\n'
-            link_index += 1  
-    mermaid_string += "\n" + link_styles
+            mermaid_string += f'    node_{item.parent_id} --> node_{item.id};\n'
+            link_styles.append(f'    linkStyle {link_index} stroke:#aaa,stroke-width:1.5px,stroke-dasharray: 5 5;')
+            link_index += 1
+
+    relationships = ["dẫn tới", "so sánh", "kết quả", "phụ thuộc"]
+    colors = ["#87CEEB", "#FFD700", "#98FB98", "#FFB6C1", "#F0E68C"]
+    for rel in relations:
+        label = rel.label if rel.label else random.choice(relationships)
+        mermaid_string += f'    node_{rel.source_id} -->|{label}| node_{rel.target_id};\n'
+        random_color = random.choice(colors)
+        link_styles.append(f'    linkStyle {link_index} stroke:{random_color},stroke-width:2px;')
+        link_index += 1
+
+    mermaid_string += "\n" + "\n".join(link_styles)
     return mermaid_string
 
 def check_document_relevance(document, user):
@@ -1367,9 +1371,10 @@ def get_document_network_mermaid(document_id):
     doc = db.session.get(Document, document_id)
     if not doc:
         return "Tài liệu không tồn tại", 404
-
     all_items = WorkspaceItem.query.filter_by(document_id=document_id).order_by(WorkspaceItem.order).all()
-    mermaid_data = generate_mermaid_graph(all_items)
+    all_relations = WorkspaceItemRelation.query.filter_by(document_id=document_id).all()
+    mermaid_data = generate_mermaid_graph(all_items, all_relations)
+
     return mermaid_data, 200, {'Content-Type': 'text/plain; charset=utf-8'}
 
 @app.route('/api/workspace_item/<int:item_id>')
@@ -1408,46 +1413,178 @@ def auto_breakdown_document(doc_id):
     doc = db.session.get(Document, doc_id)
     if not doc:
         return jsonify({"error": "Tài liệu không tồn tại"}), 404
-    try: 
+    try:
+        # Xóa dữ liệu cũ của tài liệu này để tạo mới
         WorkspaceItem.query.filter_by(document_id=doc_id).delete()
+        WorkspaceItemRelation.query.filter_by(document_id=doc_id).delete()
         db.session.flush()
-        doc_filename_lower = doc.filename.lower()
 
-        # === LOGIC ĐÃ SỬA LỖI: Kiểm tra từ khóa cụ thể hơn ===
-        
-        # Kịch bản 1: Cho file chứa "ai-voice"
-        if 'ai-voice' in doc_filename_lower:
-            root = WorkspaceItem(title="Công nghệ AI Voice", document_id=doc_id, order=1)
-            db.session.add(root)
-            db.session.flush()
-            stt = WorkspaceItem(title="Speech to Text (STT)", document_id=doc_id, parent_id=root.id, order=1, content="Chuyển đổi giọng nói thành văn bản.")
-            tts = WorkspaceItem(title="Text to Speech (TTS)", document_id=doc_id, parent_id=root.id, order=2, content="Chuyển đổi văn bản thành giọng nói.")
-            nlu = WorkspaceItem(title="Natural Language Understanding (NLU)", document_id=doc_id, parent_id=root.id, order=3, content="Giúp máy tính hiểu ý nghĩa của ngôn ngữ tự nhiên.")
-            db.session.add_all([stt, tts, nlu])
-            db.session.flush()
-            nlu_child1 = WorkspaceItem(title="Intent Recognition", document_id=doc_id, parent_id=nlu.id, order=1, content="Nhận diện ý định của người dùng (vd: đặt báo thức, hỏi thời tiết).")
-            nlu_child2 = WorkspaceItem(title="Entity Extraction", document_id=doc_id, parent_id=nlu.id, order=2, content="Trích xuất các thực thể quan trọng (vd: thời gian, địa điểm).")
-            db.session.add_all([nlu_child1, nlu_child2])
+        normalized_filename = normalize_vietnamese(doc.filename.lower())
+        nodes = {}
 
-        # Kịch bản 2: Cho file chứa "dientruong"
-        elif 'dientruong' in doc_filename_lower:
-            root = WorkspaceItem(title="Lý thuyết về Điện trường", document_id=doc_id, order=1)
-            db.session.add(root)
-            db.session.flush()
-            child1 = WorkspaceItem(title="Định nghĩa Điện trường", document_id=doc_id, parent_id=root.id, order=1, content="Điện trường là một dạng vật chất tồn tại xung quanh điện tích và tác dụng lực điện lên các điện tích khác đặt trong nó.")
-            child2 = WorkspaceItem(title="Vector Cường độ Điện trường (E)", document_id=doc_id, parent_id=root.id, order=2)
-            child3 = WorkspaceItem(title="Nguyên lý chồng chất Điện trường", document_id=doc_id, parent_id=root.id, order=3, content="Vector cường độ điện trường tại một điểm bằng tổng các vector cường độ điện trường do từng điện tích điểm gây ra tại điểm đó.")
-            db.session.add_all([child1, child2, child3])
-            db.session.flush()
-            grandchild1 = WorkspaceItem(title="Công thức tính E", document_id=doc_id, parent_id=child2.id, order=1, content="E = k * |Q| / (ε * r²)")
-            grandchild2 = WorkspaceItem(title="Đặc điểm của Vector E", document_id=doc_id, parent_id=child2.id, order=2)
-            db.session.add_all([grandchild1, grandchild2])
+        if re.search(r'\bai\b', normalized_filename) or 'ai-voice' in normalized_filename:
+            # Cấp 1: Các Trụ cột chính của AI
+            nodes['root'] = WorkspaceItem(title="Hệ thống Trí tuệ Nhân tạo", document_id=doc_id)
+            db.session.add(nodes['root']); db.session.flush()
+            nodes['data'] = WorkspaceItem(title="Dữ liệu & Tiền xử lý", parent_id=nodes['root'].id, document_id=doc_id)
+            nodes['ml_core'] = WorkspaceItem(title="Lõi Học máy (ML Core)", parent_id=nodes['root'].id, document_id=doc_id)
+            nodes['applications'] = WorkspaceItem(title="Các Lĩnh vực Ứng dụng", parent_id=nodes['root'].id, document_id=doc_id)
+            nodes['evaluation'] = WorkspaceItem(title="Đánh giá & Tối ưu", parent_id=nodes['root'].id, document_id=doc_id)
+            db.session.add_all([nodes[k] for k in ['data', 'ml_core', 'applications', 'evaluation']]); db.session.flush()
+
+            # Cấp 2: Chi tiết hóa các Trụ cột
+            nodes['data_collection'] = WorkspaceItem(title="Thu thập Dữ liệu", parent_id=nodes['data'].id, document_id=doc_id)
+            nodes['data_cleaning'] = WorkspaceItem(title="Làm sạch Dữ liệu", parent_id=nodes['data'].id, document_id=doc_id)
+            nodes['feature_eng'] = WorkspaceItem(title="Feature Engineering", parent_id=nodes['data'].id, document_id=doc_id)
+            nodes['data_labeling'] = WorkspaceItem(title="Gán nhãn Dữ liệu", parent_id=nodes['data'].id, document_id=doc_id)
+            nodes['data_augmentation'] = WorkspaceItem(title="Tăng cường Dữ liệu", parent_id=nodes['data'].id, document_id=doc_id)
+            nodes['supervised'] = WorkspaceItem(title="Học có giám sát", parent_id=nodes['ml_core'].id, document_id=doc_id)
+            nodes['unsupervised'] = WorkspaceItem(title="Học không giám sát", parent_id=nodes['ml_core'].id, document_id=doc_id)
+            nodes['reinforcement'] = WorkspaceItem(title="Học tăng cường", parent_id=nodes['ml_core'].id, document_id=doc_id)
+            nodes['models'] = WorkspaceItem(title="Các loại Mô hình", parent_id=nodes['ml_core'].id, document_id=doc_id)
+            nodes['vision'] = WorkspaceItem(title="Thị giác Máy tính", parent_id=nodes['applications'].id, document_id=doc_id)
+            nodes['nlp'] = WorkspaceItem(title="Xử lý Ngôn ngữ Tự nhiên", parent_id=nodes['applications'].id, document_id=doc_id)
+            nodes['speech'] = WorkspaceItem(title="Xử lý Tiếng nói", parent_id=nodes['applications'].id, document_id=doc_id)
+            nodes['recsys'] = WorkspaceItem(title="Hệ thống Gợi ý", parent_id=nodes['applications'].id, document_id=doc_id)
+            nodes['metrics'] = WorkspaceItem(title="Các độ đo", parent_id=nodes['evaluation'].id, document_id=doc_id)
+            nodes['hyperparam'] = WorkspaceItem(title="Tinh chỉnh siêu tham số", parent_id=nodes['evaluation'].id, document_id=doc_id)
+            nodes['overfitting'] = WorkspaceItem(title="Overfitting & Underfitting", parent_id=nodes['evaluation'].id, document_id=doc_id)
+            nodes['cross_validation'] = WorkspaceItem(title="Kiểm định chéo", parent_id=nodes['evaluation'].id, document_id=doc_id)
+            db.session.add_all([nodes[k] for k in ['data_collection','data_cleaning','feature_eng','data_labeling','data_augmentation','supervised','unsupervised','reinforcement','models','vision','nlp','speech','recsys','metrics','hyperparam','overfitting','cross_validation']]); db.session.flush()
+
+            # Cấp 3: Các thuật toán, kỹ thuật và chi tiết cụ thể
+            nodes['cnn'] = WorkspaceItem(title="Mạng Tích chập (CNN)", parent_id=nodes['models'].id, document_id=doc_id)
+            nodes['rnn'] = WorkspaceItem(title="Mạng Hồi quy (RNN)", parent_id=nodes['models'].id, document_id=doc_id)
+            nodes['transformer'] = WorkspaceItem(title="Mô hình Transformer", parent_id=nodes['models'].id, document_id=doc_id)
+            nodes['gan'] = WorkspaceItem(title="Mạng GAN", parent_id=nodes['models'].id, document_id=doc_id)
+            nodes['decision_tree'] = WorkspaceItem(title="Cây quyết định", parent_id=nodes['models'].id, document_id=doc_id)
+            nodes['svm'] = WorkspaceItem(title="SVM", parent_id=nodes['supervised'].id, document_id=doc_id)
+            nodes['log_reg'] = WorkspaceItem(title="Hồi quy Logistic", parent_id=nodes['supervised'].id, document_id=doc_id)
+            nodes['kmeans'] = WorkspaceItem(title="K-Means Clustering", parent_id=nodes['unsupervised'].id, document_id=doc_id)
+            nodes['pca'] = WorkspaceItem(title="PCA", parent_id=nodes['unsupervised'].id, document_id=doc_id)
+            nodes['accuracy'] = WorkspaceItem(title="Accuracy", parent_id=nodes['metrics'].id, document_id=doc_id)
+            nodes['precision_recall'] = WorkspaceItem(title="Precision & Recall", parent_id=nodes['metrics'].id, document_id=doc_id)
+            nodes['f1_score'] = WorkspaceItem(title="F1-Score", parent_id=nodes['metrics'].id, document_id=doc_id)
+            nodes['confusion_matrix'] = WorkspaceItem(title="Confusion Matrix", parent_id=nodes['metrics'].id, document_id=doc_id)
+            nodes['image_cls'] = WorkspaceItem(title="Phân loại ảnh", parent_id=nodes['vision'].id, document_id=doc_id)
+            nodes['obj_detection'] = WorkspaceItem(title="Phát hiện vật thể", parent_id=nodes['vision'].id, document_id=doc_id)
+            nodes['semantic_seg'] = WorkspaceItem(title="Phân vùng ngữ nghĩa", parent_id=nodes['vision'].id, document_id=doc_id)
+            nodes['text_cls'] = WorkspaceItem(title="Phân loại văn bản", parent_id=nodes['nlp'].id, document_id=doc_id)
+            nodes['ner'] = WorkspaceItem(title="Nhận dạng thực thể tên", parent_id=nodes['nlp'].id, document_id=doc_id)
+            nodes['summarization'] = WorkspaceItem(title="Tóm tắt văn bản", parent_id=nodes['nlp'].id, document_id=doc_id)
+            nodes['qna'] = WorkspaceItem(title="Hỏi-Đáp", parent_id=nodes['nlp'].id, document_id=doc_id)
+            nodes['stt'] = WorkspaceItem(title="Speech to Text (STT)", parent_id=nodes['speech'].id, document_id=doc_id)
+            nodes['tts'] = WorkspaceItem(title="Text to Speech (TTS)", parent_id=nodes['speech'].id, document_id=doc_id)
+            nodes['emotion_rec'] = WorkspaceItem(title="Nhận dạng cảm xúc giọng nói", parent_id=nodes['speech'].id, document_id=doc_id)
+            nodes['q_learning'] = WorkspaceItem(title="Q-Learning", parent_id=nodes['reinforcement'].id, document_id=doc_id)
+            nodes['deep_q'] = WorkspaceItem(title="Deep Q-Network (DQN)", parent_id=nodes['reinforcement'].id, document_id=doc_id)
+            db.session.add_all([nodes[k] for k in ['cnn','rnn','transformer','gan','decision_tree','svm','log_reg','kmeans','pca','accuracy','precision_recall','f1_score','confusion_matrix','image_cls','obj_detection','semantic_seg','text_cls','ner','summarization','qna','stt','tts','emotion_rec','q_learning','deep_q']]); db.session.flush()
+
+            relations_to_add = [
+                WorkspaceItemRelation(document_id=doc_id, source_id=nodes['cnn'].id, target_id=nodes['vision'].id, label="ứng dụng chính"),
+                WorkspaceItemRelation(document_id=doc_id, source_id=nodes['transformer'].id, target_id=nodes['nlp'].id, label="là nền tảng cho"),
+                WorkspaceItemRelation(document_id=doc_id, source_id=nodes['supervised'].id, target_id=nodes['image_cls'].id, label="là phương pháp"),
+                WorkspaceItemRelation(document_id=doc_id, source_id=nodes['supervised'].id, target_id=nodes['text_cls'].id, label="là phương pháp"),
+                WorkspaceItemRelation(document_id=doc_id, source_id=nodes['f1_score'].id, target_id=nodes['text_cls'].id, label="đo lường"),
+                WorkspaceItemRelation(document_id=doc_id, source_id=nodes['stt'].id, target_id=nodes['nlp'].id, label="là đầu vào của"),
+                WorkspaceItemRelation(document_id=doc_id, source_id=nodes['data_labeling'].id, target_id=nodes['supervised'].id, label="yêu cầu"),
+                WorkspaceItemRelation(document_id=doc_id, source_id=nodes['rnn'].id, target_id=nodes['speech'].id, label="ứng dụng cho"),
+                WorkspaceItemRelation(document_id=doc_id, source_id=nodes['gan'].id, target_id=nodes['data_augmentation'].id, label="dùng để"),
+                WorkspaceItemRelation(document_id=doc_id, source_id=nodes['hyperparam'].id, target_id=nodes['models'].id, label="tối ưu"),
+                WorkspaceItemRelation(document_id=doc_id, source_id=nodes['overfitting'].id, target_id=nodes['evaluation'].id, label="vấn đề của"),
+                WorkspaceItemRelation(document_id=doc_id, source_id=nodes['kmeans'].id, target_id=nodes['recsys'].id, label="có thể dùng cho"),
+                WorkspaceItemRelation(document_id=doc_id, source_id=nodes['deep_q'].id, target_id=nodes['reinforcement'].id, label="là thuật toán"),
+                WorkspaceItemRelation(document_id=doc_id, source_id=nodes['data_cleaning'].id, target_id=nodes['evaluation'].id, label="ảnh hưởng tới"),
+                WorkspaceItemRelation(document_id=doc_id, source_id=nodes['obj_detection'].id, target_id=nodes['unsupervised'].id, label="có thể dùng"),
+                WorkspaceItemRelation(document_id=doc_id, source_id=nodes['summarization'].id, target_id=nodes['transformer'].id, label="ứng dụng của"),
+                WorkspaceItemRelation(document_id=doc_id, source_id=nodes['confusion_matrix'].id, target_id=nodes['precision_recall'].id, label="tổng hợp từ"),
+                WorkspaceItemRelation(document_id=doc_id, source_id=nodes['pca'].id, target_id=nodes['feature_eng'].id, label="là kỹ thuật"),
+                WorkspaceItemRelation(document_id=doc_id, source_id=nodes['emotion_rec'].id, target_id=nodes['tts'].id, label="nâng cao"),
+                WorkspaceItemRelation(document_id=doc_id, source_id=nodes['log_reg'].id, target_id=nodes['metrics'].id, label="được đánh giá bằng"),
+                WorkspaceItemRelation(document_id=doc_id, source_id=nodes['qna'].id, target_id=nodes['ner'].id, label="sử dụng")
+            ]
+            db.session.add_all(relations_to_add)
+
+            # =====================================================================
+        # === KỊCH BẢN "ĐIỆN TRƯỜNG" SIÊU PHỨC TẠP (~60 NODES) ===
+        # =====================================================================
+        elif 'dientruong' in normalized_filename:
+            # --- Cấp 1: Các Trụ cột chính ---
+            nodes['root'] = WorkspaceItem(title="Toàn cảnh Tĩnh điện học", document_id=doc_id)
+            db.session.add(nodes['root']); db.session.flush()
+            
+            nodes['truong_co_ban'] = WorkspaceItem(title="Các Khái niệm Nền tảng", parent_id=nodes['root'].id, document_id=doc_id)
+            nodes['luc_va_tuong_tac'] = WorkspaceItem(title="Lực & Tương tác Điện", parent_id=nodes['root'].id, document_id=doc_id)
+            nodes['nang_luong'] = WorkspaceItem(title="Năng lượng, Công, Thế năng", parent_id=nodes['root'].id, document_id=doc_id)
+            nodes['vat_lieu'] = WorkspaceItem(title="Vật liệu trong Điện trường", parent_id=nodes['root'].id, document_id=doc_id)
+            nodes['ung_dung'] = WorkspaceItem(title="Ứng dụng Thực tế", parent_id=nodes['root'].id, document_id=doc_id)
+            db.session.add_all([nodes[k] for k in ['truong_co_ban', 'luc_va_tuong_tac', 'nang_luong', 'vat_lieu', 'ung_dung']]); db.session.flush()
+
+            # --- Cấp 2 ---
+            nodes['dien_tich'] = WorkspaceItem(title="Điện tích", parent_id=nodes['truong_co_ban'].id, document_id=doc_id)
+            nodes['dinh_luat_bao_toan_dt'] = WorkspaceItem(title="ĐL Bảo toàn Điện tích", parent_id=nodes['truong_co_ban'].id, document_id=doc_id)
+            nodes['dinh_luat_coulomb'] = WorkspaceItem(title="Định luật Coulomb", parent_id=nodes['luc_va_tuong_tac'].id, document_id=doc_id)
+            nodes['khai_niem_dien_truong'] = WorkspaceItem(title="Định nghĩa Điện trường", parent_id=nodes['luc_va_tuong_tac'].id, document_id=doc_id)
+            nodes['vector_e'] = WorkspaceItem(title="Vector Cường độ Điện trường E", parent_id=nodes['khai_niem_dien_truong'].id, document_id=doc_id)
+            nodes['duong_suc_dien'] = WorkspaceItem(title="Đường sức điện", parent_id=nodes['khai_niem_dien_truong'].id, document_id=doc_id)
+            nodes['nguyen_ly_chong_chat'] = WorkspaceItem(title="Nguyên lý chồng chất", parent_id=nodes['luc_va_tuong_tac'].id, document_id=doc_id)
+            nodes['cong_luc_dien'] = WorkspaceItem(title="Công của Lực điện", parent_id=nodes['nang_luong'].id, document_id=doc_id)
+            nodes['the_nang'] = WorkspaceItem(title="Thế năng Điện trường", parent_id=nodes['nang_luong'].id, document_id=doc_id)
+            nodes['dien_the'] = WorkspaceItem(title="Điện thế V", parent_id=nodes['nang_luong'].id, document_id=doc_id)
+            nodes['hieu_dien_the'] = WorkspaceItem(title="Hiệu điện thế U", parent_id=nodes['nang_luong'].id, document_id=doc_id)
+            nodes['vat_dan'] = WorkspaceItem(title="Vật dẫn", parent_id=nodes['vat_lieu'].id, document_id=doc_id)
+            nodes['dien_moi'] = WorkspaceItem(title="Điện môi", parent_id=nodes['vat_lieu'].id, document_id=doc_id)
+            nodes['tu_dien'] = WorkspaceItem(title="Tụ điện", parent_id=nodes['vat_lieu'].id, document_id=doc_id)
+            nodes['son_tinh_dien'] = WorkspaceItem(title="Sơn tĩnh điện", parent_id=nodes['ung_dung'].id, document_id=doc_id)
+            nodes['loc_bui'] = WorkspaceItem(title="Máy lọc bụi tĩnh điện", parent_id=nodes['ung_dung'].id, document_id=doc_id)
+            nodes['photocopy'] = WorkspaceItem(title="Máy Photocopy", parent_id=nodes['ung_dung'].id, document_id=doc_id)
+            db.session.add_all([nodes[k] for k in ['dien_tich', 'dinh_luat_bao_toan_dt', 'dinh_luat_coulomb', 'khai_niem_dien_truong', 'vector_e', 'duong_suc_dien', 'nguyen_ly_chong_chat', 'cong_luc_dien', 'the_nang', 'dien_the', 'hieu_dien_the', 'vat_dan', 'dien_moi', 'tu_dien', 'son_tinh_dien', 'loc_bui', 'photocopy']]); db.session.flush()
+
+            # --- Cấp 3 và sâu hơn ---
+            nodes['q_duong_am'] = WorkspaceItem(title="Điện tích dương & âm", parent_id=nodes['dien_tich'].id, document_id=doc_id)
+            nodes['e_electron'] = WorkspaceItem(title="Điện tích nguyên tố e", parent_id=nodes['dien_tich'].id, document_id=doc_id)
+            nodes['cong_thuc_coulomb'] = WorkspaceItem(title="F = k|q1q2|/εr²", parent_id=nodes['dinh_luat_coulomb'].id, document_id=doc_id)
+            nodes['cong_thuc_e'] = WorkspaceItem(title="E = F/q", parent_id=nodes['vector_e'].id, document_id=doc_id)
+            nodes['cong_thuc_e_diem'] = WorkspaceItem(title="E = k|Q|/εr²", parent_id=nodes['vector_e'].id, document_id=doc_id)
+            nodes['cong_thuc_chong_chat'] = WorkspaceItem(title="E_tổng = E1 + E2 + ...", parent_id=nodes['nguyen_ly_chong_chat'].id, document_id=doc_id)
+            nodes['dac_diem_duong_suc'] = WorkspaceItem(title="Đặc điểm đường sức", parent_id=nodes['duong_suc_dien'].id, document_id=doc_id)
+            nodes['cong_thuc_amn'] = WorkspaceItem(title="A_MN = qE.d_MN", parent_id=nodes['cong_luc_dien'].id, document_id=doc_id)
+            nodes['the_nang_amn'] = WorkspaceItem(title="A_MN = W_M - W_N", parent_id=nodes['the_nang'].id, document_id=doc_id)
+            nodes['cong_thuc_v'] = WorkspaceItem(title="V = W/q", parent_id=nodes['dien_the'].id, document_id=doc_id)
+            nodes['cong_thuc_umn'] = WorkspaceItem(title="U_MN = V_M - V_N = A_MN/q", parent_id=nodes['hieu_dien_the'].id, document_id=doc_id)
+            nodes['can_bang_tinh_dien'] = WorkspaceItem(title="Cân bằng tĩnh điện trong vật dẫn", parent_id=nodes['vat_dan'].id, document_id=doc_id)
+            nodes['hang_so_dien_moi'] = WorkspaceItem(title="Hằng số điện môi ε", parent_id=nodes['dien_moi'].id, document_id=doc_id)
+            nodes['dien_dung'] = WorkspaceItem(title="Điện dung C = Q/U", parent_id=nodes['tu_dien'].id, document_id=doc_id)
+            nodes['nang_luong_tu'] = WorkspaceItem(title="Năng lượng tụ W = ½CU²", parent_id=nodes['tu_dien'].id, document_id=doc_id)
+            nodes['ghep_noi_tiep'] = WorkspaceItem(title="Ghép nối tiếp", parent_id=nodes['tu_dien'].id, document_id=doc_id)
+            nodes['ghep_song_song'] = WorkspaceItem(title="Ghép song song", parent_id=nodes['tu_dien'].id, document_id=doc_id)
+            db.session.add_all([nodes[k] for k in ['q_duong_am','e_electron','cong_thuc_coulomb','cong_thuc_e','cong_thuc_e_diem','cong_thuc_chong_chat','dac_diem_duong_suc','cong_thuc_amn','the_nang_amn','cong_thuc_v','cong_thuc_umn','can_bang_tinh_dien','hang_so_dien_moi','dien_dung','nang_luong_tu','ghep_noi_tiep','ghep_song_song']]); db.session.flush()
+
+            # --- Tạo các mối quan hệ chéo ---
+            relations_to_add = [
+                WorkspaceItemRelation(document_id=doc_id, source_id=nodes['dinh_luat_coulomb'].id, target_id=nodes['dien_tich'].id, label="tương tác giữa"),
+                WorkspaceItemRelation(document_id=doc_id, source_id=nodes['khai_niem_dien_truong'].id, target_id=nodes['luc_dien'].id, label="khái niệm hóa"),
+                WorkspaceItemRelation(document_id=doc_id, source_id=nodes['vector_e'].id, target_id=nodes['luc_dien'].id, label="đặc trưng cho"),
+                WorkspaceItemRelation(document_id=doc_id, source_id=nodes['duong_suc_dien'].id, target_id=nodes['vector_e'].id, label="biểu diễn trực quan"),
+                WorkspaceItemRelation(document_id=doc_id, source_id=nodes['cong_luc_dien'].id, target_id=nodes['vector_e'].id, label="phụ thuộc"),
+                WorkspaceItemRelation(document_id=doc_id, source_id=nodes['hieu_dien_the'].id, target_id=nodes['cong_luc_dien'].id, label="liên hệ với"),
+                WorkspaceItemRelation(document_id=doc_id, source_id=nodes['the_nang'].id, target_id=nodes['cong_luc_dien'].id, label="bằng độ giảm"),
+                WorkspaceItemRelation(document_id=doc_id, source_id=nodes['dien_dung'].id, target_id=nodes['hieu_dien_the'].id, label="tỉ lệ với"),
+                WorkspaceItemRelation(document_id=doc_id, source_id=nodes['nang_luong_tu'].id, target_id=nodes['nang_luong'].id, label="là một dạng của"),
+                WorkspaceItemRelation(document_id=doc_id, source_id=nodes['dien_moi'].id, target_id=nodes['cong_thuc_coulomb'].id, label="làm yếu"),
+                WorkspaceItemRelation(document_id=doc_id, source_id=nodes['can_bang_tinh_dien'].id, target_id=nodes['dientich'].id, label="quy định phân bố"),
+                WorkspaceItemRelation(document_id=doc_id, source_id=nodes['photocopy'].id, target_id=nodes['luc_dien'].id, label="ứng dụng"),
+                WorkspaceItemRelation(document_id=doc_id, source_id=nodes['nguyen_ly_chong_chat'].id, target_id=nodes['vector_e'].id, label="áp dụng cho"),
+            ]
+            db.session.add_all(relations_to_add)
 
         else:
             root = WorkspaceItem(title=f"Sơ đồ cho '{doc.filename}'", document_id=doc_id, order=1)
             db.session.add(root)
+            
         db.session.commit()
         return jsonify({"message": "Auto Breakdown thành công!"})
+
     except Exception as e:
         db.session.rollback()
         print(f"Lỗi khi auto breakdown: {e}")
